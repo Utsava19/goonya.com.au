@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 /* ── ROBOT SVG (pure SVG + CSS animations, no GSAP) ── */
@@ -179,7 +179,141 @@ function Counter({ target, suffix }) {
   );
 }
 
-/* ════════════════ HOME ════════════════ */
+/* ── WEBSITE SHOWCASE — auto-flipping industry cards ── */
+function WebsiteShowcase({ A, L }) {
+  const sites = [
+    {
+      industry: "Hospitality",
+      name: "The Rustic Table",
+      color: "#f97316",
+      img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=70",
+      tags: ["Menu", "Reservations", "Gallery"],
+      desc: "Restaurant & cafe websites that fill seats.",
+    },
+    {
+      industry: "Tradies",
+      name: "ProBuild Co.",
+      color: "#fbbf24",
+      img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=70",
+      tags: ["Quotes", "Portfolio", "Contact"],
+      desc: "Trade websites that generate real enquiries.",
+    },
+    {
+      industry: "Healthcare",
+      name: "Wellcare Clinic",
+      color: "#4ade80",
+      img: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=70",
+      tags: ["Bookings", "Services", "Team"],
+      desc: "Healthcare sites patients trust and book from.",
+    },
+    {
+      industry: "Retail",
+      name: "Bloom Boutique",
+      color: "#e879f9",
+      img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=70",
+      tags: ["Shop", "Products", "Checkout"],
+      desc: "eCommerce stores built to convert browsers.",
+    },
+    {
+      industry: "Fitness",
+      name: "Iron & Flow",
+      color: "#38bdf8",
+      img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=70",
+      tags: ["Classes", "Memberships", "Booking"],
+      desc: "Gym & studio sites that sign up members.",
+    },
+    {
+      industry: "Real Estate",
+      name: "Apex Property",
+      color: "#a78bfa",
+      img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=70",
+      tags: ["Listings", "Appraisals", "Contact"],
+      desc: "Property sites that capture serious buyers.",
+    },
+  ];
+
+  const [active, setActive] = useState(0);
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setActive(prev => (prev + 1) % sites.length);
+    }, 2800);
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  const s = sites[active];
+
+  return (
+    <div style={{ background:"#050410", padding:"40px 44px",
+      display:"flex", flexDirection:"column", gap:"20px", minHeight:"420px" }}>
+
+      {/* dot nav */}
+      <div style={{ display:"flex", gap:"8px", alignItems:"center" }}>
+        {sites.map((site,i) => (
+          <button key={i} onClick={() => setActive(i)} style={{
+            width: i===active ? "24px" : "8px",
+            height:"8px", borderRadius:"4px",
+            background: i===active ? A : "rgba(255,255,255,.15)",
+            border:"none", cursor:"pointer", padding:0,
+            transition:"all .3s ease",
+          }}/>
+        ))}
+        <span style={{ marginLeft:"auto", fontSize:"11px", color:"#3a3a3a",
+          letterSpacing:"1px" }}>{active+1} / {sites.length}</span>
+      </div>
+
+      {/* card */}
+      <div key={active} style={{
+        flex:1, borderRadius:"8px", overflow:"hidden",
+        border:`1px solid rgba(255,255,255,.08)`,
+        animation:"cardFlip .4s ease",
+        position:"relative",
+      }}>
+        {/* screenshot */}
+        <img src={s.img} alt={s.industry}
+          style={{ width:"100%", height:"200px", objectFit:"cover", display:"block" }}
+          onError={e => { e.target.style.background="#1a1230"; e.target.style.height="200px"; }}/>
+
+        {/* overlay gradient */}
+        <div style={{ position:"absolute", top:0, left:0, right:0, height:"200px",
+          background:"linear-gradient(to bottom, transparent 40%, rgba(5,4,16,.9) 100%)" }}/>
+
+        {/* industry badge */}
+        <div style={{ position:"absolute", top:"14px", left:"14px",
+          padding:"4px 12px", borderRadius:"100px",
+          background:`${s.color}22`, border:`1px solid ${s.color}44`,
+          fontSize:"10px", letterSpacing:"1.5px", color:s.color, fontWeight:600 }}>
+          {s.industry.toUpperCase()}
+        </div>
+
+        {/* info */}
+        <div style={{ padding:"16px 20px", background:"rgba(5,4,16,.95)" }}>
+          <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"18px",
+            fontWeight:700, color:"white", marginBottom:"6px", letterSpacing:"-.5px" }}>
+            {s.name}
+          </div>
+          <div style={{ fontSize:"13px", color:"#555", marginBottom:"12px" }}>{s.desc}</div>
+          <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
+            {s.tags.map(tag => (
+              <span key={tag} style={{ padding:"3px 10px", borderRadius:"100px",
+                background:"rgba(255,255,255,.05)", border:"1px solid rgba(255,255,255,.08)",
+                fontSize:"11px", color:"#666" }}>{tag}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* cta */}
+      <Link to="/our-work" style={{ display:"inline-flex", alignItems:"center", gap:"8px",
+        fontSize:"13px", color:A, textDecoration:"none", fontWeight:500 }}>
+        See our work <span>↗</span>
+      </Link>
+    </div>
+  );
+}
+
+
 export default function Home() {
   useEffect(() => {
     // fade-in on load
@@ -391,7 +525,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ══ SERVICES ══ */}
+      {/* ══ SERVICES — horizontal line + website showcase ══ */}
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto 130px" }}>
         <div style={{ marginBottom:"56px" }}>
           <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"18px",
@@ -403,32 +537,71 @@ export default function Home() {
             The machine<span style={{color:A}}> behind your business.</span>
           </h2>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)",
-          gap:"1px", background:L, border:`1px solid ${L}` }}>
+
+        {/* ── HORIZONTAL SERVICES ROW ── */}
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)",
+          gap:"1px", background:L, border:`1px solid ${L}`, marginBottom:"1px" }}>
           {[
-            {n:"01",t:"AI Automation",       d:"Eliminate repetitive tasks. Intelligent systems handle the work so your team focuses on what matters.",       glow:"rgba(155,124,255,.3)"},
-            {n:"02",t:"Website Design",      d:"High-performance websites built to convert. Fast, modern, optimised to grow your business from day one.",      glow:"rgba(0,210,190,.25)"},
-            {n:"03",t:"Digital Marketing",   d:"Get discovered by the right people. Data-driven campaigns that grow revenue, not just impressions.",           glow:"rgba(255,100,180,.2)"},
-            {n:"04",t:"Systems Integration", d:"Connect your tools and automate your workflows — run your entire business as one efficient machine.",          glow:"rgba(100,180,255,.2)"},
-          ].map(({n,t,d,glow}) => (
-            <Link to="/services" key={n} style={{ display:"block", padding:"56px 52px",
-              background:"#08060f", textDecoration:"none", position:"relative",
-              overflow:"hidden", minHeight:"260px" }}
+            {n:"01", t:"AI Automation",       d:"Intelligent systems that eliminate repetitive work.",    glow:"rgba(155,124,255,.3)", icon:"⚡"},
+            {n:"02", t:"Website Design",      d:"High-performance sites built to convert.",               glow:"rgba(0,210,190,.25)",  icon:"🌐"},
+            {n:"03", t:"Digital Marketing",   d:"Campaigns that grow revenue, not just traffic.",         glow:"rgba(255,100,180,.2)", icon:"📈"},
+            {n:"04", t:"Systems Integration", d:"Connect your tools. Run as one efficient machine.",      glow:"rgba(100,180,255,.2)", icon:"🔗"},
+          ].map(({n,t,d,glow,icon}) => (
+            <Link to="/services" key={n} style={{ display:"block", padding:"40px 36px",
+              background:"#08060f", textDecoration:"none", position:"relative", overflow:"hidden" }}
               onMouseEnter={e=>e.currentTarget.style.background="#0d0b18"}
               onMouseLeave={e=>e.currentTarget.style.background="#08060f"}>
-              <div style={{ position:"absolute", top:"-60px", right:"-60px", width:"200px", height:"200px",
+              <div style={{ position:"absolute", top:"-40px", right:"-40px", width:"150px", height:"150px",
                 borderRadius:"50%", background:`radial-gradient(circle,${glow},transparent 70%)`,
-                filter:"blur(25px)", pointerEvents:"none" }}/>
+                filter:"blur(20px)", pointerEvents:"none" }}/>
               <div style={{ position:"relative", zIndex:1 }}>
-                <div style={{ fontSize:"11px", letterSpacing:"2px", color:A, marginBottom:"40px",
-                  fontFamily:"'Space Grotesk',sans-serif" }}>{n}</div>
-                <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"26px",
-                  fontWeight:700, letterSpacing:"-1px", color:"white", marginBottom:"12px" }}>{t}</h3>
-                <p style={{ color:"#444", fontSize:"15px", lineHeight:1.65, maxWidth:"320px" }}>{d}</p>
-                <div style={{ marginTop:"28px", fontSize:"18px", color:A }}>↗</div>
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"32px" }}>
+                  <span style={{ fontSize:"11px", letterSpacing:"2px", color:A,
+                    fontFamily:"'Space Grotesk',sans-serif" }}>{n}</span>
+                  <span style={{ fontSize:"20px" }}>{icon}</span>
+                </div>
+                <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"18px",
+                  fontWeight:700, letterSpacing:"-.5px", color:"white", marginBottom:"10px" }}>{t}</h3>
+                <p style={{ color:"#444", fontSize:"13px", lineHeight:1.6 }}>{d}</p>
+                <div style={{ marginTop:"24px", fontSize:"16px", color:A }}>↗</div>
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* ── WEBSITE SHOWCASE — flipping cards ── */}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
+          background:L, border:`1px solid ${L}` }}>
+
+          {/* LEFT — label */}
+          <div style={{ padding:"52px 52px", background:"#08060f",
+            display:"flex", flexDirection:"column", justifyContent:"center" }}>
+            <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"18px",
+              display:"flex", alignItems:"center", gap:"10px" }}>
+              <span style={{ width:"20px", height:"1px", background:A }}/>WE BUILD FOR EVERY INDUSTRY
+            </div>
+            <h3 style={{ fontFamily:"'Space Grotesk',sans-serif",
+              fontSize:"clamp(28px,3vw,46px)", fontWeight:700,
+              letterSpacing:"-2px", color:"white", marginBottom:"20px", lineHeight:1.05 }}>
+              Whatever your industry,<br/><span style={{color:A}}>we've got you covered.</span>
+            </h3>
+            <p style={{ color:"#555", fontSize:"15px", lineHeight:1.75, maxWidth:"380px", marginBottom:"36px" }}>
+              From tradies to healthcare, hospitality to retail — we build
+              websites and systems tailored to how your industry actually works.
+            </p>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:"10px" }}>
+              {["Hospitality","Tradies","Healthcare","Retail","Real Estate","Fitness","Legal","Education"].map(tag => (
+                <span key={tag} style={{ padding:"6px 14px",
+                  border:`1px solid rgba(155,124,255,.2)`, borderRadius:"100px",
+                  fontSize:"12px", color:"#666", background:"rgba(155,124,255,.05)" }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT — flipping website cards */}
+          <WebsiteShowcase A={A} L={L} />
         </div>
       </div>
 
@@ -787,7 +960,10 @@ export default function Home() {
           from{transform:scaleY(0);transform-origin:bottom}
           to{transform:scaleY(1);transform-origin:bottom}
         }
-        @keyframes slideUp {
+        @keyframes cardFlip {
+          from { opacity:0; transform:translateY(12px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
           from{opacity:0;transform:translateY(16px)}
           to{opacity:1;transform:translateY(0)}
         }
