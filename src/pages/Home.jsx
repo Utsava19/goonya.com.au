@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -6,71 +6,45 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 function Home() {
-  const cursorRef = useRef(null);
-  const cursorDotRef = useRef(null);
 
   useEffect(() => {
 
-    /* ── CURSOR ── */
-    const cursor = cursorRef.current;
-    const cursorDot = cursorDotRef.current;
-    let mouseX = 0, mouseY = 0;
-    let dotX = 0, dotY = 0;
-
-    const onMouseMove = (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      gsap.to(cursor, { x: mouseX, y: mouseY, duration: 0.6, ease: "power3.out" });
-    };
-
-    const animateDot = () => {
-      dotX += (mouseX - dotX) * 0.15;
-      dotY += (mouseY - dotY) * 0.15;
-      gsap.set(cursorDot, { x: dotX, y: dotY });
-      requestAnimationFrame(animateDot);
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    animateDot();
-
-    /* Cursor scale on hover */
-    const hoverEls = document.querySelectorAll("a, button, .preview-card");
-    hoverEls.forEach(el => {
-      el.addEventListener("mouseenter", () => gsap.to(cursor, { scale: 2.5, opacity: 0.5, duration: 0.3 }));
-      el.addEventListener("mouseleave", () => gsap.to(cursor, { scale: 1, opacity: 1, duration: 0.3 }));
-    });
-
     /* ── HERO ENTRANCE ── */
-    const tl = gsap.timeline({ delay: 0.1 });
+    const tl = gsap.timeline({ delay: 0.15 });
 
-    tl.from(".home-kicker", { opacity: 0, y: 30, duration: 0.7 })
-      .from(".hero-line", { opacity: 0, y: 120, stagger: 0.13, duration: 1.1, ease: "power4.out" }, "-=0.4")
+    tl.from(".home-kicker",      { opacity: 0, y: 30, duration: 0.7 })
+      .from(".hero-line",        { opacity: 0, y: 100, stagger: 0.13, duration: 1.1, ease: "power4.out" }, "-=0.4")
       .from(".hero-description", { opacity: 0, y: 30, duration: 0.7 }, "-=0.5")
-      .from(".hero-actions", { opacity: 0, y: 20, duration: 0.6 }, "-=0.4")
-      .from(".hero-visual", { opacity: 0, scale: 0.75, duration: 1.3, ease: "power3.out" }, "-=0.9");
+      .from(".hero-actions",     { opacity: 0, y: 20, duration: 0.6 }, "-=0.4")
+      .from(".hero-photo-wrap",  { opacity: 0, scale: 0.92, x: 40, duration: 1.2, ease: "power3.out" }, "-=0.9");
 
-    /* ── HERO ORB / CARDS ── */
-    gsap.to(".hero-orb", {
-      y: -35, x: 22,
-      duration: 4.5,
-      repeat: -1, yoyo: true,
-      ease: "sine.inOut",
+    /* Photo overlay shimmer */
+    gsap.to(".photo-shimmer", {
+      x: "110%",
+      duration: 1.6,
+      ease: "power2.inOut",
+      delay: 1.2,
     });
 
+    /* Floating cards */
     gsap.to(".floating-card", {
       y: -16, duration: 2.8,
       repeat: -1, yoyo: true,
       stagger: 0.6, ease: "sine.inOut",
     });
 
-    /* Subtle ring spin */
-    gsap.to(".ring-one", { rotation: 360, duration: 18, repeat: -1, ease: "none", transformOrigin: "center center" });
-    gsap.to(".ring-two", { rotation: -360, duration: 12, repeat: -1, ease: "none", transformOrigin: "center center" });
+    /* Ambient orb drift */
+    gsap.to(".hero-orb", {
+      y: -40, x: 25,
+      duration: 5,
+      repeat: -1, yoyo: true,
+      ease: "sine.inOut",
+    });
 
     /* ── MARQUEE ── */
     gsap.to(".marquee-track", {
       xPercent: -50,
-      duration: 20,
+      duration: 22,
       repeat: -1,
       ease: "none",
     });
@@ -78,31 +52,16 @@ function Home() {
     /* ── SCROLL REVEALS ── */
     gsap.utils.toArray(".reveal").forEach((el) => {
       gsap.from(el, {
-        scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" },
-        opacity: 0, y: 60, duration: 0.9, ease: "power3.out",
-      });
-    });
-
-    gsap.utils.toArray(".reveal-left").forEach((el) => {
-      gsap.from(el, {
         scrollTrigger: { trigger: el, start: "top 88%" },
-        opacity: 0, x: -60, duration: 0.9, ease: "power3.out",
+        opacity: 0, y: 55, duration: 0.9, ease: "power3.out",
       });
     });
 
-    gsap.utils.toArray(".reveal-right").forEach((el) => {
-      gsap.from(el, {
-        scrollTrigger: { trigger: el, start: "top 88%" },
-        opacity: 0, x: 60, duration: 0.9, ease: "power3.out",
-      });
-    });
-
-    /* Stagger children inside .stagger-parent */
+    /* Stagger grid children */
     gsap.utils.toArray(".stagger-parent").forEach((parent) => {
-      const kids = parent.querySelectorAll(".stagger-child");
-      gsap.from(kids, {
+      gsap.from(parent.querySelectorAll(".stagger-child"), {
         scrollTrigger: { trigger: parent, start: "top 85%" },
-        opacity: 0, y: 50, stagger: 0.13, duration: 0.8, ease: "power3.out",
+        opacity: 0, y: 50, stagger: 0.12, duration: 0.8, ease: "power3.out",
       });
     });
 
@@ -141,16 +100,16 @@ function Home() {
       });
     });
 
-    /* ── PREVIEW CARDS tilt ── */
+    /* ── CARD TILT ── */
     document.querySelectorAll(".preview-card").forEach(card => {
       card.addEventListener("mousemove", (e) => {
         const rect = card.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
-        gsap.to(card, { rotateY: x * 10, rotateX: -y * 10, transformPerspective: 800, duration: 0.4, ease: "power2.out" });
+        gsap.to(card, { rotateY: x * 10, rotateX: -y * 8, transformPerspective: 900, duration: 0.4, ease: "power2.out" });
       });
       card.addEventListener("mouseleave", () => {
-        gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.6, ease: "elastic.out(1,0.5)" });
+        gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.7, ease: "elastic.out(1,0.4)" });
       });
     });
 
@@ -166,247 +125,233 @@ function Home() {
       ease: "none",
     });
 
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-      document.removeEventListener("mousemove", onMouseMove);
-    };
+    /* ── PHOTO PARALLAX ── */
+    gsap.to(".hero-photo", {
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+      y: 60,
+      ease: "none",
+    });
+
+    return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, []);
 
   return (
-    <>
-      {/* CUSTOM CURSOR */}
-      <div ref={cursorRef} className="cursor-ring" />
-      <div ref={cursorDotRef} className="cursor-dot" />
+    <div className="home">
 
-      <div className="home">
+      {/* ── HERO ── */}
+      <section className="hero">
 
-        {/* ── HERO ── */}
-        <section className="hero">
+        <div className="hero-content">
 
-          <div className="hero-content">
-
-            <div className="home-kicker">
-              <span />
-              DIGITAL SYSTEMS FOR MODERN BUSINESS
-            </div>
-
-            <h1 className="hero-title">
-              <div className="hero-line">YOUR BUSINESS.</div>
-              <div className="hero-line hero-gradient">BUT SMARTER.</div>
-              <div className="hero-line">AUTOMATED.</div>
-            </h1>
-
-            <p className="hero-description">
-              Goonya builds websites, AI automation and digital systems
-              that help ambitious businesses attract customers, save time and grow.
-            </p>
-
-            <div className="hero-actions">
-              <Link to="/services" className="primary-button">
-                Explore what we do <span>↗</span>
-              </Link>
-              <Link to="/our-work" className="secondary-button">
-                See our work <span>↓</span>
-              </Link>
-            </div>
-
+          <div className="home-kicker">
+            <span />
+            DIGITAL SYSTEMS FOR MODERN BUSINESS
           </div>
 
-          {/* VISUAL */}
-          <div className="hero-visual">
-            <div className="hero-orb" />
-            <div className="hero-core">
-              <div className="core-ring ring-one" />
-              <div className="core-ring ring-two" />
-              <div className="core-center">
-                <span>✦</span>
-                <small>GOONYA</small>
-                <strong>AI</strong>
-              </div>
-            </div>
-            <div className="floating-card card-one">
-              <span className="status-dot" />
-              New enquiry <strong>+1</strong>
-            </div>
-            <div className="floating-card card-two">
-              <span className="status-dot green" />
-              AI response <strong>0.8s</strong>
-            </div>
-            <div className="floating-card card-three">
-              <span className="status-dot purple" />
-              Customer converted <strong>$420</strong>
-            </div>
+          <h1 className="hero-title">
+            <div className="hero-line">YOUR BUSINESS.</div>
+            <div className="hero-line hero-gradient">BUT SMARTER.</div>
+            <div className="hero-line">AUTOMATED.</div>
+          </h1>
+
+          <p className="hero-description">
+            Goonya builds websites, AI automation and digital systems
+            that help ambitious businesses attract customers, save time and grow.
+          </p>
+
+          <div className="hero-actions">
+            <Link to="/services" className="primary-button">
+              Explore what we do <span>↗</span>
+            </Link>
+            <Link to="/our-work" className="secondary-button">
+              See our work <span>↓</span>
+            </Link>
           </div>
 
-        </section>
-
-        {/* ── MARQUEE ── */}
-        <div className="marquee-strip">
-          <div className="marquee-track">
-            {[...Array(2)].map((_, i) => (
-              <span key={i} className="marquee-inner">
-                <b>AI AUTOMATION</b><em>✦</em>
-                <b>WEBSITES</b><em>✦</em>
-                <b>DIGITAL SYSTEMS</b><em>✦</em>
-                <b>MARKETING</b><em>✦</em>
-                <b>GOONYA.COM.AU</b><em>✦</em>
-                <b>BUILD WHAT'S NEXT</b><em>✦</em>
-              </span>
-            ))}
-          </div>
         </div>
 
-        {/* ── STATS ── */}
-        <section className="home-stats stagger-parent">
-          {[
-            { label: "Projects Delivered", value: "40", suffix: "+" },
-            { label: "Avg Response Time", value: "0.8", suffix: "s" },
-            { label: "Client Satisfaction", value: "98", suffix: "%" },
-            { label: "Hours Saved / Client", value: "120", suffix: "h" },
-          ].map(({ label, value, suffix }) => (
-            <div className="stat-item stagger-child" key={label}>
-              <div className="stat-value">
-                <span className="stat-number" data-target={value}>0</span>
-                <sup>{suffix}</sup>
-              </div>
-              <p>{label}</p>
-            </div>
+        {/* PHOTO SIDE */}
+        <div className="hero-photo-wrap">
+
+          <div className="hero-orb" />
+
+          {/* Real photo — replace src with your own image */}
+          <div className="hero-photo-frame">
+            <img
+              className="hero-photo"
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=80"
+              alt="Team working on digital systems"
+            />
+            <div className="photo-shimmer" />
+            <div className="photo-gradient" />
+          </div>
+
+          {/* Floating stat cards */}
+          <div className="floating-card card-one">
+            <span className="status-dot" />
+            New enquiry
+            <strong>+1</strong>
+          </div>
+
+          <div className="floating-card card-two">
+            <span className="status-dot green" />
+            AI response
+            <strong>0.8s</strong>
+          </div>
+
+          <div className="floating-card card-three">
+            <span className="status-dot purple" />
+            Customer converted
+            <strong>$420</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* ── MARQUEE ── */}
+      <div className="marquee-strip">
+        <div className="marquee-track">
+          {[...Array(2)].map((_, i) => (
+            <span key={i} className="marquee-inner">
+              <b>AI AUTOMATION</b><em>✦</em>
+              <b>WEBSITES</b><em>✦</em>
+              <b>DIGITAL SYSTEMS</b><em>✦</em>
+              <b>MARKETING</b><em>✦</em>
+              <b>GOONYA.COM.AU</b><em>✦</em>
+              <b>BUILD WHAT'S NEXT</b><em>✦</em>
+            </span>
           ))}
-        </section>
+        </div>
+      </div>
 
-        {/* ── STATEMENT ── */}
-        <section className="statement-section">
-          <span className="section-label reveal">01 / THE GOONYA IDEA</span>
-          <h2 className="reveal">
-            Your business has
-            <span> enough to think about.</span>
-          </h2>
-          <p className="reveal">
-            Your technology shouldn't be one of them. We connect the digital
-            pieces behind your business so everything works together.
-          </p>
-        </section>
-
-        {/* ── VIDEO ── */}
-        <section className="home-video reveal">
-          <div className="video-container">
-            <video autoPlay muted loop playsInline>
-              <source
-                src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-                type="video/mp4"
-              />
-            </video>
-            <div className="video-overlay" />
-            <div className="video-copy">
-              <span>THE DIGITAL MACHINE</span>
-              <h2>BUILD ONCE.<br /><em>RUN SMARTER.</em></h2>
+      {/* ── STATS ── */}
+      <section className="home-stats stagger-parent">
+        {[
+          { label: "Projects Delivered", value: "40", suffix: "+" },
+          { label: "Avg Response Time",  value: "0.8", suffix: "s" },
+          { label: "Client Satisfaction", value: "98", suffix: "%" },
+          { label: "Hours Saved / Client", value: "120", suffix: "h" },
+        ].map(({ label, value, suffix }) => (
+          <div className="stat-item stagger-child" key={label}>
+            <div className="stat-value">
+              <span className="stat-number" data-target={value}>0</span>
+              <sup>{suffix}</sup>
             </div>
+            <p>{label}</p>
           </div>
-        </section>
+        ))}
+      </section>
 
-        {/* ── SERVICES PREVIEW ── */}
-        <section className="home-services">
-          <div className="section-header reveal">
-            <span className="section-label">02 / WHAT WE DO</span>
-            <h2>We build the <span>machine behind your business.</span></h2>
+      {/* ── STATEMENT ── */}
+      <section className="statement-section">
+        <span className="section-label reveal">01 / THE GOONYA IDEA</span>
+        <h2 className="reveal">
+          Your business has
+          <span> enough to think about.</span>
+        </h2>
+        <p className="reveal">
+          Your technology shouldn't be one of them. We connect the digital
+          pieces behind your business so everything works together.
+        </p>
+      </section>
+
+      {/* ── VIDEO ── */}
+      <section className="home-video reveal">
+        <div className="video-container">
+          <video autoPlay muted loop playsInline>
+            <source
+              src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+              type="video/mp4"
+            />
+          </video>
+          <div className="video-overlay" />
+          <div className="video-copy">
+            <span>THE DIGITAL MACHINE</span>
+            <h2>BUILD ONCE.<br /><em>RUN SMARTER.</em></h2>
           </div>
+        </div>
+      </section>
 
-          <div className="service-preview-grid stagger-parent">
-            {[
-              { n: "01", title: "AI AUTOMATION", desc: "Make repetitive work disappear." },
-              { n: "02", title: "WEBSITES", desc: "Turn attention into customers." },
-              { n: "03", title: "MARKETING", desc: "Get discovered. Get chosen." },
-            ].map(({ n, title, desc }) => (
-              <Link to="/services" className="preview-card stagger-child" key={n}>
-                <span>{n}</span>
-                <div>
-                  <strong>{title}</strong>
-                  <p>{desc}</p>
-                </div>
-                <b>↗</b>
-              </Link>
-            ))}
-          </div>
-        </section>
+      {/* ── SERVICES PREVIEW ── */}
+      <section className="home-services">
+        <div className="section-header reveal">
+          <span className="section-label">02 / WHAT WE DO</span>
+          <h2>We build the <span>machine behind your business.</span></h2>
+        </div>
 
-        {/* ── PROCESS ── */}
-        <section className="home-process">
-          <div className="section-header reveal">
-            <span className="section-label">03 / HOW IT WORKS</span>
-            <h2>Simple process. <span>Serious results.</span></h2>
-          </div>
-
-          <div className="process-steps stagger-parent">
-            {[
-              { n: "01", title: "Discovery", desc: "We learn your business, your bottlenecks, your goals." },
-              { n: "02", title: "Strategy", desc: "We map the digital system your business actually needs." },
-              { n: "03", title: "Build", desc: "We execute fast without cutting corners." },
-              { n: "04", title: "Launch", desc: "We go live and track what's working." },
-            ].map(({ n, title, desc }) => (
-              <div className="process-step stagger-child" key={n}>
-                <div className="step-number">{n}</div>
-                <div className="step-line" />
+        <div className="service-preview-grid stagger-parent">
+          {[
+            { n: "01", title: "AI AUTOMATION", desc: "Make repetitive work disappear." },
+            { n: "02", title: "WEBSITES",      desc: "Turn attention into customers." },
+            { n: "03", title: "MARKETING",     desc: "Get discovered. Get chosen." },
+          ].map(({ n, title, desc }) => (
+            <Link to="/services" className="preview-card stagger-child" key={n}>
+              <span>{n}</span>
+              <div>
                 <strong>{title}</strong>
                 <p>{desc}</p>
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── CTA ── */}
-        <section className="home-cta">
-          <span className="section-label reveal">04 / READY?</span>
-          <h2 className="reveal">
-            Let's build something <span>people remember.</span>
-          </h2>
-          <div className="reveal">
-            <Link to="/contact" className="primary-button cta-big">
-              Start a project <span>↗</span>
+              <b>↗</b>
             </Link>
-          </div>
-        </section>
+          ))}
+        </div>
+      </section>
 
-      </div>
+      {/* ── PROCESS ── */}
+      <section className="home-process">
+        <div className="section-header reveal">
+          <span className="section-label">03 / HOW IT WORKS</span>
+          <h2>Simple process. <span>Serious results.</span></h2>
+        </div>
 
-      {/* HOME CSS */}
+        <div className="process-steps stagger-parent">
+          {[
+            { n: "01", title: "Discovery", desc: "We learn your business, your bottlenecks, your goals." },
+            { n: "02", title: "Strategy",  desc: "We map the digital system your business actually needs." },
+            { n: "03", title: "Build",     desc: "We execute fast without cutting corners." },
+            { n: "04", title: "Launch",    desc: "We go live and track what's working." },
+          ].map(({ n, title, desc }) => (
+            <div className="process-step stagger-child" key={n}>
+              <div className="step-number">{n}</div>
+              <div className="step-line" />
+              <strong>{title}</strong>
+              <p>{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="home-cta">
+        <span className="section-label reveal">04 / READY?</span>
+        <h2 className="reveal">
+          Let's build something <span>people remember.</span>
+        </h2>
+        <div className="reveal">
+          <Link to="/contact" className="primary-button cta-big">
+            Start a project <span>↗</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ── HOME STYLES ── */}
       <style>{`
-        /* ── CURSOR ── */
-        .cursor-ring {
-          position: fixed;
-          top: -20px; left: -20px;
-          width: 40px; height: 40px;
-          border: 1px solid rgba(155,124,255,.7);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 99999;
-          mix-blend-mode: difference;
-          will-change: transform;
-        }
-        .cursor-dot {
-          position: fixed;
-          top: -4px; left: -4px;
-          width: 8px; height: 8px;
-          background: var(--accent);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 99999;
-          will-change: transform;
-        }
-        @media(max-width:850px){
-          .cursor-ring,.cursor-dot { display:none; }
-        }
+        .home { overflow-x: hidden; }
 
-        /* ── HOME ── */
-        .home { overflow: hidden; }
-
-        /* ── HERO ── */
+        /* HERO */
         .hero {
           width: min(1400px, 90vw);
           margin: auto;
-          padding: 130px 0 160px;
+          padding: 120px 0 140px;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 60px;
+          gap: 70px;
           align-items: center;
         }
 
@@ -414,7 +359,7 @@ function Home() {
           display: flex;
           align-items: center;
           gap: 12px;
-          color: #777;
+          color: #666;
           font-size: 11px;
           letter-spacing: 2.5px;
           margin-bottom: 38px;
@@ -423,40 +368,40 @@ function Home() {
           width: 25px; height: 1px;
           background: var(--accent);
           display: block;
+          flex-shrink: 0;
         }
 
-        .hero-title {
-          overflow: hidden;
-        }
+        .hero-title { overflow: hidden; }
+
         .hero-line {
           display: block;
           font-family: "Space Grotesk", sans-serif;
-          font-size: clamp(52px, 6.5vw, 110px);
-          line-height: .9;
-          letter-spacing: -5px;
-          font-weight: 600;
+          font-size: clamp(52px, 6vw, 100px);
+          line-height: .92;
+          letter-spacing: -4px;
+          font-weight: 700;
           overflow: hidden;
         }
         .hero-gradient {
-          background: linear-gradient(90deg, var(--accent), #c4a9ff);
+          background: linear-gradient(90deg, var(--accent), #c4a9ff 80%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
 
         .hero-description {
-          max-width: 480px;
-          margin-top: 50px;
-          color: #999;
-          font-size: 18px;
-          line-height: 1.7;
+          max-width: 460px;
+          margin-top: 44px;
+          color: #888;
+          font-size: 17px;
+          line-height: 1.75;
         }
 
         .hero-actions {
           display: flex;
           align-items: center;
-          gap: 18px;
-          margin-top: 48px;
+          gap: 16px;
+          margin-top: 46px;
           flex-wrap: wrap;
         }
 
@@ -464,7 +409,7 @@ function Home() {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          padding: 16px 26px;
+          padding: 15px 26px;
           background: white;
           color: black;
           border-radius: 100px;
@@ -475,85 +420,105 @@ function Home() {
           will-change: transform;
         }
         .primary-button:hover {
-          box-shadow: 0 15px 50px rgba(155,124,255,.3);
+          box-shadow: 0 16px 50px rgba(155,124,255,.35);
         }
         .primary-button.cta-big {
-          padding: 20px 36px;
+          padding: 19px 36px;
           font-size: 16px;
         }
+
         .secondary-button {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          padding: 16px 26px;
-          border: 1px solid rgba(255,255,255,.18);
+          padding: 15px 26px;
+          border: 1px solid rgba(255,255,255,.15);
           border-radius: 100px;
           font-size: 14px;
           cursor: pointer;
-          transition: background .3s, color .3s;
+          transition: background .3s, border-color .3s;
           will-change: transform;
         }
         .secondary-button:hover {
-          background: rgba(255,255,255,.07);
+          background: rgba(255,255,255,.06);
+          border-color: rgba(255,255,255,.3);
         }
 
-        /* HERO VISUAL */
-        .hero-visual {
+        /* PHOTO SIDE */
+        .hero-photo-wrap {
           position: relative;
-          height: 500px;
+          height: 560px;
           display: flex;
           align-items: center;
           justify-content: center;
         }
+
         .hero-orb {
           position: absolute;
-          width: 340px; height: 340px;
+          width: 420px; height: 420px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(155,124,255,.35), transparent 70%);
-          filter: blur(40px);
+          background: radial-gradient(circle, rgba(155,124,255,.22), transparent 70%);
+          filter: blur(60px);
+          pointer-events: none;
         }
-        .hero-core {
-          position: relative;
-          width: 180px; height: 180px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .core-ring {
-          position: absolute;
-          border-radius: 50%;
-          border: 1px solid rgba(155,124,255,.3);
-        }
-        .ring-one { width: 180px; height: 180px; }
-        .ring-two { width: 240px; height: 240px; border-style: dashed; }
-        .core-center {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 2px;
-          font-family: "Space Grotesk", sans-serif;
-        }
-        .core-center span { font-size: 20px; color: var(--accent); }
-        .core-center small { font-size: 9px; letter-spacing: 2px; color: #666; }
-        .core-center strong { font-size: 22px; font-weight: 700; }
 
+        .hero-photo-frame {
+          position: relative;
+          width: 88%;
+          height: 100%;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,.1);
+          border-radius: 4px;
+        }
+
+        .hero-photo {
+          width: 100%;
+          height: 110%;
+          object-fit: cover;
+          object-position: center top;
+          display: block;
+          filter: brightness(.85) saturate(.8);
+        }
+
+        /* Shimmer sweep on load */
+        .photo-shimmer {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.15) 50%, transparent 60%);
+          transform: translateX(-110%);
+          pointer-events: none;
+        }
+
+        /* Bottom gradient so text overlay on floating cards reads well */
+        .photo-gradient {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            rgba(7,7,7,0) 40%,
+            rgba(7,7,7,.55) 100%
+          );
+        }
+
+        /* FLOATING CARDS */
         .floating-card {
           position: absolute;
           display: flex;
           align-items: center;
           gap: 10px;
-          padding: 12px 18px;
-          background: rgba(255,255,255,.05);
+          padding: 11px 17px;
+          background: rgba(10,10,10,.75);
           border: 1px solid rgba(255,255,255,.1);
           border-radius: 12px;
           font-size: 13px;
-          backdrop-filter: blur(10px);
+          backdrop-filter: blur(12px);
           white-space: nowrap;
+          z-index: 2;
         }
         .floating-card strong { color: var(--accent); font-weight: 700; }
-        .card-one { top: 15%; left: -5%; }
-        .card-two { top: 50%; right: -5%; }
-        .card-three { bottom: 15%; left: 5%; }
+        .card-one   { top: 12%;    left: -6%; }
+        .card-two   { top: 48%;    right: -6%; }
+        .card-three { bottom: 12%; left: 4%; }
 
         .status-dot {
           width: 8px; height: 8px;
@@ -562,23 +527,16 @@ function Home() {
           box-shadow: 0 0 8px #f87171;
           flex-shrink: 0;
         }
-        .status-dot.green {
-          background: #4ade80;
-          box-shadow: 0 0 8px #4ade80;
-        }
-        .status-dot.purple {
-          background: var(--accent);
-          box-shadow: 0 0 8px var(--accent);
-        }
+        .status-dot.green  { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+        .status-dot.purple { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
-        /* ── MARQUEE ── */
+        /* MARQUEE */
         .marquee-strip {
-          width: 100%;
           overflow: hidden;
           border-top: 1px solid var(--line);
           border-bottom: 1px solid var(--line);
-          padding: 16px 0;
-          background: rgba(255,255,255,.02);
+          padding: 15px 0;
+          background: rgba(255,255,255,.015);
         }
         .marquee-track {
           display: flex;
@@ -588,47 +546,47 @@ function Home() {
         .marquee-inner {
           display: flex;
           align-items: center;
-          gap: 32px;
-          padding-right: 32px;
-          white-space: nowrap;
+          gap: 30px;
+          padding-right: 30px;
         }
         .marquee-inner b {
           font-size: 11px;
-          letter-spacing: 2.5px;
+          letter-spacing: 2px;
           font-weight: 500;
-          color: #555;
+          color: #444;
         }
         .marquee-inner em {
           font-style: normal;
           color: var(--accent);
-          font-size: 10px;
+          font-size: 9px;
         }
 
-        /* ── STATS ── */
+        /* STATS */
         .home-stats {
           width: min(1400px, 90vw);
           margin: 80px auto;
           display: grid;
           grid-template-columns: repeat(4,1fr);
           border: 1px solid var(--line);
+          background: #0a0a0a;
         }
         .stat-item {
-          padding: 48px 36px;
+          padding: 50px 38px;
           border-right: 1px solid var(--line);
           transition: background .4s ease;
         }
         .stat-item:last-child { border-right: none; }
-        .stat-item:hover { background: rgba(155,124,255,.05); }
+        .stat-item:hover { background: rgba(155,124,255,.06); }
         .stat-value {
           font-family: "Space Grotesk", sans-serif;
-          font-size: clamp(42px, 4vw, 72px);
+          font-size: clamp(40px, 3.5vw, 66px);
           font-weight: 700;
           letter-spacing: -3px;
           line-height: 1;
           color: white;
         }
         .stat-value sup {
-          font-size: 0.4em;
+          font-size: .4em;
           color: var(--accent);
           vertical-align: super;
           letter-spacing: 0;
@@ -636,96 +594,84 @@ function Home() {
         .stat-item p {
           margin-top: 10px;
           font-size: 12px;
-          letter-spacing: 1.5px;
+          letter-spacing: 1px;
           color: #555;
         }
 
-        /* ── STATEMENT ── */
+        /* STATEMENT */
         .statement-section {
-          width: min(900px, 90vw);
+          width: min(860px, 90vw);
           margin: 0 auto;
-          padding: 120px 0;
+          padding: 110px 0;
           text-align: center;
         }
         .statement-section h2 {
           font-family: "Space Grotesk", sans-serif;
-          font-size: clamp(36px, 4.5vw, 68px);
+          font-size: clamp(34px, 4vw, 62px);
           font-weight: 600;
-          letter-spacing: -3px;
-          line-height: 1.05;
-          margin: 28px 0 24px;
+          letter-spacing: -2.5px;
+          line-height: 1.06;
+          margin: 24px 0 22px;
         }
         .statement-section h2 span { color: var(--accent); }
-        .statement-section p {
-          color: #777;
-          font-size: 18px;
-          line-height: 1.7;
-        }
+        .statement-section p { color: #666; font-size: 18px; line-height: 1.75; }
 
-        /* ── VIDEO ── */
+        /* VIDEO */
         .home-video {
           width: min(1400px, 90vw);
-          margin: 0 auto 120px;
+          margin: 0 auto 100px;
         }
         .video-container {
           position: relative;
-          height: 560px;
+          height: 540px;
           overflow: hidden;
           border: 1px solid var(--line);
         }
         .video-container video {
-          width: 100%;
-          height: 120%;
+          width: 100%; height: 120%;
           object-fit: cover;
           display: block;
         }
         .video-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(7,7,7,.9) 0%, rgba(7,7,7,.4) 60%, transparent 100%);
+          background: linear-gradient(to top, rgba(7,7,7,.88) 0%, rgba(7,7,7,.3) 60%, transparent 100%);
         }
         .video-copy {
           position: absolute;
           bottom: 50px;
           left: 50px;
         }
-        .video-copy span {
-          font-size: 11px;
-          letter-spacing: 2.5px;
-          color: #666;
-        }
+        .video-copy span { font-size: 11px; letter-spacing: 2.5px; color: #555; }
         .video-copy h2 {
           font-family: "Space Grotesk", sans-serif;
-          font-size: clamp(38px, 5vw, 80px);
+          font-size: clamp(36px, 5vw, 76px);
           font-weight: 700;
-          letter-spacing: -4px;
-          line-height: .9;
-          margin-top: 16px;
+          letter-spacing: -3px;
+          line-height: .92;
+          margin-top: 14px;
         }
-        .video-copy h2 em {
-          font-style: normal;
-          color: var(--accent);
-        }
+        .video-copy h2 em { font-style: normal; color: var(--accent); }
 
-        /* ── SERVICES PREVIEW ── */
+        /* SERVICES PREVIEW */
         .home-services {
           width: min(1400px, 90vw);
-          margin: 0 auto 120px;
+          margin: 0 auto 100px;
         }
-        .section-header { margin-bottom: 55px; }
+        .section-header { margin-bottom: 50px; }
         .section-label {
           font-size: 11px;
-          letter-spacing: 2.5px;
+          letter-spacing: 2px;
           color: #555;
           display: block;
-          margin-bottom: 18px;
+          margin-bottom: 16px;
         }
         .section-header h2 {
           font-family: "Space Grotesk", sans-serif;
-          font-size: clamp(32px, 3.5vw, 54px);
+          font-size: clamp(30px, 3.5vw, 52px);
           font-weight: 600;
           letter-spacing: -2px;
-          line-height: 1.05;
+          line-height: 1.08;
         }
         .section-header h2 span { color: var(--accent); }
 
@@ -739,42 +685,42 @@ function Home() {
         .preview-card {
           display: flex;
           align-items: center;
-          gap: 24px;
-          padding: 40px 36px;
-          background: var(--bg);
+          gap: 22px;
+          padding: 42px 34px;
+          background: #0a0a0a;
           transition: background .4s ease;
           transform-style: preserve-3d;
           cursor: pointer;
         }
-        .preview-card:hover { background: rgba(155,124,255,.06); }
+        .preview-card:hover { background: rgba(155,124,255,.07); }
         .preview-card > span {
           font-family: "Space Grotesk", sans-serif;
-          font-size: 42px;
+          font-size: 38px;
           font-weight: 700;
-          color: rgba(255,255,255,.07);
+          color: rgba(255,255,255,.06);
           letter-spacing: -2px;
           flex-shrink: 0;
         }
         .preview-card > div { flex: 1; }
         .preview-card strong {
           display: block;
-          font-size: 13px;
+          font-size: 12px;
           letter-spacing: 1.5px;
           margin-bottom: 8px;
         }
         .preview-card p { color: #666; font-size: 14px; }
         .preview-card > b {
-          font-size: 20px;
+          font-size: 18px;
           color: var(--accent);
           flex-shrink: 0;
           transition: transform .3s ease;
         }
         .preview-card:hover > b { transform: translate(4px, -4px); }
 
-        /* ── PROCESS ── */
+        /* PROCESS */
         .home-process {
           width: min(1400px, 90vw);
-          margin: 0 auto 120px;
+          margin: 0 auto 100px;
         }
         .process-steps {
           display: grid;
@@ -782,12 +728,11 @@ function Home() {
           gap: 1px;
           background: var(--line);
           border: 1px solid var(--line);
-          margin-top: 55px;
+          margin-top: 50px;
         }
         .process-step {
-          padding: 44px 36px;
-          background: var(--bg);
-          position: relative;
+          padding: 44px 34px;
+          background: #0a0a0a;
           transition: background .4s ease;
         }
         .process-step:hover { background: rgba(155,124,255,.05); }
@@ -796,50 +741,49 @@ function Home() {
           font-size: 11px;
           letter-spacing: 2px;
           color: var(--accent);
-          margin-bottom: 28px;
+          margin-bottom: 24px;
         }
         .step-line {
-          width: 30px;
-          height: 1px;
+          width: 28px; height: 1px;
           background: var(--accent);
-          margin-bottom: 20px;
-          opacity: .5;
+          margin-bottom: 18px;
+          opacity: .4;
         }
         .process-step strong {
           display: block;
-          font-size: 18px;
+          font-size: 17px;
           font-family: "Space Grotesk", sans-serif;
-          margin-bottom: 12px;
+          margin-bottom: 10px;
         }
         .process-step p { color: #666; font-size: 14px; line-height: 1.6; }
 
-        /* ── CTA ── */
+        /* CTA */
         .home-cta {
           width: min(1400px, 90vw);
           margin: 0 auto;
-          padding: 130px 0 160px;
+          padding: 120px 0 150px;
           text-align: center;
           border-top: 1px solid var(--line);
         }
         .home-cta h2 {
           font-family: "Space Grotesk", sans-serif;
-          font-size: clamp(42px, 5.5vw, 90px);
-          font-weight: 600;
+          font-size: clamp(40px, 5vw, 86px);
+          font-weight: 700;
           letter-spacing: -4px;
-          line-height: .95;
-          margin: 24px 0 52px;
+          line-height: .94;
+          margin: 22px 0 50px;
         }
         .home-cta h2 span { color: var(--accent); }
 
-        /* ── MOBILE ── */
-        @media(max-width:850px) {
+        /* MOBILE */
+        @media(max-width: 850px) {
           .hero {
             grid-template-columns: 1fr;
-            padding: 80px 0 100px;
-            gap: 60px;
+            padding: 70px 0 90px;
+            gap: 50px;
           }
-          .hero-line { font-size: clamp(48px,13vw,80px); letter-spacing: -3px; }
-          .hero-visual { height: 360px; }
+          .hero-line { font-size: clamp(44px,13vw,78px); letter-spacing: -2.5px; }
+          .hero-photo-wrap { height: 340px; width: 100%; }
           .card-one { left: 0; }
           .card-two { right: 0; }
 
@@ -855,9 +799,12 @@ function Home() {
 
           .home-cta h2 { letter-spacing: -2px; }
           .hero-actions { flex-direction: column; align-items: flex-start; }
+
+          .video-copy { left: 24px; bottom: 32px; }
         }
       `}</style>
-    </>
+
+    </div>
   );
 }
 
