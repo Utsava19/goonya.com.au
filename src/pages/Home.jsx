@@ -5,547 +5,446 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function Home() {
-  const canvasRef = useRef(null);
+/* ─────────────────────────────────────────
+   NEURAL NETWORK CANVAS
+───────────────────────────────────────── */
+function NeuralNet({ style }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current;
+    const ctx = cv.getContext("2d");
+    let W = cv.width  = cv.offsetWidth;
+    let H = cv.height = cv.offsetHeight;
+
+    const NODE_COUNT = 28;
+    const nodes = Array.from({ length: NODE_COUNT }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - .5) * .4,
+      vy: (Math.random() - .5) * .4,
+      r: Math.random() * 2.5 + 1.5,
+      pulse: Math.random() * Math.PI * 2,
+    }));
+
+    let raf;
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+
+      // connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 130) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(155,124,255,${(1 - dist / 130) * 0.35})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // nodes
+      nodes.forEach(n => {
+        n.pulse += 0.04;
+        const glow = (Math.sin(n.pulse) + 1) / 2;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + glow * 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(155,124,255,${0.5 + glow * 0.5})`;
+        ctx.fill();
+
+        // move
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+      });
+
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+
+    const onResize = () => {
+      W = cv.width  = cv.offsetWidth;
+      H = cv.height = cv.offsetHeight;
+    };
+    window.addEventListener("resize", onResize);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
+  }, []);
+  return <canvas ref={ref} style={{ width: "100%", height: "100%", display: "block", ...style }} />;
+}
+
+/* ─────────────────────────────────────────
+   PROFIT BARS
+───────────────────────────────────────── */
+function ProfitChart() {
+  const bars = [
+    { h: 35, label: "Q1", val: "$12k" },
+    { h: 52, label: "Q2", val: "$18k" },
+    { h: 44, label: "Q3", val: "$15k" },
+    { h: 78, label: "Q4", val: "$27k" },
+  ];
 
   useEffect(() => {
-    // ── PARTICLE CANVAS ──
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
-    const particles = Array.from({ length: 80 }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 1.5 + 0.3,
-      dx: (Math.random() - 0.5) * 0.3,
-      dy: (Math.random() - 0.5) * 0.3,
-      o: Math.random() * 0.5 + 0.1,
-    }));
-    let raf;
-    const drawParticles = () => {
-      ctx.clearRect(0, 0, W, H);
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(155,124,255,${p.o})`;
-        ctx.fill();
-        p.x += p.dx; p.y += p.dy;
-        if (p.x < 0 || p.x > W) p.dx *= -1;
-        if (p.y < 0 || p.y > H) p.dy *= -1;
-      });
-      raf = requestAnimationFrame(drawParticles);
-    };
-    drawParticles();
-    const onResize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
-    window.addEventListener("resize", onResize);
+    gsap.from(".pchart-bar", {
+      scaleY: 0, duration: 1.2, ease: "power3.out",
+      stagger: 0.15, transformOrigin: "bottom",
+      scrollTrigger: { trigger: ".profit-chart-wrap", start: "top 85%" },
+    });
+    gsap.from(".pchart-val", {
+      opacity: 0, y: 8, duration: 0.5,
+      stagger: 0.15, delay: 0.6,
+      scrollTrigger: { trigger: ".profit-chart-wrap", start: "top 85%" },
+      clearProps: "all",
+    });
+  }, []);
 
+  return (
+    <div className="profit-chart-wrap" style={{
+      background: "rgba(13,13,20,.95)",
+      border: "1px solid rgba(155,124,255,.2)",
+      borderRadius: "16px",
+      padding: "28px 32px",
+      backdropFilter: "blur(12px)",
+      width: "280px",
+    }}>
+      <div style={{ fontSize: "10px", letterSpacing: "2.5px", color: "#555", marginBottom: "20px" }}>
+        REVENUE GROWTH
+      </div>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: "12px", height: "80px", marginBottom: "10px" }}>
+        {bars.map((b, i) => (
+          <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px", flex: 1 }}>
+            <div className="pchart-val" style={{ fontSize: "9px", color: "#9b7cff", fontWeight: 600, letterSpacing: "0.5px" }}>
+              {b.val}
+            </div>
+            <div className="pchart-bar" style={{
+              width: "100%",
+              height: `${b.h}px`,
+              background: i === 3
+                ? "linear-gradient(180deg, #9b7cff, #6b4cff)"
+                : `rgba(155,124,255,${0.2 + i * 0.1})`,
+              borderRadius: "4px 4px 0 0",
+              transformOrigin: "bottom",
+            }} />
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {bars.map((b, i) => (
+          <div key={i} style={{ fontSize: "9px", color: "#444", flex: 1, textAlign: "center" }}>{b.label}</div>
+        ))}
+      </div>
+      <div style={{
+        marginTop: "16px", paddingTop: "14px",
+        borderTop: "1px solid rgba(255,255,255,.06)",
+        display: "flex", alignItems: "center", gap: "8px",
+      }}>
+        <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 8px #4ade80" }} />
+        <span style={{ fontSize: "11px", color: "#666" }}>+125% avg client growth</span>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   HOME PAGE
+───────────────────────────────────────── */
+export default function Home() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
     // ── FORCE VISIBLE ──
+    gsap.set(".hero-line, .home-kicker, .hero-desc, .hero-ctas, .hero-right", {
+      opacity: 1, y: 0, x: 0, scale: 1,
+    });
     gsap.set(".reveal, .stagger-child", { opacity: 1, y: 0 });
-    gsap.set(".hero-line, .home-kicker, .hero-desc, .hero-actions, .hero-right", { opacity: 1, y: 0, x: 0, scale: 1 });
 
     // ── HERO ENTRANCE ──
-    const tl = gsap.timeline({ delay: 0.2 });
+    const tl = gsap.timeline({ delay: 0.15 });
     tl.from(".home-kicker",  { opacity: 0, y: 20, duration: 0.6, clearProps: "all" })
-      .from(".hero-line",    { opacity: 0, y: 60, stagger: 0.1, duration: 0.9, ease: "power3.out", clearProps: "all" }, "-=0.3")
+      .from(".hero-line",    { opacity: 0, y: 40, stagger: 0.1, duration: 0.8, ease: "power3.out", clearProps: "all" }, "-=0.3")
       .from(".hero-desc",    { opacity: 0, y: 20, duration: 0.6, clearProps: "all" }, "-=0.4")
-      .from(".hero-actions", { opacity: 0, y: 15, duration: 0.5, clearProps: "all" }, "-=0.3")
-      .from(".hero-right",   { opacity: 0, x: 50, duration: 1, ease: "power3.out", clearProps: "all" }, "-=0.6");
-
-    // ── ROBOT PULSE ──
-    gsap.to(".robot-core", { scale: 1.06, duration: 1.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
-    gsap.to(".robot-ring-1", { rotation: 360, duration: 12, repeat: -1, ease: "none", transformOrigin: "center" });
-    gsap.to(".robot-ring-2", { rotation: -360, duration: 8, repeat: -1, ease: "none", transformOrigin: "center" });
-    gsap.to(".robot-ring-3", { rotation: 360, duration: 20, repeat: -1, ease: "none", transformOrigin: "center" });
-    gsap.to(".robot-glow",   { opacity: 0.4, scale: 1.3, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
-
-    // ── PROFIT COUNTER RISE ──
-    gsap.to(".profit-bar", {
-      scaleY: 1, duration: 2, ease: "power2.out", delay: 1,
-      stagger: 0.15, transformOrigin: "bottom",
-    });
-    gsap.from(".profit-label", { opacity: 0, y: 10, duration: 0.5, stagger: 0.15, delay: 1.5, clearProps: "all" });
+      .from(".hero-ctas",    { opacity: 0, y: 15, duration: 0.5, clearProps: "all" }, "-=0.3")
+      .from(".hero-right",   { opacity: 0, x: 40, duration: 1, ease: "power3.out", clearProps: "all" }, "-=0.7");
 
     // ── MARQUEE ──
-    gsap.to(".marquee-track", { xPercent: -50, duration: 25, repeat: -1, ease: "none" });
+    gsap.to(".marquee-track", { xPercent: -50, duration: 28, repeat: -1, ease: "none" });
 
     // ── SCROLL REVEALS ──
-    gsap.utils.toArray(".reveal").forEach((el) => {
+    gsap.utils.toArray(".reveal").forEach(el => {
       gsap.from(el, {
         scrollTrigger: { trigger: el, start: "top 90%" },
-        opacity: 0, y: 40, duration: 0.8, ease: "power3.out", clearProps: "all",
+        opacity: 0, y: 40, duration: 0.85, ease: "power3.out", clearProps: "all",
       });
     });
 
-    gsap.utils.toArray(".stagger-parent").forEach((parent) => {
+    gsap.utils.toArray(".stagger-parent").forEach(parent => {
       gsap.from(parent.querySelectorAll(".stagger-child"), {
-        scrollTrigger: { trigger: parent, start: "top 90%" },
+        scrollTrigger: { trigger: parent, start: "top 88%" },
         opacity: 0, y: 35, stagger: 0.1, duration: 0.7, ease: "power3.out", clearProps: "all",
       });
     });
 
     // ── STAT COUNTERS ──
-    gsap.utils.toArray(".stat-number").forEach((el) => {
+    gsap.utils.toArray(".stat-num").forEach(el => {
       const target = parseFloat(el.dataset.target);
-      const isFloat = el.dataset.target.includes(".");
+      const isFloat = String(target).includes(".");
       ScrollTrigger.create({
         trigger: el, start: "top 90%",
-        onEnter: () => {
-          gsap.to({ val: 0 }, {
-            val: target, duration: 2, ease: "power2.out",
-            onUpdate: function () {
-              el.textContent = isFloat
-                ? this.targets()[0].val.toFixed(1)
-                : Math.round(this.targets()[0].val);
-            },
-          });
-        },
+        onEnter: () => gsap.to({ val: 0 }, {
+          val: target, duration: 2, ease: "power2.out",
+          onUpdate: function () {
+            el.textContent = isFloat
+              ? this.targets()[0].val.toFixed(1)
+              : Math.round(this.targets()[0].val);
+          },
+        }),
       });
     });
 
-    // ── HORIZONTAL SCROLL SECTION ──
-    const hScroll = document.querySelector(".h-scroll-track");
-    if (hScroll) {
-      gsap.to(hScroll, {
-        x: () => -(hScroll.scrollWidth - window.innerWidth + 80),
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".h-scroll-section",
-          start: "top top",
-          end: () => `+=${hScroll.scrollWidth - window.innerWidth + 80}`,
-          scrub: 1,
-          pin: true,
-        },
+    // ── VIDEO PING-PONG ──
+    const vid = videoRef.current;
+    if (vid) {
+      vid.playbackRate = 0.65;
+      vid.addEventListener("ended", () => {
+        vid.playbackRate = -0.65;
+        vid.play().catch(() => {
+          // fallback: just restart
+          vid.currentTime = 0;
+          vid.playbackRate = 0.65;
+          vid.play();
+        });
       });
     }
 
-    // ── SECTION BG COLOUR SHIFT ──
+    // ── NUMBER COUNT ON HERO ──
+    let count = 0;
+    const heroCount = document.querySelector(".hero-count");
+    if (heroCount) {
+      const iv = setInterval(() => {
+        count += Math.floor(Math.random() * 12) + 1;
+        if (count >= 840) { count = 840; clearInterval(iv); }
+        heroCount.textContent = count;
+      }, 30);
+    }
+
+    // ── BG COLOUR SHIFT ON SCROLL ──
     ScrollTrigger.create({
-      trigger: ".dark-section",
-      start: "top 60%",
-      onEnter: () => gsap.to("body", { backgroundColor: "#0a0818", duration: 1 }),
-      onLeaveBack: () => gsap.to("body", { backgroundColor: "#070707", duration: 1 }),
+      trigger: ".shift-section",
+      start: "top 55%",
+      onEnter: () => gsap.to(".home-page", { backgroundColor: "#08061a", duration: 1.5 }),
+      onLeaveBack: () => gsap.to(".home-page", { backgroundColor: "#070707", duration: 1.5 }),
     });
 
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
+    return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, []);
 
-  const s = {
-    // layout
-    page: { overflowX: "hidden", background: "#070707" },
-
-    // hero section
-    heroSection: {
-      position: "relative",
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      overflow: "hidden",
-    },
-    canvas: {
-      position: "absolute", inset: 0,
-      width: "100%", height: "100%",
-      pointerEvents: "none", zIndex: 0,
-    },
-    heroBg: {
-      position: "absolute", inset: 0,
-      background: "radial-gradient(ellipse 80% 60% at 60% 40%, rgba(155,124,255,.12) 0%, transparent 70%)",
-      zIndex: 0,
-    },
-    heroInner: {
-      position: "relative", zIndex: 1,
-      width: "min(1400px, 90vw)",
-      margin: "0 auto",
-      padding: "140px 0 100px",
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: "60px",
-      alignItems: "center",
-    },
-    kicker: {
-      display: "inline-flex", alignItems: "center", gap: "10px",
-      color: "#9b7cff", fontSize: "11px", letterSpacing: "3px",
-      marginBottom: "32px",
-      padding: "6px 14px",
-      border: "1px solid rgba(155,124,255,.3)",
-      borderRadius: "100px",
-      background: "rgba(155,124,255,.08)",
-    },
-    kickerDot: {
-      width: "6px", height: "6px", borderRadius: "50%",
-      background: "#9b7cff", flexShrink: 0,
-      boxShadow: "0 0 8px #9b7cff",
-    },
-    heroTitle: { marginBottom: 0 },
-    heroLine: {
-      display: "block",
-      fontFamily: "'Space Grotesk', sans-serif",
-      fontSize: "clamp(56px, 7vw, 110px)",
-      lineHeight: 0.9,
-      letterSpacing: "-4px",
-      fontWeight: 700,
-      color: "white",
-    },
-    heroLineGrad: {
-      display: "block",
-      fontFamily: "'Space Grotesk', sans-serif",
-      fontSize: "clamp(56px, 7vw, 110px)",
-      lineHeight: 0.9,
-      letterSpacing: "-4px",
-      fontWeight: 700,
-      background: "linear-gradient(90deg, #9b7cff 0%, #e0b0ff 50%, #9b7cff 100%)",
-      backgroundSize: "200%",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      backgroundClip: "text",
-    },
-    heroDesc: {
-      maxWidth: "440px", marginTop: "36px",
-      color: "#888", fontSize: "17px", lineHeight: 1.75,
-    },
-    heroActions: {
-      display: "flex", alignItems: "center", gap: "16px",
-      marginTop: "44px", flexWrap: "wrap",
-    },
-    btnPrimary: {
-      display: "inline-flex", alignItems: "center", gap: "10px",
-      padding: "16px 30px", background: "white", color: "black",
-      borderRadius: "100px", fontWeight: 700, fontSize: "14px",
-      textDecoration: "none", letterSpacing: "0.3px",
-      boxShadow: "0 0 30px rgba(155,124,255,.2)",
-    },
-    btnSecondary: {
-      display: "inline-flex", alignItems: "center", gap: "10px",
-      padding: "16px 30px", color: "white", fontSize: "14px",
-      textDecoration: "none", borderRadius: "100px",
-      border: "1px solid rgba(255,255,255,.18)",
-    },
-
-    // robot visual
-    heroRight: {
-      position: "relative", height: "560px",
-      display: "flex", alignItems: "center", justifyContent: "center",
-    },
-    robotWrap: {
-      position: "relative", width: "340px", height: "340px",
-      display: "flex", alignItems: "center", justifyContent: "center",
-    },
-    robotGlow: {
-      position: "absolute", width: "300px", height: "300px",
-      borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(155,124,255,.5), transparent 70%)",
-      filter: "blur(40px)",
-    },
-    robotRing1: {
-      position: "absolute", width: "300px", height: "300px",
-      borderRadius: "50%", border: "1px solid rgba(155,124,255,.4)",
-    },
-    robotRing2: {
-      position: "absolute", width: "240px", height: "240px",
-      borderRadius: "50%", border: "1px dashed rgba(155,124,255,.25)",
-    },
-    robotRing3: {
-      position: "absolute", width: "360px", height: "360px",
-      borderRadius: "50%", border: "1px solid rgba(155,124,255,.15)",
-    },
-    robotCore: {
-      position: "relative", zIndex: 2,
-      width: "150px", height: "150px",
-      background: "linear-gradient(135deg, #1a1230, #0d0d14)",
-      borderRadius: "24px",
-      border: "1px solid rgba(155,124,255,.4)",
-      display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center", gap: "6px",
-      boxShadow: "0 0 40px rgba(155,124,255,.3), inset 0 0 30px rgba(155,124,255,.05)",
-    },
-    robotEye: {
-      display: "flex", gap: "16px", marginBottom: "4px",
-    },
-    robotEyeDot: {
-      width: "16px", height: "16px", borderRadius: "50%",
-      background: "#9b7cff",
-      boxShadow: "0 0 12px #9b7cff, 0 0 24px rgba(155,124,255,.5)",
-    },
-    robotMouth: {
-      width: "40px", height: "3px", borderRadius: "2px",
-      background: "rgba(155,124,255,.6)",
-    },
-    robotLabel: {
-      fontSize: "9px", letterSpacing: "2px", color: "#9b7cff", marginTop: "4px",
-    },
-
-    // profit bars
-    profitWrap: {
-      position: "absolute", bottom: "20px", left: "-20px",
-      background: "rgba(10,10,10,.9)",
-      border: "1px solid rgba(255,255,255,.1)",
-      borderRadius: "16px", padding: "20px 24px",
-      backdropFilter: "blur(12px)",
-      zIndex: 3,
-    },
-    profitTitle: { fontSize: "10px", letterSpacing: "2px", color: "#555", marginBottom: "14px" },
-    profitBars: { display: "flex", alignItems: "flex-end", gap: "8px", height: "60px" },
-    profitBarWrap: { display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" },
-    profitLabel: { fontSize: "9px", color: "#555", letterSpacing: "1px" },
-
-    // status card
-    statusCard: {
-      position: "absolute", top: "40px", right: "-20px",
-      background: "rgba(10,10,10,.9)",
-      border: "1px solid rgba(255,255,255,.1)",
-      borderRadius: "14px", padding: "14px 18px",
-      backdropFilter: "blur(12px)",
-      zIndex: 3, minWidth: "170px",
-    },
-    statusRow: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" },
-    statusDot: { width: "8px", height: "8px", borderRadius: "50%", flexShrink: 0 },
-    statusText: { fontSize: "12px", color: "#888" },
-    statusVal: { fontSize: "12px", color: "white", fontWeight: 600, marginLeft: "auto" },
-
-    // marquee
-    marqueeWrap: {
-      overflow: "hidden",
-      borderTop: "1px solid rgba(255,255,255,.06)",
-      borderBottom: "1px solid rgba(255,255,255,.06)",
-      padding: "14px 0",
-      background: "rgba(255,255,255,.01)",
-    },
-    marqueeTrack: { display: "flex", width: "max-content" },
-    marqueeInner: { display: "flex", alignItems: "center", gap: "28px", paddingRight: "28px" },
-    marqueeB: { fontSize: "11px", letterSpacing: "2px", fontWeight: 500, color: "#333" },
-    marqueeEm: { fontStyle: "normal", color: "#9b7cff", fontSize: "9px" },
-
-    // stats strip
-    statsStrip: {
-      width: "min(1400px, 90vw)", margin: "0 auto",
-      padding: "70px 0",
-      display: "grid", gridTemplateColumns: "repeat(4,1fr)",
-      borderBottom: "1px solid rgba(255,255,255,.06)",
-    },
-    statItem: {
-      padding: "0 40px",
-      borderRight: "1px solid rgba(255,255,255,.06)",
-    },
-    statItemLast: { padding: "0 40px" },
-    statNum: {
-      fontFamily: "'Space Grotesk', sans-serif",
-      fontSize: "clamp(42px, 4vw, 70px)",
-      fontWeight: 700, letterSpacing: "-3px", lineHeight: 1,
-      color: "white",
-    },
-    statSup: { fontSize: ".4em", color: "#9b7cff", verticalAlign: "super" },
-    statLbl: { marginTop: "8px", fontSize: "12px", letterSpacing: "1px", color: "#444" },
-
-    // dark section
-    darkSection: {
-      background: "linear-gradient(180deg, #070707 0%, #0d0818 50%, #070707 100%)",
-      padding: "120px 0",
-    },
-    sectionInner: { width: "min(1400px, 90vw)", margin: "0 auto" },
-    eyebrow: {
-      display: "inline-flex", alignItems: "center", gap: "10px",
-      fontSize: "11px", letterSpacing: "2.5px", color: "#555",
-      marginBottom: "28px",
-    },
-    eyebrowLine: { width: "20px", height: "1px", background: "#9b7cff" },
-    sectionH2: {
-      fontFamily: "'Space Grotesk', sans-serif",
-      fontSize: "clamp(36px, 4.5vw, 68px)",
-      fontWeight: 700, letterSpacing: "-3px", lineHeight: 1.0,
-      color: "white", marginBottom: "20px",
-    },
-    accent: { color: "#9b7cff" },
-    sectionP: { color: "#555", fontSize: "18px", lineHeight: 1.75, maxWidth: "500px" },
-
-    // horizontal scroll cards
-    hScrollSection: { overflow: "hidden" },
-    hScrollTrack: {
-      display: "flex", gap: "24px",
-      padding: "80px 5vw",
-      width: "max-content",
-    },
-    hCard: {
-      width: "380px", flexShrink: 0,
-      padding: "48px 40px",
-      background: "#0d0d14",
-      border: "1px solid rgba(155,124,255,.15)",
-      borderRadius: "4px",
-      position: "relative", overflow: "hidden",
-    },
-    hCardGlow: {
-      position: "absolute", top: "-80px", right: "-80px",
-      width: "200px", height: "200px", borderRadius: "50%",
-      filter: "blur(40px)", pointerEvents: "none",
-    },
-    hCardNum: {
-      fontFamily: "'Space Grotesk', sans-serif",
-      fontSize: "11px", letterSpacing: "2px", color: "#9b7cff",
-      marginBottom: "60px",
-    },
-    hCardTitle: {
-      fontFamily: "'Space Grotesk', sans-serif",
-      fontSize: "28px", fontWeight: 700, letterSpacing: "-1px",
-      color: "white", marginBottom: "14px",
-    },
-    hCardDesc: { color: "#555", fontSize: "15px", lineHeight: 1.65 },
-    hCardArrow: {
-      position: "absolute", bottom: "36px", right: "36px",
-      fontSize: "22px", color: "#9b7cff",
-    },
-
-    // video
-    videoSection: { width: "min(1400px, 90vw)", margin: "0 auto 0" },
-    videoWrap: {
-      position: "relative", height: "560px",
-      overflow: "hidden", borderRadius: "4px",
-      border: "1px solid rgba(255,255,255,.06)",
-    },
-    videoEl: { width: "100%", height: "120%", objectFit: "cover", display: "block" },
-    videoOverlay: {
-      position: "absolute", inset: 0,
-      background: "linear-gradient(to top, rgba(7,7,7,.92) 0%, rgba(7,7,7,.2) 60%, transparent 100%)",
-    },
-    videoCopy: { position: "absolute", bottom: "50px", left: "50px" },
-    videoEyebrow: { fontSize: "11px", letterSpacing: "2.5px", color: "#555" },
-    videoH2: {
-      fontFamily: "'Space Grotesk', sans-serif",
-      fontSize: "clamp(38px, 5vw, 78px)",
-      fontWeight: 700, letterSpacing: "-3px", lineHeight: .92,
-      marginTop: "14px", color: "white",
-    },
-    videoEm: { fontStyle: "normal", color: "#9b7cff" },
-
-    // process
-    processGrid: {
-      display: "grid", gridTemplateColumns: "repeat(4,1fr)",
-      gap: "1px", background: "rgba(255,255,255,.06)",
-      border: "1px solid rgba(255,255,255,.06)",
-      marginTop: "60px",
-    },
-    processStep: { padding: "44px 36px", background: "#070707" },
-    stepN: { fontSize: "11px", letterSpacing: "2px", color: "#9b7cff", marginBottom: "24px", fontFamily: "'Space Grotesk', sans-serif" },
-    stepLine: { width: "28px", height: "1px", background: "#9b7cff", marginBottom: "20px", opacity: .35 },
-    stepTitle: { display: "block", fontSize: "18px", fontFamily: "'Space Grotesk', sans-serif", color: "white", marginBottom: "10px" },
-    stepDesc: { color: "#555", fontSize: "14px", lineHeight: 1.65 },
-
-    // cta
-    ctaSection: {
-      width: "min(1400px, 90vw)", margin: "0 auto",
-      padding: "140px 0 160px", textAlign: "center",
-      borderTop: "1px solid rgba(255,255,255,.06)",
-    },
-    ctaH2: {
-      fontFamily: "'Space Grotesk', sans-serif",
-      fontSize: "clamp(44px, 6vw, 100px)",
-      fontWeight: 700, letterSpacing: "-5px", lineHeight: .9,
-      color: "white", margin: "24px 0 56px",
-    },
-  };
-
-  const profitData = [
-    { h: 30, label: "Q1", color: "rgba(155,124,255,.4)" },
-    { h: 45, label: "Q2", color: "rgba(155,124,255,.55)" },
-    { h: 38, label: "Q3", color: "rgba(155,124,255,.5)" },
-    { h: 58, label: "Q4", color: "#9b7cff" },
-  ];
-
-  const cards = [
-    { n: "01", title: "AI Automation", desc: "Eliminate repetitive tasks. Let intelligent systems handle the work so your team focuses on what matters.", glow: "rgba(155,124,255,.4)" },
-    { n: "02", title: "Website Design", desc: "High-performance websites that convert visitors into customers. Built fast, built to last.", glow: "rgba(0,210,190,.3)" },
-    { n: "03", title: "Digital Marketing", desc: "Get discovered by the right people at the right time. Data-driven campaigns that actually grow revenue.", glow: "rgba(255,100,180,.25)" },
-    { n: "04", title: "Systems Integration", desc: "Connect your tools, automate your workflows, and make your entire business run as one smart machine.", glow: "rgba(100,180,255,.25)" },
-  ];
+  const accent = "#9b7cff";
+  const line   = "rgba(255,255,255,.07)";
 
   return (
-    <div style={s.page}>
+    <div className="home-page" style={{ background: "#070707", overflowX: "hidden" }}>
 
-      {/* ── HERO ── */}
-      <section style={s.heroSection}>
-        <canvas ref={canvasRef} style={s.canvas} />
-        <div style={s.heroBg} />
+      {/* ══════════════════════════════
+          HERO
+      ══════════════════════════════ */}
+      <section style={{
+        position: "relative",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        overflow: "hidden",
+      }}>
 
-        <div style={s.heroInner}>
-          {/* LEFT */}
+        {/* ambient bg */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 0,
+          background: `radial-gradient(ellipse 70% 70% at 65% 50%, rgba(155,124,255,.1) 0%, transparent 70%)`,
+        }} />
+
+        <div style={{
+          position: "relative", zIndex: 1,
+          width: "min(1400px, 90vw)",
+          margin: "0 auto",
+          padding: "130px 0 100px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "60px",
+          alignItems: "center",
+        }}>
+
+          {/* ── LEFT ── */}
           <div>
-            <div className="home-kicker" style={s.kicker}>
-              <span style={s.kickerDot} />
+            {/* kicker pill */}
+            <div className="home-kicker" style={{
+              display: "inline-flex", alignItems: "center", gap: "10px",
+              padding: "7px 16px",
+              border: `1px solid rgba(155,124,255,.35)`,
+              borderRadius: "100px",
+              background: "rgba(155,124,255,.08)",
+              fontSize: "11px", letterSpacing: "2.5px", color: accent,
+              marginBottom: "36px",
+            }}>
+              <span style={{
+                width: "7px", height: "7px", borderRadius: "50%",
+                background: accent, boxShadow: `0 0 10px ${accent}`,
+                flexShrink: 0, animation: "pulse-dot 2s infinite",
+              }} />
               DIGITAL SYSTEMS FOR MODERN BUSINESS
             </div>
 
-            <h1 style={s.heroTitle}>
-              <span className="hero-line" style={s.heroLine}>YOUR BUSINESS.</span>
-              <span className="hero-line" style={s.heroLineGrad}>BUT SMARTER.</span>
-              <span className="hero-line" style={s.heroLine}>AUTOMATED.</span>
+            {/* headline — big, never shrinks below 64px */}
+            <h1 style={{ margin: 0, lineHeight: 0.88 }}>
+              <span className="hero-line" style={{
+                display: "block",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: "clamp(64px, 7.5vw, 112px)",
+                fontWeight: 700, letterSpacing: "-4px",
+                color: "white",
+              }}>YOUR BUSINESS.</span>
+
+              <span className="hero-line" style={{
+                display: "block",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: "clamp(64px, 7.5vw, 112px)",
+                fontWeight: 700, letterSpacing: "-4px",
+                background: `linear-gradient(90deg, ${accent} 0%, #e0b0ff 60%, ${accent} 100%)`,
+                backgroundSize: "200%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>BUT SMARTER.</span>
+
+              <span className="hero-line" style={{
+                display: "block",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: "clamp(64px, 7.5vw, 112px)",
+                fontWeight: 700, letterSpacing: "-4px",
+                color: "white",
+              }}>AUTOMATED.</span>
             </h1>
 
-            <p className="hero-desc" style={s.heroDesc}>
+            <p className="hero-desc" style={{
+              maxWidth: "440px", marginTop: "36px",
+              color: "#777", fontSize: "17px", lineHeight: 1.75,
+            }}>
               Goonya builds websites, AI automation and digital systems
-              that help ambitious businesses attract customers, save time and grow.
+              that help ambitious businesses attract customers,
+              save time and grow fast.
             </p>
 
-            <div className="hero-actions" style={s.heroActions}>
-              <Link to="/services" style={s.btnPrimary}>
+            <div className="hero-ctas" style={{
+              display: "flex", alignItems: "center", gap: "16px",
+              marginTop: "44px", flexWrap: "wrap",
+            }}>
+              <Link to="/services" style={{
+                display: "inline-flex", alignItems: "center", gap: "10px",
+                padding: "16px 32px",
+                background: "white", color: "black",
+                borderRadius: "100px", fontWeight: 700, fontSize: "14px",
+                textDecoration: "none",
+                boxShadow: "0 0 40px rgba(155,124,255,.25)",
+              }}>
                 Explore what we do <span>↗</span>
               </Link>
-              <Link to="/our-work" style={s.btnSecondary}>
+              <Link to="/our-work" style={{
+                display: "inline-flex", alignItems: "center", gap: "10px",
+                padding: "16px 32px", color: "white", fontSize: "14px",
+                textDecoration: "none", borderRadius: "100px",
+                border: `1px solid rgba(255,255,255,.15)`,
+              }}>
                 See our work <span>↓</span>
               </Link>
             </div>
+
+            {/* live counter pill */}
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: "10px",
+              marginTop: "36px",
+              padding: "8px 16px",
+              background: "rgba(74,222,128,.08)",
+              border: "1px solid rgba(74,222,128,.2)",
+              borderRadius: "100px",
+              fontSize: "12px", color: "#4ade80",
+            }}>
+              <span style={{
+                width: "7px", height: "7px", borderRadius: "50%",
+                background: "#4ade80", boxShadow: "0 0 8px #4ade80",
+              }} />
+              <span className="hero-count">0</span> AI tasks automated today
+            </div>
           </div>
 
-          {/* RIGHT — ROBOT */}
-          <div className="hero-right" style={s.heroRight}>
+          {/* ── RIGHT — Neural Net + Charts ── */}
+          <div className="hero-right" style={{ position: "relative", height: "520px" }}>
 
-            {/* Robot */}
-            <div style={s.robotWrap}>
-              <div className="robot-glow" style={s.robotGlow} />
-              <div className="robot-ring-3" style={s.robotRing3} />
-              <div className="robot-ring-1" style={s.robotRing1} />
-              <div className="robot-ring-2" style={s.robotRing2} />
-              <div className="robot-core" style={s.robotCore}>
-                <div style={s.robotEye}>
-                  <div style={s.robotEyeDot} />
-                  <div style={s.robotEyeDot} />
-                </div>
-                <div style={s.robotMouth} />
-                <div style={s.robotLabel}>GOONYA AI</div>
+            {/* neural net canvas */}
+            <div style={{
+              position: "absolute", inset: 0,
+              borderRadius: "4px",
+              overflow: "hidden",
+              border: `1px solid ${line}`,
+              background: "rgba(13,10,26,.6)",
+            }}>
+              <NeuralNet style={{}} />
+              {/* centre label */}
+              <div style={{
+                position: "absolute",
+                top: "50%", left: "50%",
+                transform: "translate(-50%,-50%)",
+                textAlign: "center",
+                pointerEvents: "none",
+              }}>
+                <div style={{
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontSize: "11px", letterSpacing: "3px", color: accent,
+                  marginBottom: "6px",
+                }}>GOONYA AI</div>
+                <div style={{
+                  width: "48px", height: "48px",
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, rgba(155,124,255,.6), transparent 70%)`,
+                  filter: "blur(8px)",
+                  margin: "0 auto",
+                }} />
               </div>
             </div>
 
-            {/* Profit chart card */}
-            <div style={s.profitWrap}>
-              <div style={s.profitTitle}>REVENUE GROWTH</div>
-              <div style={s.profitBars}>
-                {profitData.map((b, i) => (
-                  <div key={i} style={s.profitBarWrap}>
-                    <div className="profit-bar" style={{
-                      width: "28px",
-                      height: `${b.h}px`,
-                      background: b.color,
-                      borderRadius: "4px 4px 0 0",
-                      transform: "scaleY(0)",
-                      transformOrigin: "bottom",
-                    }} />
-                    <div className="profit-label" style={s.profitLabel}>{b.label}</div>
-                  </div>
-                ))}
-              </div>
+            {/* profit chart — bottom left */}
+            <div style={{
+              position: "absolute", bottom: "-20px", left: "-24px", zIndex: 3,
+            }}>
+              <ProfitChart />
             </div>
 
-            {/* Status card */}
-            <div style={s.statusCard}>
+            {/* status card — top right */}
+            <div style={{
+              position: "absolute", top: "20px", right: "-20px", zIndex: 3,
+              background: "rgba(13,13,20,.95)",
+              border: `1px solid ${line}`,
+              borderRadius: "14px",
+              padding: "18px 22px",
+              backdropFilter: "blur(12px)",
+              minWidth: "190px",
+            }}>
               {[
-                { color: "#4ade80", label: "Systems live", val: "12" },
-                { color: "#9b7cff", label: "AI tasks/day", val: "840" },
-                { color: "#f87171", label: "Hours saved", val: "∞" },
+                { color: "#4ade80", label: "Systems live",  val: "12" },
+                { color: accent,    label: "AI tasks / day", val: "840" },
+                { color: "#f87171", label: "Hours saved",   val: "∞" },
               ].map(({ color, label, val }) => (
-                <div key={label} style={s.statusRow}>
-                  <span style={{ ...s.statusDot, background: color, boxShadow: `0 0 6px ${color}` }} />
-                  <span style={s.statusText}>{label}</span>
-                  <span style={s.statusVal}>{val}</span>
+                <div key={label} style={{
+                  display: "flex", alignItems: "center", gap: "10px",
+                  marginBottom: "12px",
+                }}>
+                  <span style={{
+                    width: "8px", height: "8px", borderRadius: "50%",
+                    background: color, boxShadow: `0 0 6px ${color}`,
+                    flexShrink: 0,
+                  }} />
+                  <span style={{ fontSize: "12px", color: "#666", flex: 1 }}>{label}</span>
+                  <span style={{ fontSize: "12px", color: "white", fontWeight: 600 }}>{val}</span>
                 </div>
               ))}
             </div>
@@ -554,151 +453,284 @@ function Home() {
         </div>
       </section>
 
-      {/* ── MARQUEE ── */}
-      <div style={s.marqueeWrap}>
-        <div className="marquee-track" style={s.marqueeTrack}>
+      {/* ══════════════════════════════
+          MARQUEE
+      ══════════════════════════════ */}
+      <div style={{
+        overflow: "hidden",
+        borderTop: `1px solid ${line}`,
+        borderBottom: `1px solid ${line}`,
+        padding: "13px 0",
+        background: "rgba(255,255,255,.01)",
+      }}>
+        <div className="marquee-track" style={{ display: "flex", width: "max-content" }}>
           {[...Array(2)].map((_, i) => (
-            <span key={i} style={s.marqueeInner}>
-              <b style={s.marqueeB}>AI AUTOMATION</b><em style={s.marqueeEm}>✦</em>
-              <b style={s.marqueeB}>WEBSITES</b><em style={s.marqueeEm}>✦</em>
-              <b style={s.marqueeB}>DIGITAL SYSTEMS</b><em style={s.marqueeEm}>✦</em>
-              <b style={s.marqueeB}>MARKETING</b><em style={s.marqueeEm}>✦</em>
-              <b style={s.marqueeB}>GOONYA.COM.AU</b><em style={s.marqueeEm}>✦</em>
-              <b style={s.marqueeB}>BUILD WHAT'S NEXT</b><em style={s.marqueeEm}>✦</em>
+            <span key={i} style={{ display: "flex", alignItems: "center", gap: "28px", paddingRight: "28px" }}>
+              {["AI AUTOMATION","WEBSITES","DIGITAL SYSTEMS","MARKETING","GOONYA.COM.AU","BUILD WHAT'S NEXT"].map(w => (
+                <span key={w} style={{ display: "inline-flex", alignItems: "center", gap: "28px" }}>
+                  <b style={{ fontSize: "11px", letterSpacing: "2px", fontWeight: 500, color: "#333" }}>{w}</b>
+                  <em style={{ fontStyle: "normal", color: accent, fontSize: "9px" }}>✦</em>
+                </span>
+              ))}
             </span>
           ))}
         </div>
       </div>
 
-      {/* ── STATS ── */}
-      <div style={s.statsStrip} className="stagger-parent">
-        {[
-          { v: "40",  s: "+", l: "Projects Delivered" },
-          { v: "0.8", s: "s", l: "Avg AI Response" },
-          { v: "98",  s: "%", l: "Client Satisfaction" },
-          { v: "120", s: "h", l: "Hours Saved / Client" },
-        ].map(({ v, s: suffix, l }, i) => (
-          <div className="stagger-child" key={l}
-            style={i < 3 ? s.statItem : s.statItemLast}>
-            <div style={s.statNum}>
-              <span className="stat-number" data-target={v}>0</span>
-              <sup style={s.statSup}>{suffix}</sup>
+      {/* ══════════════════════════════
+          STATS
+      ══════════════════════════════ */}
+      <div style={{ width: "min(1400px, 90vw)", margin: "0 auto" }}>
+        <div className="stagger-parent" style={{
+          display: "grid", gridTemplateColumns: "repeat(4,1fr)",
+          borderBottom: `1px solid ${line}`,
+        }}>
+          {[
+            { v: "40",  s: "+", l: "Projects Delivered" },
+            { v: "0.8", s: "s", l: "Avg AI Response" },
+            { v: "98",  s: "%", l: "Client Satisfaction" },
+            { v: "120", s: "h", l: "Hours Saved / Client" },
+          ].map(({ v, s, l }, i) => (
+            <div className="stagger-child" key={l} style={{
+              padding: "60px 40px",
+              borderRight: i < 3 ? `1px solid ${line}` : "none",
+            }}>
+              <div style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: "clamp(44px, 4vw, 72px)",
+                fontWeight: 700, letterSpacing: "-3px", lineHeight: 1,
+                color: "white",
+              }}>
+                <span className="stat-num" data-target={v}>0</span>
+                <sup style={{ fontSize: ".4em", color: accent, verticalAlign: "super" }}>{s}</sup>
+              </div>
+              <p style={{ marginTop: "8px", fontSize: "12px", letterSpacing: "1px", color: "#444" }}>{l}</p>
             </div>
-            <p style={s.statLbl}>{l}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      {/* ── STATEMENT ── */}
-      <div className="dark-section" style={s.darkSection}>
-        <div style={s.sectionInner}>
-          <div className="reveal" style={s.eyebrow}>
-            <span style={s.eyebrowLine} />
+      {/* ══════════════════════════════
+          STATEMENT (bg shift)
+      ══════════════════════════════ */}
+      <div className="shift-section" style={{ padding: "130px 0" }}>
+        <div style={{ width: "min(1400px, 90vw)", margin: "0 auto" }}>
+          <div className="reveal" style={{
+            display: "inline-flex", alignItems: "center", gap: "10px",
+            fontSize: "11px", letterSpacing: "2.5px", color: "#444",
+            marginBottom: "28px",
+          }}>
+            <span style={{ width: "20px", height: "1px", background: accent }} />
             01 / THE GOONYA IDEA
           </div>
-          <h2 className="reveal" style={{ ...s.sectionH2, maxWidth: "800px" }}>
+
+          <h2 className="reveal" style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "clamp(40px, 5vw, 80px)",
+            fontWeight: 700, letterSpacing: "-3px", lineHeight: 1.0,
+            color: "white", maxWidth: "900px", marginBottom: "28px",
+          }}>
             Your business has
-            <span style={s.accent}> enough to think about.</span>
+            <span style={{ color: accent }}> enough to think about.</span>
           </h2>
-          <p className="reveal" style={s.sectionP}>
+
+          <p className="reveal" style={{
+            color: "#555", fontSize: "18px", lineHeight: 1.75,
+            maxWidth: "520px",
+          }}>
             Your technology shouldn't be one of them. We connect the digital
-            pieces behind your business so everything works together — invisibly, reliably, at scale.
+            pieces behind your business so everything works together —
+            invisibly, reliably, at scale.
           </p>
         </div>
       </div>
 
-      {/* ── HORIZONTAL SCROLL SERVICES ── */}
-      <div className="h-scroll-section" style={s.hScrollSection}>
-        <div style={{ padding: "80px 5vw 30px" }}>
-          <div className="reveal" style={s.eyebrow}>
-            <span style={s.eyebrowLine} />
+      {/* ══════════════════════════════
+          SERVICES GRID
+      ══════════════════════════════ */}
+      <div style={{ width: "min(1400px, 90vw)", margin: "0 auto 130px" }}>
+        <div className="reveal" style={{ marginBottom: "60px" }}>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: "10px",
+            fontSize: "11px", letterSpacing: "2.5px", color: "#444",
+            marginBottom: "20px",
+          }}>
+            <span style={{ width: "20px", height: "1px", background: accent }} />
             02 / WHAT WE DO
           </div>
-          <h2 className="reveal" style={s.sectionH2}>
-            The machine <span style={s.accent}>behind your business.</span>
+          <h2 style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "clamp(36px, 4vw, 62px)",
+            fontWeight: 700, letterSpacing: "-2.5px",
+            color: "white",
+          }}>
+            The machine <span style={{ color: accent }}>behind your business.</span>
           </h2>
         </div>
-        <div className="h-scroll-track" style={s.hScrollTrack}>
-          {cards.map(({ n, title, desc, glow }) => (
-            <Link to="/services" key={n} style={{ ...s.hCard, textDecoration: "none" }}>
-              <div style={{ ...s.hCardGlow, background: `radial-gradient(circle, ${glow}, transparent 70%)` }} />
-              <div style={s.hCardNum}>{n}</div>
-              <div style={s.hCardTitle}>{title}</div>
-              <p style={s.hCardDesc}>{desc}</p>
-              <span style={s.hCardArrow}>↗</span>
+
+        <div className="stagger-parent" style={{
+          display: "grid", gridTemplateColumns: "repeat(2,1fr)",
+          gap: "1px", background: line,
+          border: `1px solid ${line}`,
+        }}>
+          {[
+            { n:"01", title:"AI Automation", desc:"Eliminate repetitive tasks. Let intelligent systems handle the work so your team focuses on what actually matters.", glow:"rgba(155,124,255,.35)" },
+            { n:"02", title:"Website Design", desc:"High-performance websites that convert visitors into customers. Built fast, designed to last, optimised to grow.", glow:"rgba(0,210,190,.25)" },
+            { n:"03", title:"Digital Marketing", desc:"Get discovered by the right people at the right time. Data-driven campaigns that grow revenue, not just traffic.", glow:"rgba(255,100,180,.2)" },
+            { n:"04", title:"Systems Integration", desc:"Connect your tools, automate your workflows, and make your entire business run as one smart, efficient machine.", glow:"rgba(100,200,255,.2)" },
+          ].map(({ n, title, desc, glow }) => (
+            <Link to="/services" key={n} style={{
+              display: "block", padding: "52px 48px",
+              background: "#0a0a12",
+              textDecoration: "none",
+              position: "relative", overflow: "hidden",
+              transition: "background .3s ease",
+            }}
+              onMouseEnter={e => e.currentTarget.style.background = "#0f0f1a"}
+              onMouseLeave={e => e.currentTarget.style.background = "#0a0a12"}
+            >
+              <div style={{
+                position: "absolute", top: "-60px", right: "-60px",
+                width: "200px", height: "200px", borderRadius: "50%",
+                background: `radial-gradient(circle, ${glow}, transparent 70%)`,
+                filter: "blur(30px)", pointerEvents: "none",
+              }} />
+              <div style={{ fontSize: "11px", letterSpacing: "2px", color: accent, marginBottom: "48px", fontFamily: "'Space Grotesk', sans-serif" }}>{n}</div>
+              <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "26px", fontWeight: 700, letterSpacing: "-1px", color: "white", marginBottom: "14px" }}>{title}</h3>
+              <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.65, maxWidth: "340px" }}>{desc}</p>
+              <div style={{ marginTop: "36px", fontSize: "20px", color: accent }}>↗</div>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* ── VIDEO ── */}
-      <div style={{ ...s.videoSection, margin: "80px auto 120px" }}>
-        <div style={s.videoWrap}>
+      {/* ══════════════════════════════
+          VIDEO (ping-pong, slow)
+      ══════════════════════════════ */}
+      <div className="reveal" style={{ width: "min(1400px, 90vw)", margin: "0 auto 130px" }}>
+        <div style={{
+          position: "relative", height: "560px",
+          overflow: "hidden",
+          border: `1px solid ${line}`,
+        }}>
           <video
-            style={s.videoEl}
+            ref={videoRef}
             autoPlay muted playsInline
-            onEnded={e => { e.target.currentTime = e.target.duration; e.target.play(); }}
+            style={{ width: "100%", height: "120%", objectFit: "cover", display: "block" }}
           >
             <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
           </video>
-          <div style={s.videoOverlay} />
-          <div style={s.videoCopy}>
-            <div style={s.videoEyebrow}>THE DIGITAL MACHINE</div>
-            <h2 style={s.videoH2}>
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(to top, rgba(7,7,7,.9) 0%, rgba(7,7,7,.2) 60%, transparent 100%)",
+          }} />
+          <div style={{ position: "absolute", bottom: "52px", left: "52px" }}>
+            <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#555" }}>THE DIGITAL MACHINE</div>
+            <h2 style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontSize: "clamp(40px, 5.5vw, 82px)",
+              fontWeight: 700, letterSpacing: "-3px", lineHeight: .9,
+              marginTop: "14px", color: "white",
+            }}>
               BUILD ONCE.<br />
-              <em style={s.videoEm}>RUN SMARTER.</em>
+              <em style={{ fontStyle: "normal", color: accent }}>RUN SMARTER.</em>
             </h2>
           </div>
         </div>
       </div>
 
-      {/* ── PROCESS ── */}
-      <div style={{ background: "#070707", padding: "0 0 120px" }}>
-        <div style={s.sectionInner}>
-          <div className="reveal" style={s.eyebrow}>
-            <span style={s.eyebrowLine} />
+      {/* ══════════════════════════════
+          PROCESS
+      ══════════════════════════════ */}
+      <div style={{ width: "min(1400px, 90vw)", margin: "0 auto 130px" }}>
+        <div className="reveal" style={{ marginBottom: "60px" }}>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: "10px",
+            fontSize: "11px", letterSpacing: "2.5px", color: "#444",
+            marginBottom: "20px",
+          }}>
+            <span style={{ width: "20px", height: "1px", background: accent }} />
             03 / HOW IT WORKS
           </div>
-          <h2 className="reveal" style={s.sectionH2}>
-            Simple process. <span style={s.accent}>Serious results.</span>
+          <h2 style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "clamp(36px, 4vw, 62px)",
+            fontWeight: 700, letterSpacing: "-2.5px",
+            color: "white",
+          }}>
+            Simple process. <span style={{ color: accent }}>Serious results.</span>
           </h2>
-          <div className="stagger-parent" style={s.processGrid}>
-            {[
-              { n: "01", t: "Discovery", d: "We learn your business, your bottlenecks, your goals." },
-              { n: "02", t: "Strategy",  d: "We map the exact digital system your business needs." },
-              { n: "03", t: "Build",     d: "We execute fast, without cutting corners." },
-              { n: "04", t: "Launch",    d: "We go live, track results, and keep improving." },
-            ].map(({ n, t, d }) => (
-              <div className="stagger-child" key={n} style={s.processStep}>
-                <div style={s.stepN}>{n}</div>
-                <div style={s.stepLine} />
-                <strong style={s.stepTitle}>{t}</strong>
-                <p style={s.stepDesc}>{d}</p>
-              </div>
-            ))}
-          </div>
+        </div>
+
+        <div className="stagger-parent" style={{
+          display: "grid", gridTemplateColumns: "repeat(4,1fr)",
+          gap: "1px", background: line, border: `1px solid ${line}`,
+        }}>
+          {[
+            { n:"01", t:"Discovery",  d:"We learn your business, bottlenecks and goals." },
+            { n:"02", t:"Strategy",   d:"We map the exact digital system you need." },
+            { n:"03", t:"Build",      d:"We execute fast, without cutting corners." },
+            { n:"04", t:"Launch",     d:"We go live, track results, keep improving." },
+          ].map(({ n, t, d }) => (
+            <div className="stagger-child" key={n} style={{ padding: "44px 36px", background: "#070707" }}>
+              <div style={{ fontSize: "11px", letterSpacing: "2px", color: accent, marginBottom: "24px", fontFamily: "'Space Grotesk', sans-serif" }}>{n}</div>
+              <div style={{ width: "28px", height: "1px", background: accent, marginBottom: "20px", opacity: .3 }} />
+              <strong style={{ display: "block", fontSize: "18px", fontFamily: "'Space Grotesk', sans-serif", color: "white", marginBottom: "10px" }}>{t}</strong>
+              <p style={{ color: "#555", fontSize: "14px", lineHeight: 1.65 }}>{d}</p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* ── CTA ── */}
-      <div style={s.ctaSection}>
-        <div className="reveal" style={s.eyebrow}>
-          <span style={s.eyebrowLine} />
+      {/* ══════════════════════════════
+          CTA
+      ══════════════════════════════ */}
+      <div style={{
+        width: "min(1400px, 90vw)", margin: "0 auto",
+        padding: "130px 0 160px", textAlign: "center",
+        borderTop: `1px solid ${line}`,
+      }}>
+        <div className="reveal" style={{
+          display: "inline-flex", alignItems: "center", gap: "10px",
+          fontSize: "11px", letterSpacing: "2.5px", color: "#444",
+          marginBottom: "24px",
+        }}>
+          <span style={{ width: "20px", height: "1px", background: accent }} />
           04 / READY?
         </div>
-        <h2 className="reveal" style={s.ctaH2}>
+
+        <h2 className="reveal" style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: "clamp(48px, 7vw, 110px)",
+          fontWeight: 700, letterSpacing: "-5px", lineHeight: .88,
+          color: "white", margin: "0 0 56px",
+        }}>
           Let's build something<br />
-          <span style={s.accent}>people remember.</span>
+          <span style={{ color: accent }}>people remember.</span>
         </h2>
+
         <div className="reveal">
-          <Link to="/contact" style={{ ...s.btnPrimary, padding: "20px 40px", fontSize: "16px" }}>
+          <Link to="/contact" style={{
+            display: "inline-flex", alignItems: "center", gap: "12px",
+            padding: "20px 44px",
+            background: "white", color: "black",
+            borderRadius: "100px", fontWeight: 700, fontSize: "16px",
+            textDecoration: "none",
+            boxShadow: "0 0 60px rgba(155,124,255,.3)",
+          }}>
             Start a project <span>↗</span>
           </Link>
         </div>
       </div>
 
+      {/* pulse dot keyframe */}
+      <style>{`
+        @keyframes pulse-dot {
+          0%, 100% { box-shadow: 0 0 6px #9b7cff; }
+          50% { box-shadow: 0 0 16px #9b7cff, 0 0 30px rgba(155,124,255,.4); }
+        }
+      `}</style>
+
     </div>
   );
 }
-
-export default Home;
