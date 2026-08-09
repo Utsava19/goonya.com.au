@@ -432,59 +432,304 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ══ VIDEO ══ */}
+      {/* ══ SOCIAL MEDIA SECTION ══ */}
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto 130px" }}>
-        <div style={{ position:"relative", overflow:"hidden", border:`1px solid ${L}`, height:"520px" }}>
-          <video autoPlay muted loop playsInline
-            style={{ width:"100%", height:"120%", objectFit:"cover", display:"block" }}>
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-working-on-a-laptop-in-a-cafe-42701-large.mp4" type="video/mp4"/>
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-typing-on-a-laptop-keyboard-close-up-1024-large.mp4" type="video/mp4"/>
-          </video>
-          <div style={{ position:"absolute", inset:0,
-            background:"linear-gradient(to top, rgba(7,7,7,.92) 0%, rgba(7,7,7,.2) 60%, transparent 100%)" }}/>
-          <div style={{ position:"absolute", bottom:"52px", left:"52px" }}>
-            <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#555", marginBottom:"14px" }}>
-              THE DIGITAL MACHINE
-            </div>
-            <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
-              fontSize:"clamp(40px,5.5vw,82px)", fontWeight:700,
-              letterSpacing:"-3px", lineHeight:.9, color:"white" }}>
-              BUILD ONCE.<br/>
-              <em style={{ fontStyle:"normal", color:A }}>RUN SMARTER.</em>
-            </h2>
+        <div style={{ marginBottom:"56px" }}>
+          <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"18px",
+            display:"flex", alignItems:"center", gap:"10px" }}>
+            <span style={{ width:"20px", height:"1px", background:A }}/>BUILD ONCE. RUN SMARTER.
           </div>
+          <h2 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"clamp(36px,4.2vw,64px)",
+            fontWeight:700, letterSpacing:"-2.5px", color:"white", maxWidth:"700px" }}>
+            Your brand, everywhere<span style={{color:A}}> that matters.</span>
+          </h2>
+          <p style={{ color:"#444", fontSize:"17px", lineHeight:1.75, maxWidth:"520px", marginTop:"20px" }}>
+            Facebook, Instagram, TikTok — we create content, run campaigns and
+            build automated systems that grow your audience while you sleep.
+          </p>
+        </div>
+
+        {/* big visual block */}
+        <div style={{ display:"grid", gridTemplateColumns:"1.2fr 1fr", gap:"1px",
+          background:L, border:`1px solid ${L}` }}>
+
+          {/* LEFT — phone mockup with social feed */}
+          <div style={{ background:"#08060f", padding:"60px 52px",
+            position:"relative", overflow:"hidden", minHeight:"560px",
+            display:"flex", alignItems:"center", justifyContent:"center" }}>
+            {/* bg glow */}
+            <div style={{ position:"absolute", top:"-100px", left:"-100px", width:"400px", height:"400px",
+              borderRadius:"50%", background:"radial-gradient(circle,rgba(155,124,255,.15),transparent 70%)",
+              filter:"blur(40px)" }}/>
+            <div style={{ position:"absolute", bottom:"-80px", right:"-80px", width:"300px", height:"300px",
+              borderRadius:"50%", background:"radial-gradient(circle,rgba(255,100,180,.1),transparent 70%)",
+              filter:"blur(40px)" }}/>
+
+            {/* phone frame */}
+            <div style={{ position:"relative", zIndex:2, width:"220px",
+              background:"#0a0818", border:"1px solid rgba(255,255,255,.12)",
+              borderRadius:"32px", padding:"16px 10px",
+              boxShadow:"0 0 60px rgba(155,124,255,.2), 0 40px 80px rgba(0,0,0,.6)" }}>
+              {/* notch */}
+              <div style={{ width:"60px", height:"6px", background:"rgba(255,255,255,.1)",
+                borderRadius:"3px", margin:"0 auto 14px" }}/>
+              {/* social posts */}
+              {[
+                { platform:"Instagram", icon:"📸", metric:"↑ 2,400 followers", color:"#e1306c",
+                  img:"https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=200&q=60",
+                  label:"New campaign live" },
+                { platform:"TikTok",    icon:"🎵", metric:"↑ 48K views",        color:"#69c9d0",
+                  img:"https://images.unsplash.com/photo-1622556498246-755f44ca76f3?w=200&q=60",
+                  label:"Video boosted" },
+                { platform:"Facebook",  icon:"👍", metric:"↑ 320 leads",         color:"#1877f2",
+                  img:"https://images.unsplash.com/photo-1563986768609-322da13575f3?w=200&q=60",
+                  label:"Ad running" },
+              ].map(({platform,icon,metric,color,img,label},i) => (
+                <div key={platform} style={{
+                  background:"rgba(255,255,255,.04)", borderRadius:"12px",
+                  marginBottom:"8px", overflow:"hidden",
+                  border:"1px solid rgba(255,255,255,.06)",
+                  animation:`slideUp .5s ease ${i*.15+.3}s both`,
+                }}>
+                  <img src={img} alt={platform}
+                    style={{ width:"100%", height:"80px", objectFit:"cover", display:"block" }}
+                    onError={e => { e.target.style.display="none"; }}/>
+                  <div style={{ padding:"8px 10px" }}>
+                    <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:"5px" }}>
+                        <span style={{ fontSize:"9px" }}>{icon}</span>
+                        <span style={{ fontSize:"9px", color:"#555", letterSpacing:"1px" }}>{platform.toUpperCase()}</span>
+                      </div>
+                      <span style={{ fontSize:"9px", color:color, fontWeight:600 }}>{metric}</span>
+                    </div>
+                    <div style={{ fontSize:"8px", color:"#4ade80", marginTop:"3px" }}>● {label}</div>
+                  </div>
+                </div>
+              ))}
+              {/* bottom bar */}
+              <div style={{ display:"flex", justifyContent:"space-around", marginTop:"12px",
+                paddingTop:"10px", borderTop:"1px solid rgba(255,255,255,.06)" }}>
+                {["🏠","🔍","➕","❤️","👤"].map(ic=>(
+                  <span key={ic} style={{ fontSize:"14px", opacity:.5 }}>{ic}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* floating metric cards */}
+            <div style={{ position:"absolute", top:"60px", right:"40px",
+              background:"rgba(10,8,22,.95)", border:"1px solid rgba(255,255,255,.08)",
+              borderRadius:"12px", padding:"12px 16px", animation:"float1 3s ease-in-out infinite" }}>
+              <div style={{ fontSize:"9px", color:"#555", letterSpacing:"1px", marginBottom:"4px" }}>REACH TODAY</div>
+              <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"22px",
+                fontWeight:700, color:"white", letterSpacing:"-1px" }}>84.2K</div>
+              <div style={{ fontSize:"10px", color:"#4ade80", marginTop:"2px" }}>↑ 23% vs yesterday</div>
+            </div>
+
+            <div style={{ position:"absolute", bottom:"80px", right:"30px",
+              background:"rgba(10,8,22,.95)", border:"1px solid rgba(255,255,255,.08)",
+              borderRadius:"12px", padding:"12px 16px", animation:"float2 3.5s ease-in-out infinite" }}>
+              <div style={{ fontSize:"9px", color:"#555", letterSpacing:"1px", marginBottom:"4px" }}>CONVERSIONS</div>
+              <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"22px",
+                fontWeight:700, color:"white", letterSpacing:"-1px" }}>$4,820</div>
+              <div style={{ fontSize:"10px", color:A, marginTop:"2px" }}>↑ This week</div>
+            </div>
+          </div>
+
+          {/* RIGHT — services list */}
+          <div style={{ background:"#08060f" }}>
+            {[
+              { icon:"📱", title:"Social Media Management",
+                desc:"Daily content, scheduling and engagement across Facebook, Instagram and TikTok.",
+                color:"#e1306c" },
+              { icon:"🎬", title:"TikTok & Reel Creation",
+                desc:"Scroll-stopping short-form videos custom made for your brand and audience.",
+                color:"#69c9d0" },
+              { icon:"✨", title:"Animated Video Production",
+                desc:"Professional animated explainers and promos that tell your story beautifully.",
+                color:A },
+              { icon:"🎯", title:"Paid Social Campaigns",
+                desc:"Facebook and Instagram ads that target the right people and convert them into customers.",
+                color:"#1877f2" },
+              { icon:"📈", title:"Growth & Analytics",
+                desc:"We track every metric and optimise continuously so your results compound over time.",
+                color:"#4ade80" },
+            ].map(({icon,title,desc,color},i) => (
+              <div key={title} style={{
+                padding:"28px 36px",
+                borderBottom:`1px solid ${L}`,
+                display:"flex", alignItems:"flex-start", gap:"16px",
+                transition:"background .2s ease",
+              }}
+                onMouseEnter={e=>e.currentTarget.style.background="#0d0b18"}
+                onMouseLeave={e=>e.currentTarget.style.background="transparent"}
+              >
+                <div style={{ width:"36px", height:"36px", borderRadius:"10px", flexShrink:0,
+                  background:`${color}18`, border:`1px solid ${color}30`,
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  fontSize:"16px" }}>{icon}</div>
+                <div>
+                  <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"15px",
+                    fontWeight:600, color:"white", marginBottom:"5px" }}>{title}</div>
+                  <div style={{ fontSize:"13px", color:"#555", lineHeight:1.6 }}>{desc}</div>
+                </div>
+                <div style={{ marginLeft:"auto", color:color, fontSize:"16px", flexShrink:0, paddingTop:"2px" }}>↗</div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </div>
 
-      {/* ══ PROCESS ══ */}
+      {/* ══ ADMIN WORK ══ */}
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto 130px" }}>
-        <div style={{ marginBottom:"52px" }}>
-          <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"18px",
-            display:"flex", alignItems:"center", gap:"10px" }}>
-            <span style={{ width:"20px", height:"1px", background:A }}/>03 / HOW IT WORKS
-          </div>
-          <h2 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"clamp(36px,4vw,62px)",
-            fontWeight:700, letterSpacing:"-2.5px", color:"white" }}>
-            Simple process. <span style={{color:A}}>Serious results.</span>
-          </h2>
-        </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)",
-          gap:"1px", background:L, border:`1px solid ${L}` }}>
-          {[
-            {n:"01",t:"Discovery", d:"We learn your business, your bottlenecks, and your goals."},
-            {n:"02",t:"Strategy",  d:"We map the exact digital system your business needs."},
-            {n:"03",t:"Build",     d:"We execute fast, without cutting corners."},
-            {n:"04",t:"Launch",    d:"We go live, track results, and keep improving."},
-          ].map(({n,t,d}) => (
-            <div key={n} style={{ padding:"44px 36px", background:BG }}>
-              <div style={{ fontSize:"11px", letterSpacing:"2px", color:A, marginBottom:"22px",
-                fontFamily:"'Space Grotesk',sans-serif" }}>{n}</div>
-              <div style={{ width:"28px", height:"1px", background:A, marginBottom:"18px", opacity:.3 }}/>
-              <strong style={{ display:"block", fontSize:"17px", fontFamily:"'Space Grotesk',sans-serif",
-                color:"white", marginBottom:"10px" }}>{t}</strong>
-              <p style={{ color:"#444", fontSize:"14px", lineHeight:1.65 }}>{d}</p>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
+          background:L, border:`1px solid ${L}` }}>
+
+          {/* LEFT — text */}
+          <div style={{ padding:"70px 60px", background:"#08060f" }}>
+            <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"22px",
+              display:"flex", alignItems:"center", gap:"10px" }}>
+              <span style={{ width:"20px", height:"1px", background:A }}/>04 / ADMIN & OPERATIONS
             </div>
-          ))}
+            <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
+              fontSize:"clamp(32px,3.5vw,54px)", fontWeight:700,
+              letterSpacing:"-2.5px", color:"white", marginBottom:"22px", lineHeight:1.05 }}>
+              We handle the back-end<span style={{color:A}}> so you don't have to.</span>
+            </h2>
+            <p style={{ color:"#555", fontSize:"16px", lineHeight:1.75, marginBottom:"36px", maxWidth:"420px" }}>
+              From data entry to inbox management, scheduling, reporting
+              and operations — we take the tedious tasks off your plate
+              so you can focus on growing your business.
+            </p>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
+              {[
+                "Email & inbox management",
+                "Data entry & cleanup",
+                "Scheduling & calendars",
+                "Reporting & spreadsheets",
+                "Document preparation",
+                "Customer follow-ups",
+                "Research & sourcing",
+                "Process documentation",
+              ].map(item => (
+                <div key={item} style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                  <span style={{ width:"6px", height:"6px", borderRadius:"50%",
+                    background:A, flexShrink:0, boxShadow:`0 0 6px ${A}` }}/>
+                  <span style={{ fontSize:"13px", color:"#666" }}>{item}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop:"40px" }}>
+              <Link to="/contact" style={{ display:"inline-flex", alignItems:"center", gap:"10px",
+                padding:"13px 26px", background:"rgba(155,124,255,.1)",
+                border:`1px solid rgba(155,124,255,.3)`, borderRadius:"100px",
+                fontSize:"13px", fontWeight:500, color:"white", textDecoration:"none" }}>
+                Talk to us about admin <span>↗</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* RIGHT — animated desk visual */}
+          <div style={{ background:"#050410", position:"relative",
+            overflow:"hidden", minHeight:"500px",
+            display:"flex", alignItems:"center", justifyContent:"center" }}>
+
+            {/* ambient glow */}
+            <div style={{ position:"absolute", top:"50%", left:"50%",
+              transform:"translate(-50%,-50%)",
+              width:"300px", height:"300px", borderRadius:"50%",
+              background:"radial-gradient(circle, rgba(155,124,255,.15), transparent 70%)",
+              filter:"blur(40px)", pointerEvents:"none" }}/>
+
+            {/* desk mockup */}
+            <div style={{ position:"relative", zIndex:2, width:"340px" }}>
+
+              {/* laptop screen */}
+              <div style={{ background:"#0a0818", border:`1px solid rgba(155,124,255,.2)`,
+                borderRadius:"12px 12px 0 0", padding:"16px",
+                boxShadow:"0 0 40px rgba(155,124,255,.15)" }}>
+                {/* screen top bar */}
+                <div style={{ display:"flex", alignItems:"center", gap:"6px", marginBottom:"12px" }}>
+                  {["#f87171","#fbbf24","#4ade80"].map(c=>(
+                    <span key={c} style={{ width:"8px", height:"8px", borderRadius:"50%", background:c }}/>
+                  ))}
+                  <div style={{ flex:1, background:"rgba(255,255,255,.04)", borderRadius:"4px",
+                    height:"18px", marginLeft:"8px", display:"flex", alignItems:"center", paddingLeft:"8px" }}>
+                    <span style={{ fontSize:"9px", color:"#2a2a2a" }}>admin.goonya.com.au</span>
+                  </div>
+                </div>
+                {/* fake emails */}
+                {[
+                  {from:"Client — Sarah",  subj:"Q4 Report ready",      time:"9:41am", unread:true},
+                  {from:"Supplier",        subj:"Invoice #0042",         time:"9:15am", unread:true},
+                  {from:"Team",            subj:"Monday standup notes",  time:"8:50am", unread:false},
+                  {from:"CRM",             subj:"3 new leads this week", time:"8:00am", unread:false},
+                ].map(({from,subj,time,unread},i) => (
+                  <div key={i} style={{ display:"flex", alignItems:"center", gap:"10px",
+                    padding:"8px 6px", borderRadius:"6px", marginBottom:"4px",
+                    background: unread ? "rgba(155,124,255,.06)" : "transparent",
+                    borderLeft: unread ? `2px solid ${A}` : "2px solid transparent",
+                    animation:`slideUp .4s ease ${i*.1+.2}s both` }}>
+                    <div style={{ width:"28px", height:"28px", borderRadius:"50%",
+                      background:`rgba(155,124,255,${unread?.18:.08})`,
+                      display:"flex", alignItems:"center", justifyContent:"center",
+                      fontSize:"11px", flexShrink:0 }}>
+                      {from[0]}
+                    </div>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{ fontSize:"10px", color: unread ? "white" : "#555",
+                        fontWeight: unread ? 600 : 400, whiteSpace:"nowrap",
+                        overflow:"hidden", textOverflow:"ellipsis" }}>{from}</div>
+                      <div style={{ fontSize:"9px", color:"#3a3a3a", whiteSpace:"nowrap",
+                        overflow:"hidden", textOverflow:"ellipsis" }}>{subj}</div>
+                    </div>
+                    <div style={{ fontSize:"9px", color:"#3a3a3a", flexShrink:0 }}>{time}</div>
+                  </div>
+                ))}
+                {/* calendar row */}
+                <div style={{ marginTop:"10px", padding:"8px 6px",
+                  background:"rgba(74,222,128,.05)", border:"1px solid rgba(74,222,128,.15)",
+                  borderRadius:"6px", display:"flex", alignItems:"center", gap:"8px" }}>
+                  <span style={{ fontSize:"12px" }}>📅</span>
+                  <div>
+                    <div style={{ fontSize:"10px", color:"white" }}>2:00pm — Client call</div>
+                    <div style={{ fontSize:"9px", color:"#4ade80" }}>Scheduled & confirmed</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* laptop base */}
+              <div style={{ height:"8px", background:"#1a1230",
+                borderRadius:"0 0 6px 6px", margin:"0 8px" }}/>
+              <div style={{ height:"4px", background:"#120e24",
+                borderRadius:"0 0 8px 8px", margin:"0 16px" }}/>
+
+              {/* floating task card */}
+              <div style={{ position:"absolute", top:"-20px", right:"-40px",
+                background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
+                borderRadius:"12px", padding:"12px 16px",
+                animation:"float1 3s ease-in-out infinite",
+                boxShadow:"0 8px 32px rgba(0,0,0,.4)" }}>
+                <div style={{ fontSize:"9px", color:"#555", marginBottom:"6px", letterSpacing:"1px" }}>TASKS DONE TODAY</div>
+                <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
+                  fontWeight:700, color:"white", letterSpacing:"-1px" }}>14 / 14</div>
+                <div style={{ fontSize:"10px", color:"#4ade80", marginTop:"3px" }}>✓ All complete</div>
+              </div>
+
+              {/* floating hours saved */}
+              <div style={{ position:"absolute", bottom:"20px", left:"-40px",
+                background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
+                borderRadius:"12px", padding:"12px 16px",
+                animation:"float2 3.5s ease-in-out infinite",
+                boxShadow:"0 8px 32px rgba(0,0,0,.4)" }}>
+                <div style={{ fontSize:"9px", color:"#555", marginBottom:"6px", letterSpacing:"1px" }}>HOURS SAVED</div>
+                <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
+                  fontWeight:700, color:"white", letterSpacing:"-1px" }}>12h</div>
+                <div style={{ fontSize:"10px", color:A, marginTop:"3px" }}>This week</div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
 
@@ -542,8 +787,21 @@ export default function Home() {
           from{transform:scaleY(0);transform-origin:bottom}
           to{transform:scaleY(1);transform-origin:bottom}
         }
+        @keyframes slideUp {
+          from{opacity:0;transform:translateY(16px)}
+          to{opacity:1;transform:translateY(0)}
+        }
+        @keyframes float1 {
+          0%,100%{transform:translateY(0)}
+          50%{transform:translateY(-10px)}
+        }
+        @keyframes float2 {
+          0%,100%{transform:translateY(0)}
+          50%{transform:translateY(-14px)}
+        }
         @media(max-width:850px){
           div[style*="1fr 1fr"] { grid-template-columns:1fr !important; }
+          div[style*="1.2fr 1fr"] { grid-template-columns:1fr !important; }
           div[style*="repeat(4,1fr)"] { grid-template-columns:repeat(2,1fr) !important; }
           div[style*="repeat(3,1fr)"] { grid-template-columns:1fr !important; }
         }
