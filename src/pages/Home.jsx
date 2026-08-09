@@ -151,7 +151,6 @@ const styles = {
   dotGreen: { width: "8px", height: "8px", borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 8px #4ade80", flexShrink: 0 },
   dotPurple: { width: "8px", height: "8px", borderRadius: "50%", background: "#9b7cff", boxShadow: "0 0 8px #9b7cff", flexShrink: 0 },
   cardStrong: { color: "#9b7cff", fontWeight: 700 },
-
   marquee: {
     overflow: "hidden",
     borderTop: "1px solid rgba(255,255,255,.08)",
@@ -163,7 +162,6 @@ const styles = {
   marqueeInner: { display: "flex", alignItems: "center", gap: "30px", paddingRight: "30px" },
   marqueeB: { fontSize: "11px", letterSpacing: "2px", fontWeight: 500, color: "#444" },
   marqueeEm: { fontStyle: "normal", color: "#9b7cff", fontSize: "9px" },
-
   stats: {
     width: "min(1400px, 90vw)",
     margin: "80px auto",
@@ -172,10 +170,8 @@ const styles = {
     border: "1px solid rgba(255,255,255,.08)",
     background: "#0a0a0a",
   },
-  statItem: {
-    padding: "50px 38px",
-    borderRight: "1px solid rgba(255,255,255,.08)",
-  },
+  statItem: { padding: "50px 38px", borderRight: "1px solid rgba(255,255,255,.08)" },
+  statItemLast: { padding: "50px 38px" },
   statValue: {
     fontFamily: "'Space Grotesk', sans-serif",
     fontSize: "clamp(40px, 3.5vw, 66px)",
@@ -186,7 +182,6 @@ const styles = {
   },
   statSup: { fontSize: ".4em", color: "#9b7cff", verticalAlign: "super", letterSpacing: 0 },
   statLabel: { marginTop: "10px", fontSize: "12px", letterSpacing: "1px", color: "#555" },
-
   statement: {
     width: "min(860px, 90vw)",
     margin: "0 auto",
@@ -203,9 +198,8 @@ const styles = {
     margin: "24px 0 22px",
     color: "white",
   },
-  statementSpan: { color: "#9b7cff" },
+  accent: { color: "#9b7cff" },
   statementP: { color: "#666", fontSize: "18px", lineHeight: 1.75 },
-
   videoSection: { width: "min(1400px, 90vw)", margin: "0 auto 100px" },
   videoContainer: { position: "relative", height: "540px", overflow: "hidden", border: "1px solid rgba(255,255,255,.08)" },
   videoEl: { width: "100%", height: "120%", objectFit: "cover", display: "block" },
@@ -214,11 +208,9 @@ const styles = {
   videoCopySpan: { fontSize: "11px", letterSpacing: "2.5px", color: "#555" },
   videoCopyH2: { fontFamily: "'Space Grotesk', sans-serif", fontSize: "clamp(36px, 5vw, 76px)", fontWeight: 700, letterSpacing: "-3px", lineHeight: .92, marginTop: "14px", color: "white" },
   videoCopyEm: { fontStyle: "normal", color: "#9b7cff" },
-
   servicesSection: { width: "min(1400px, 90vw)", margin: "0 auto 100px" },
   sectionHeader: { marginBottom: "50px" },
   sectionH2: { fontFamily: "'Space Grotesk', sans-serif", fontSize: "clamp(30px, 3.5vw, 52px)", fontWeight: 600, letterSpacing: "-2px", lineHeight: 1.08, color: "white" },
-  sectionH2Span: { color: "#9b7cff" },
   previewGrid: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1px", background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.08)" },
   previewCard: { display: "flex", alignItems: "center", gap: "22px", padding: "42px 34px", background: "#0a0a0a", cursor: "pointer", textDecoration: "none" },
   previewNum: { fontFamily: "'Space Grotesk', sans-serif", fontSize: "38px", fontWeight: 700, color: "rgba(255,255,255,.06)", letterSpacing: "-2px", flexShrink: 0 },
@@ -226,7 +218,6 @@ const styles = {
   previewStrong: { display: "block", fontSize: "12px", letterSpacing: "1.5px", marginBottom: "8px", color: "white" },
   previewP: { color: "#666", fontSize: "14px" },
   previewArrow: { fontSize: "18px", color: "#9b7cff", flexShrink: 0 },
-
   processSection: { width: "min(1400px, 90vw)", margin: "0 auto 100px" },
   processGrid: { display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "1px", background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.08)", marginTop: "50px" },
   processStep: { padding: "44px 34px", background: "#0a0a0a" },
@@ -234,47 +225,67 @@ const styles = {
   stepLine: { width: "28px", height: "1px", background: "#9b7cff", marginBottom: "18px", opacity: .4 },
   stepTitle: { display: "block", fontSize: "17px", fontFamily: "'Space Grotesk', sans-serif", marginBottom: "10px", color: "white" },
   stepDesc: { color: "#666", fontSize: "14px", lineHeight: 1.6 },
-
   cta: { width: "min(1400px, 90vw)", margin: "0 auto", padding: "120px 0 150px", textAlign: "center", borderTop: "1px solid rgba(255,255,255,.08)" },
   ctaH2: { fontFamily: "'Space Grotesk', sans-serif", fontSize: "clamp(40px, 5vw, 86px)", fontWeight: 700, letterSpacing: "-4px", lineHeight: .94, margin: "22px 0 50px", color: "white" },
-  ctaSpan: { color: "#9b7cff" },
   ctaBtn: { display: "inline-flex", alignItems: "center", gap: "10px", padding: "19px 36px", background: "white", color: "black", borderRadius: "100px", fontWeight: 600, fontSize: "16px", cursor: "pointer", textDecoration: "none" },
 };
 
 function Home() {
   useEffect(() => {
-    const tl = gsap.timeline({ delay: 0.15 });
-    tl.from(".home-kicker",      { opacity: 0, y: 30, duration: 0.7 })
-      .from(".hero-line",        { opacity: 0, y: 100, stagger: 0.13, duration: 1.1, ease: "power4.out" }, "-=0.4")
-      .from(".hero-description", { opacity: 0, y: 30, duration: 0.7 }, "-=0.5")
-      .from(".hero-actions",     { opacity: 0, y: 20, duration: 0.6 }, "-=0.4")
-      .from(".hero-photo-wrap",  { opacity: 0, scale: 0.92, x: 40, duration: 1.2, ease: "power3.out" }, "-=0.9");
 
+    // Force everything visible first as fallback
+    gsap.set(".hero-line, .home-kicker, .hero-description, .hero-actions, .hero-photo-wrap", {
+      opacity: 1, y: 0, x: 0, scale: 1,
+    });
+    gsap.set(".reveal, .stagger-child", { opacity: 1, y: 0 });
+
+    // Hero entrance
+    const tl = gsap.timeline({ delay: 0.1 });
+    tl.from(".home-kicker",      { opacity: 0, y: 30, duration: 0.7, clearProps: "all" })
+      .from(".hero-line",        { opacity: 0, y: 80, stagger: 0.12, duration: 1, ease: "power4.out", clearProps: "all" }, "-=0.4")
+      .from(".hero-description", { opacity: 0, y: 30, duration: 0.7, clearProps: "all" }, "-=0.5")
+      .from(".hero-actions",     { opacity: 0, y: 20, duration: 0.6, clearProps: "all" }, "-=0.4")
+      .from(".hero-photo-wrap",  { opacity: 0, scale: 0.92, x: 40, duration: 1.2, ease: "power3.out", clearProps: "all" }, "-=0.9");
+
+    // Floating cards
     gsap.to(".floating-card", { y: -16, duration: 2.8, repeat: -1, yoyo: true, stagger: 0.6, ease: "sine.inOut" });
+
+    // Orb drift
     gsap.to(".hero-orb", { y: -40, x: 25, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+    // Marquee
     gsap.to(".marquee-track", { xPercent: -50, duration: 22, repeat: -1, ease: "none" });
 
+    // Scroll reveals
     gsap.utils.toArray(".reveal").forEach((el) => {
-      gsap.from(el, { scrollTrigger: { trigger: el, start: "top 88%" }, opacity: 0, y: 55, duration: 0.9, ease: "power3.out" });
-    });
-
-    gsap.utils.toArray(".stagger-parent").forEach((parent) => {
-      gsap.from(parent.querySelectorAll(".stagger-child"), {
-        scrollTrigger: { trigger: parent, start: "top 85%" },
-        opacity: 0, y: 50, stagger: 0.12, duration: 0.8, ease: "power3.out",
+      gsap.from(el, {
+        scrollTrigger: { trigger: el, start: "top 90%" },
+        opacity: 0, y: 40, duration: 0.8, ease: "power3.out", clearProps: "all",
       });
     });
 
+    // Stagger children
+    gsap.utils.toArray(".stagger-parent").forEach((parent) => {
+      gsap.from(parent.querySelectorAll(".stagger-child"), {
+        scrollTrigger: { trigger: parent, start: "top 90%" },
+        opacity: 0, y: 40, stagger: 0.1, duration: 0.7, ease: "power3.out", clearProps: "all",
+      });
+    });
+
+    // Stat counters
     gsap.utils.toArray(".stat-number").forEach((el) => {
       const target = parseFloat(el.dataset.target);
       const isFloat = el.dataset.target.includes(".");
       ScrollTrigger.create({
-        trigger: el, start: "top 85%",
+        trigger: el,
+        start: "top 90%",
         onEnter: () => {
           gsap.to({ val: 0 }, {
             val: target, duration: 2, ease: "power2.out",
             onUpdate: function () {
-              el.textContent = isFloat ? this.targets()[0].val.toFixed(1) : Math.round(this.targets()[0].val);
+              el.textContent = isFloat
+                ? this.targets()[0].val.toFixed(1)
+                : Math.round(this.targets()[0].val);
             },
           });
         },
@@ -287,6 +298,7 @@ function Home() {
   return (
     <div style={styles.home}>
 
+      {/* HERO */}
       <section style={styles.hero}>
         <div>
           <div className="home-kicker" style={styles.kicker}>
@@ -299,7 +311,8 @@ function Home() {
             <div className="hero-line" style={styles.heroLine}>AUTOMATED.</div>
           </h1>
           <p className="hero-description" style={styles.heroDesc}>
-            Goonya builds websites, AI automation and digital systems that help ambitious businesses attract customers, save time and grow.
+            Goonya builds websites, AI automation and digital systems that help
+            ambitious businesses attract customers, save time and grow.
           </p>
           <div className="hero-actions" style={styles.heroActions}>
             <Link to="/services" style={styles.primaryBtn}>Explore what we do <span>↗</span></Link>
@@ -318,18 +331,19 @@ function Home() {
             />
             <div style={styles.photoGradient} />
           </div>
-          <div className="floating-card card-one" style={{...styles.card, top:"12%", left:"-6%"}}>
+          <div className="floating-card" style={{...styles.card, top:"12%", left:"-6%"}}>
             <span style={styles.dot}/> New enquiry <strong style={styles.cardStrong}>+1</strong>
           </div>
-          <div className="floating-card card-two" style={{...styles.card, top:"48%", right:"-6%"}}>
+          <div className="floating-card" style={{...styles.card, top:"48%", right:"-6%"}}>
             <span style={styles.dotGreen}/> AI response <strong style={styles.cardStrong}>0.8s</strong>
           </div>
-          <div className="floating-card card-three" style={{...styles.card, bottom:"12%", left:"4%"}}>
+          <div className="floating-card" style={{...styles.card, bottom:"12%", left:"4%"}}>
             <span style={styles.dotPurple}/> Customer converted <strong style={styles.cardStrong}>$420</strong>
           </div>
         </div>
       </section>
 
+      {/* MARQUEE */}
       <div style={styles.marquee}>
         <div className="marquee-track" style={styles.marqueeTrack}>
           {[...Array(2)].map((_, i) => (
@@ -345,14 +359,16 @@ function Home() {
         </div>
       </div>
 
+      {/* STATS */}
       <section className="stagger-parent" style={styles.stats}>
         {[
-          { label: "Projects Delivered", value: "40", suffix: "+" },
-          { label: "Avg Response Time",  value: "0.8", suffix: "s" },
-          { label: "Client Satisfaction", value: "98", suffix: "%" },
-          { label: "Hours Saved / Client", value: "120", suffix: "h" },
+          { label: "Projects Delivered",  value: "40",  suffix: "+" },
+          { label: "Avg Response Time",   value: "0.8", suffix: "s" },
+          { label: "Client Satisfaction", value: "98",  suffix: "%" },
+          { label: "Hours Saved / Client",value: "120", suffix: "h" },
         ].map(({ label, value, suffix }, i) => (
-          <div className="stagger-child" key={label} style={{...styles.statItem, borderRight: i===3?"none":"1px solid rgba(255,255,255,.08)"}}>
+          <div className="stagger-child" key={label}
+            style={i === 3 ? styles.statItemLast : styles.statItem}>
             <div style={styles.statValue}>
               <span className="stat-number" data-target={value}>0</span>
               <sup style={styles.statSup}>{suffix}</sup>
@@ -362,16 +378,19 @@ function Home() {
         ))}
       </section>
 
+      {/* STATEMENT */}
       <section style={styles.statement}>
         <span className="reveal" style={styles.sectionLabel}>01 / THE GOONYA IDEA</span>
         <h2 className="reveal" style={styles.statementH2}>
-          Your business has <span style={styles.statementSpan}>enough to think about.</span>
+          Your business has <span style={styles.accent}>enough to think about.</span>
         </h2>
         <p className="reveal" style={styles.statementP}>
-          Your technology shouldn't be one of them. We connect the digital pieces behind your business so everything works together.
+          Your technology shouldn't be one of them. We connect the digital
+          pieces behind your business so everything works together.
         </p>
       </section>
 
+      {/* VIDEO */}
       <section className="reveal" style={styles.videoSection}>
         <div style={styles.videoContainer}>
           <video autoPlay muted loop playsInline style={styles.videoEl}>
@@ -380,15 +399,21 @@ function Home() {
           <div style={styles.videoOverlay} />
           <div style={styles.videoCopy}>
             <span style={styles.videoCopySpan}>THE DIGITAL MACHINE</span>
-            <h2 style={styles.videoCopyH2}>BUILD ONCE.<br /><em style={styles.videoCopyEm}>RUN SMARTER.</em></h2>
+            <h2 style={styles.videoCopyH2}>
+              BUILD ONCE.<br />
+              <em style={styles.videoCopyEm}>RUN SMARTER.</em>
+            </h2>
           </div>
         </div>
       </section>
 
+      {/* SERVICES */}
       <section style={styles.servicesSection}>
         <div className="reveal" style={styles.sectionHeader}>
           <span style={styles.sectionLabel}>02 / WHAT WE DO</span>
-          <h2 style={styles.sectionH2}>We build the <span style={styles.sectionH2Span}>machine behind your business.</span></h2>
+          <h2 style={styles.sectionH2}>
+            We build the <span style={styles.accent}>machine behind your business.</span>
+          </h2>
         </div>
         <div className="stagger-parent" style={styles.previewGrid}>
           {[
@@ -408,10 +433,13 @@ function Home() {
         </div>
       </section>
 
+      {/* PROCESS */}
       <section style={styles.processSection}>
         <div className="reveal" style={styles.sectionHeader}>
           <span style={styles.sectionLabel}>03 / HOW IT WORKS</span>
-          <h2 style={styles.sectionH2}>Simple process. <span style={styles.sectionH2Span}>Serious results.</span></h2>
+          <h2 style={styles.sectionH2}>
+            Simple process. <span style={styles.accent}>Serious results.</span>
+          </h2>
         </div>
         <div className="stagger-parent" style={styles.processGrid}>
           {[
@@ -430,13 +458,16 @@ function Home() {
         </div>
       </section>
 
+      {/* CTA */}
       <section style={styles.cta}>
         <span className="reveal" style={styles.sectionLabel}>04 / READY?</span>
         <h2 className="reveal" style={styles.ctaH2}>
-          Let's build something <span style={styles.ctaSpan}>people remember.</span>
+          Let's build something <span style={styles.accent}>people remember.</span>
         </h2>
         <div className="reveal">
-          <Link to="/contact" style={styles.ctaBtn}>Start a project <span>↗</span></Link>
+          <Link to="/contact" style={styles.ctaBtn}>
+            Start a project <span>↗</span>
+          </Link>
         </div>
       </section>
 
