@@ -8,7 +8,7 @@ function Footer() {
 
         <div>
           <div className="footer-brand">
-            GOONYA<span>.</span>
+            GOONYA
           </div>
 
           <p>
@@ -21,7 +21,6 @@ function Footer() {
 
           <div>
             <small>EXPLORE</small>
-
             <Link to="/">Home</Link>
             <Link to="/about">About</Link>
             <Link to="/services">Services</Link>
@@ -31,7 +30,6 @@ function Footer() {
 
           <div>
             <small>SERVICES</small>
-
             <span>AI Automation</span>
             <span>Websites</span>
             <span>Marketing</span>
