@@ -20,7 +20,7 @@ function Navbar() {
       <nav className="navbar">
 
         <Link to="/" className="brand" onClick={closeMenu}>
-          GOONYA<span>.</span>
+          GOONYA
         </Link>
 
         <div className="desktop-nav">
@@ -52,13 +52,8 @@ function Navbar() {
       </nav>
 
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
-
         <div className="mobile-menu-inner">
-
-          <div className="mobile-menu-label">
-            NAVIGATION
-          </div>
-
+          <div className="mobile-menu-label">NAVIGATION</div>
           {links.map((link, index) => (
             <Link
               key={link.path}
@@ -70,17 +65,10 @@ function Navbar() {
               {link.name}
             </Link>
           ))}
-
-          <Link
-            to="/contact"
-            className="mobile-contact"
-            onClick={closeMenu}
-          >
+          <Link to="/contact" className="mobile-contact" onClick={closeMenu}>
             Start a project ↗
           </Link>
-
         </div>
-
       </div>
     </>
   );
