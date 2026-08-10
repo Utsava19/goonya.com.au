@@ -61,15 +61,21 @@ export default function Navbar() {
       }}>
 
         {/* BRAND */}
-        <Link to="/" style={{ textDecoration:"none", display:"flex", alignItems:"center", gap:"3px",
-          transition:"opacity .2s" }}
-          onMouseEnter={e=>e.currentTarget.style.opacity=".75"}
+        <Link to="/" style={{ textDecoration:"none", display:"flex", alignItems:"center" }}
+          onMouseEnter={e=>e.currentTarget.style.opacity=".8"}
           onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-          <span style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"20px",
-            fontWeight:700, letterSpacing:"-1px", color:"white" }}>GOONYA</span>
-          <span style={{ width:"6px", height:"6px", borderRadius:"50%", background:A,
-            boxShadow:`0 0 8px ${A}`, marginBottom:"10px", flexShrink:0,
-            animation:"navdot 2.5s ease-in-out infinite" }}/>
+          <img
+            src="/logo.png"
+            alt="Goonya"
+            style={{
+              height:"38px",
+              width:"auto",
+              display:"block",
+              mixBlendMode:"screen",
+              filter:"brightness(1.8) contrast(1.1)",
+              animation:"logoLoad .8s ease both",
+            }}
+          />
         </Link>
 
         {/* DESKTOP LINKS */}
@@ -180,6 +186,13 @@ export default function Navbar() {
         <div style={{ position:"relative", zIndex:1,
           display:"flex", flexDirection:"column", alignItems:"center", gap:"16px" }}>
 
+          {/* logo in mobile menu */}
+          <img src="/logo.png" alt="Goonya" style={{
+            height:"32px", width:"auto", display:"block",
+            mixBlendMode:"screen", filter:"brightness(1.8) contrast(1.1)",
+            marginBottom:"8px",
+          }}/>
+
           {links.map((l, i) => (
             <Link key={l.path} to={l.path} onClick={() => setOpen(false)}
               className="mob-link"
@@ -232,6 +245,10 @@ export default function Navbar() {
         @keyframes navdot {
           0%,100% { box-shadow: 0 0 6px #9b7cff; }
           50%      { box-shadow: 0 0 14px #9b7cff, 0 0 24px rgba(155,124,255,.4); }
+        }
+        @keyframes logoLoad {
+          from { opacity:0; transform:translateX(-8px); }
+          to   { opacity:1; transform:translateX(0); }
         }
         @media(max-width:850px){
           .desk-nav { display:none !important; }
