@@ -34,13 +34,15 @@ export default function Footer() {
 
         {/* brand */}
         <div>
-          <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"22px",
-            fontWeight:700, letterSpacing:"-1px", color:"white", marginBottom:"14px",
-            display:"flex", alignItems:"center", gap:"3px" }}>
-            GOONYA
-            <span style={{ width:"6px", height:"6px", borderRadius:"50%",
-              background:A, boxShadow:`0 0 6px ${A}`, marginBottom:"8px" }}/>
-          </div>
+          <img
+            src="/logo.png"
+            alt="Goonya"
+            style={{
+              height:"36px", width:"auto", display:"block", marginBottom:"14px",
+              mixBlendMode:"screen",
+              filter:"brightness(1.8) contrast(1.1)",
+            }}
+          />
           <p style={{ color:"#444", fontSize:"14px", lineHeight:1.7,
             maxWidth:"260px", marginBottom:"24px" }}>
             Digital systems for businesses ready to move differently.
