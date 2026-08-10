@@ -178,11 +178,7 @@ export default function Navbar() {
           filter:"blur(40px)", pointerEvents:"none" }}/>
 
         <div style={{ position:"relative", zIndex:1,
-          display:"flex", flexDirection:"column", alignItems:"center", gap:"4px" }}>
-
-          {/* small label */}
-          <div style={{ fontSize:"10px", letterSpacing:"3px", color:"rgba(255,255,255,.2)",
-            marginBottom:"20px" }}>NAVIGATION</div>
+          display:"flex", flexDirection:"column", alignItems:"center", gap:"16px" }}>
 
           {links.map((l, i) => (
             <Link key={l.path} to={l.path} onClick={() => setOpen(false)}
