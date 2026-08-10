@@ -1,6 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
+/* ── TYPEWRITER ── */
+function Typewriter({ words }) {
+  const [display, setDisplay] = useState("");
+  const [wi, setWi] = useState(0);
+  const [ci, setCi] = useState(0);
+  const [del, setDel] = useState(false);
+  useEffect(() => {
+    const word = words[wi];
+    let tm;
+    if (!del && ci < word.length) tm = setTimeout(() => setCi(c => c+1), 85);
+    else if (!del && ci === word.length) tm = setTimeout(() => setDel(true), 2000);
+    else if (del && ci > 0) tm = setTimeout(() => setCi(c => c-1), 45);
+    else { setDel(false); setWi(w => (w+1) % words.length); }
+    setDisplay(word.slice(0, ci));
+    return () => clearTimeout(tm);
+  }, [ci, del, wi, words]);
+  return (
+    <span style={{ color:"#9b7cff" }}>
+      {display}
+      <span style={{ borderRight:"3px solid #9b7cff", animation:"blink .7s infinite", marginLeft:"1px" }}/>
+    </span>
+  );
+}
+
 /* ── ROBOT SVG (pure SVG + CSS animations, no GSAP) ── */
 function Robot() {
   const A = "#9b7cff";
@@ -375,21 +399,21 @@ export default function Home() {
 
             <h1 className="fi hero-h1" style={{ margin:0, padding:0 }}>
               <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(72px,7.5vw,112px)", fontWeight:700,
+                fontSize:"clamp(64px,7.5vw,112px)", fontWeight:700,
                 letterSpacing:"-4px", lineHeight:.92, color:"white", paddingBottom:"4px" }}>
                 YOUR BUSINESS.
               </span>
               <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(72px,7.5vw,112px)", fontWeight:700,
+                fontSize:"clamp(64px,7.5vw,112px)", fontWeight:700,
                 letterSpacing:"-4px", lineHeight:.92, paddingBottom:"4px",
                 background:`linear-gradient(90deg,${A},#e0b0ff 55%,${A})`,
                 WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
                 BUT SMARTER.
               </span>
               <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(72px,7.5vw,112px)", fontWeight:700,
-                letterSpacing:"-4px", lineHeight:.92, color:"white", paddingBottom:"4px" }}>
-                AUTOMATED.
+                fontSize:"clamp(64px,7.5vw,112px)", fontWeight:700,
+                letterSpacing:"-4px", lineHeight:.92, paddingBottom:"4px", color:"white" }}>
+                <Typewriter words={["AUTOMATED.","UNSTOPPABLE.","DIFFERENT."]}/>
               </span>
             </h1>
 
@@ -541,15 +565,15 @@ export default function Home() {
         </div>
 
         {/* ── HORIZONTAL SERVICES ROW ── */}
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)",
+        <div className="services-row" style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)",
           gap:"1px", background:L, border:`1px solid ${L}`, marginBottom:"1px" }}>
           {[
-            {n:"01", t:"AI Automation",       d:"Intelligent systems that eliminate repetitive work.",    glow:"rgba(155,124,255,.3)", icon:"⚡"},
-            {n:"02", t:"Website Design",      d:"High-performance sites built to convert.",               glow:"rgba(0,210,190,.25)",  icon:"🌐"},
-            {n:"03", t:"Digital Marketing",   d:"Campaigns that grow revenue, not just traffic.",         glow:"rgba(255,100,180,.2)", icon:"📈"},
-            {n:"04", t:"Systems Integration", d:"Connect your tools. Run as one efficient machine.",      glow:"rgba(100,180,255,.2)", icon:"🔗"},
-          ].map(({n,t,d,glow,icon}) => (
-            <Link to="/services" key={n} style={{ display:"block", padding:"40px 36px",
+            {t:"AI Automation",       d:"Intelligent systems that eliminate repetitive work.",    glow:"rgba(155,124,255,.3)", accent:"#9b7cff"},
+            {t:"Website Design",      d:"High-performance sites built to convert.",               glow:"rgba(0,210,190,.25)",  accent:"#00d2be"},
+            {t:"Digital Marketing",   d:"Campaigns that grow revenue, not just traffic.",         glow:"rgba(255,100,180,.2)", accent:"#ff64b4"},
+            {t:"Systems Integration", d:"Connect your tools. Run as one efficient machine.",      glow:"rgba(100,180,255,.2)", accent:"#64b4ff"},
+          ].map(({t,d,glow,accent}) => (
+            <Link to="/services" key={t} style={{ display:"block", padding:"36px 28px",
               background:"#08060f", textDecoration:"none", position:"relative", overflow:"hidden" }}
               onMouseEnter={e=>e.currentTarget.style.background="#0d0b18"}
               onMouseLeave={e=>e.currentTarget.style.background="#08060f"}>
@@ -557,10 +581,16 @@ export default function Home() {
                 borderRadius:"50%", background:`radial-gradient(circle,${glow},transparent 70%)`,
                 filter:"blur(20px)", pointerEvents:"none" }}/>
               <div style={{ position:"relative", zIndex:1 }}>
-                <span style={{ fontSize:"26px", display:"block", marginBottom:"20px" }}>{icon}</span>
-                <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"18px",
-                  fontWeight:700, letterSpacing:"-.5px", color:"white", marginBottom:"10px" }}>{t}</h3>
-                <p style={{ color:"#444", fontSize:"13px", lineHeight:1.6 }}>{d}</p>
+                <div style={{ width:"28px", height:"28px", borderRadius:"8px",
+                  background:`${accent}20`, border:`1px solid ${accent}40`,
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  marginBottom:"18px" }}>
+                  <div style={{ width:"8px", height:"8px", borderRadius:"50%",
+                    background:accent, boxShadow:`0 0 6px ${accent}` }}/>
+                </div>
+                <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"16px",
+                  fontWeight:700, letterSpacing:"-.5px", color:"white", marginBottom:"8px" }}>{t}</h3>
+                <p style={{ color:"#444", fontSize:"12px", lineHeight:1.6 }}>{d}</p>
               </div>
             </Link>
           ))}
@@ -708,19 +738,19 @@ export default function Home() {
           {/* RIGHT — services list */}
           <div style={{ background:"#08060f" }}>
             {[
-              { icon:"📱", title:"Social Media Management",
+              { icon:"", title:"Social Media Management",
                 desc:"Daily content, scheduling and engagement across Facebook, Instagram and TikTok.",
                 color:"#e1306c" },
-              { icon:"🎬", title:"TikTok & Reel Creation",
+              { icon:"", title:"TikTok & Reel Creation",
                 desc:"Scroll-stopping short-form videos custom made for your brand and audience.",
                 color:"#69c9d0" },
-              { icon:"✨", title:"Animated Video Production",
+              { icon:"", title:"Animated Video Production",
                 desc:"Professional animated explainers and promos that tell your story beautifully.",
                 color:A },
-              { icon:"🎯", title:"Paid Social Campaigns",
+              { icon:"", title:"Paid Social Campaigns",
                 desc:"Facebook and Instagram ads that target the right people and convert them into customers.",
                 color:"#1877f2" },
-              { icon:"📈", title:"Growth & Analytics",
+              { icon:"", title:"Growth & Analytics",
                 desc:"We track every metric and optimise continuously so your results compound over time.",
                 color:"#4ade80" },
             ].map(({icon,title,desc,color},i) => (
@@ -875,7 +905,7 @@ export default function Home() {
                 borderRadius:"0 0 8px 8px", margin:"0 16px" }}/>
 
               {/* floating task card */}
-              <div style={{ position:"absolute", top:"-20px", right:"-40px",
+              <div className="admin-float-card" style={{ position:"absolute", top:"-20px", right:"-40px",
                 background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
                 borderRadius:"12px", padding:"12px 16px",
                 animation:"float1 3s ease-in-out infinite",
@@ -883,11 +913,11 @@ export default function Home() {
                 <div style={{ fontSize:"9px", color:"#555", marginBottom:"6px", letterSpacing:"1px" }}>TASKS DONE TODAY</div>
                 <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
                   fontWeight:700, color:"white", letterSpacing:"-1px" }}>14 / 14</div>
-                <div style={{ fontSize:"10px", color:"#4ade80", marginTop:"3px" }}>✓ All complete</div>
+                <div style={{ fontSize:"10px", color:"#4ade80", marginTop:"3px" }}>All complete</div>
               </div>
 
               {/* floating hours saved */}
-              <div style={{ position:"absolute", bottom:"20px", left:"-40px",
+              <div className="admin-float-card" style={{ position:"absolute", bottom:"20px", left:"-40px",
                 background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
                 borderRadius:"12px", padding:"12px 16px",
                 animation:"float2 3.5s ease-in-out infinite",
@@ -913,7 +943,7 @@ export default function Home() {
               Results that <span style={{color:A}}>speak for themselves.</span>
             </h2>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)",
+          <div className="testi-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)",
             gap:"1px", background:L, border:`1px solid ${L}` }}>
             {[
               {q:'"Goonya automated our lead follow-up. We went from missing enquiries to closing 3x more deals."', n:"Sarah M.", r:"Retail Business Owner"},
@@ -949,6 +979,9 @@ export default function Home() {
       </div>
 
       <style>{`
+        @keyframes blink {
+          0%,100%{opacity:1} 50%{opacity:0}
+        }
         @keyframes pdot {
           0%,100%{box-shadow:0 0 6px #9b7cff}
           50%{box-shadow:0 0 16px #9b7cff,0 0 28px rgba(155,124,255,.4)}
@@ -998,8 +1031,9 @@ export default function Home() {
           .stats-grid > div:nth-child(1),
           .stats-grid > div:nth-child(2){ border-bottom:1px solid rgba(255,255,255,.08) !important; }
 
-          /* services row → 2 col */
+          /* services row → 2 col on mobile */
           .services-row { grid-template-columns:repeat(2,1fr) !important; }
+          .services-row a { padding:24px 18px !important; }
 
           /* work showcase → 1 col */
           .showcase-grid { grid-template-columns:1fr !important; }
@@ -1009,6 +1043,9 @@ export default function Home() {
 
           /* admin grid → 1 col */
           .admin-grid { grid-template-columns:1fr !important; }
+
+          /* hide admin floating cards on mobile */
+          .admin-float-card { display:none !important; }
 
           /* testimonials → 1 col */
           .testi-grid { grid-template-columns:1fr !important; }
