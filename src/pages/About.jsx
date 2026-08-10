@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-/* ── ANIMATED BACKGROUND CANVAS ── */
+/* ── LIVE NETWORK BG ── */
 function LiveBg() {
   const ref = useRef(null);
   useEffect(() => {
@@ -15,15 +15,11 @@ function LiveBg() {
     };
     resize();
     window.addEventListener("resize", resize);
-
-    // nodes that connect like a brain/network
-    const nodes = Array.from({ length: 40 }, () => ({
+    const nodes = Array.from({ length: 35 }, () => ({
       x: Math.random() * 100, y: Math.random() * 100,
-      vx: (Math.random() - .5) * .015, vy: (Math.random() - .5) * .015,
-      r: Math.random() * 1.5 + .5,
+      vx: (Math.random() - .5) * .012, vy: (Math.random() - .5) * .012,
       pulse: Math.random() * Math.PI * 2,
     }));
-
     const draw = () => {
       ctx.clearRect(0, 0, W, H);
       t += .008;
@@ -31,31 +27,29 @@ function LiveBg() {
         n.x += n.vx; n.y += n.vy;
         if (n.x < 0 || n.x > 100) n.vx *= -1;
         if (n.y < 0 || n.y > 100) n.vy *= -1;
-        n.pulse += .03;
+        n.pulse += .025;
       });
-      // connections
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const ax = nodes[i].x / 100 * W, ay = nodes[i].y / 100 * H;
           const bx = nodes[j].x / 100 * W, by = nodes[j].y / 100 * H;
           const d = Math.hypot(ax - bx, ay - by);
-          if (d < 120) {
+          if (d < 130) {
             ctx.beginPath();
             ctx.moveTo(ax, ay);
             ctx.lineTo(bx, by);
-            ctx.strokeStyle = `rgba(155,124,255,${(1 - d / 120) * .15})`;
-            ctx.lineWidth = .8;
+            ctx.strokeStyle = `rgba(155,124,255,${(1 - d / 130) * .12})`;
+            ctx.lineWidth = .7;
             ctx.stroke();
           }
         }
       }
-      // nodes
       nodes.forEach(n => {
         const x = n.x / 100 * W, y = n.y / 100 * H;
-        const glow = (Math.sin(n.pulse) + 1) / 2;
+        const g = (Math.sin(n.pulse) + 1) / 2;
         ctx.beginPath();
-        ctx.arc(x, y, n.r + glow, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(155,124,255,${.3 + glow * .4})`;
+        ctx.arc(x, y, 1 + g, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(155,124,255,${.25 + g * .35})`;
         ctx.fill();
       });
       raf = requestAnimationFrame(draw);
@@ -63,7 +57,7 @@ function LiveBg() {
     draw();
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
   }, []);
-  return <canvas ref={ref} style={{ position:"absolute", inset:0, width:"100%", height:"100%", display:"block", zIndex:0, opacity:.6 }} />;
+  return <canvas ref={ref} style={{ position:"absolute", inset:0, width:"100%", height:"100%", display:"block", zIndex:0 }} />;
 }
 
 /* ── TYPEWRITER ── */
@@ -71,184 +65,142 @@ function Typewriter({ words }) {
   const [display, setDisplay] = useState("");
   const [wi, setWi] = useState(0);
   const [ci, setCi] = useState(0);
-  const [deleting, setDeleting] = useState(false);
-
+  const [del, setDel] = useState(false);
   useEffect(() => {
     const word = words[wi];
-    let timeout;
-    if (!deleting && ci < word.length) {
-      timeout = setTimeout(() => setCi(c => c + 1), 80);
-    } else if (!deleting && ci === word.length) {
-      timeout = setTimeout(() => setDeleting(true), 1800);
-    } else if (deleting && ci > 0) {
-      timeout = setTimeout(() => setCi(c => c - 1), 45);
-    } else if (deleting && ci === 0) {
-      setDeleting(false);
-      setWi(w => (w + 1) % words.length);
-    }
+    let tm;
+    if (!del && ci < word.length) tm = setTimeout(() => setCi(c => c + 1), 80);
+    else if (!del && ci === word.length) tm = setTimeout(() => setDel(true), 1800);
+    else if (del && ci > 0) tm = setTimeout(() => setCi(c => c - 1), 45);
+    else { setDel(false); setWi(w => (w + 1) % words.length); }
     setDisplay(word.slice(0, ci));
-    return () => clearTimeout(timeout);
-  }, [ci, deleting, wi, words]);
-
+    return () => clearTimeout(tm);
+  }, [ci, del, wi, words]);
   return (
     <span style={{ color:"#9b7cff" }}>
       {display}
-      <span style={{ animation:"blink .7s infinite", borderRight:"2px solid #9b7cff", marginLeft:"2px" }}/>
+      <span style={{ borderRight:"3px solid #9b7cff", animation:"blink .7s infinite", marginLeft:"2px" }}/>
     </span>
   );
 }
 
 /* ── COUNTER ── */
-function AnimCounter({ to, suffix = "" }) {
-  const [val, setVal] = useState(0);
+function Counter({ to, suffix }) {
+  const [v, setV] = useState(0);
   const ref = useRef(null);
-  const started = useRef(false);
+  const done = useRef(false);
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
     const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started.current) {
-        started.current = true;
-        const isFloat = String(to).includes(".");
-        const num = parseFloat(to);
-        const dur = 1800;
-        const start = performance.now();
+      if (e.isIntersecting && !done.current) {
+        done.current = true;
+        const n = parseFloat(to), isF = String(to).includes(".");
+        const s = performance.now();
         const tick = now => {
-          const p = Math.min((now - start) / dur, 1);
+          const p = Math.min((now - s) / 1800, 1);
           const ease = 1 - Math.pow(1 - p, 3);
-          setVal(isFloat ? (num * ease).toFixed(1) : Math.round(num * ease));
-          if (p < 1) requestAnimationFrame(tick);
-          else setVal(to);
+          setV(isF ? (n * ease).toFixed(1) : Math.round(n * ease));
+          if (p < 1) requestAnimationFrame(tick); else setV(to);
         };
         requestAnimationFrame(tick);
         obs.disconnect();
       }
     }, { threshold: .3 });
-    obs.observe(el);
+    if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [to]);
-  return <span ref={ref}>{val}{suffix}</span>;
+  return <span ref={ref}>{v}{suffix}</span>;
 }
 
-/* ── SCROLL REVEAL HOOK ── */
-function useReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll(".rv");
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => {
-            e.target.style.opacity = "1";
-            e.target.style.transform = "translateY(0) scale(1)";
-          }, (e.target.dataset.delay || 0) * 1);
-          obs.unobserve(e.target);
-        }
-      });
-    }, { threshold: .12 });
-    els.forEach(el => {
-      el.style.opacity = "0";
-      el.style.transform = "translateY(40px) scale(.98)";
-      el.style.transition = "opacity .7s ease, transform .7s ease";
-      obs.observe(el);
-    });
-    return () => obs.disconnect();
-  }, []);
-}
-
-/* ════════ ABOUT PAGE ════════ */
 export default function About() {
-  useReveal();
   const A = "#9b7cff";
   const L = "rgba(255,255,255,.08)";
 
   useEffect(() => {
-    // hero text animate in
-    const els = document.querySelectorAll(".ab-hero");
-    els.forEach((el, i) => {
+    // hero entrance
+    document.querySelectorAll(".ah").forEach((el, i) => {
       el.style.opacity = "0";
-      el.style.transform = "translateY(30px)";
-      el.style.transition = `opacity .8s ease ${i * .13}s, transform .8s ease ${i * .13}s`;
+      el.style.transform = "translateY(28px)";
+      el.style.transition = `opacity .8s ease ${i * .12}s, transform .8s ease ${i * .12}s`;
       setTimeout(() => { el.style.opacity = "1"; el.style.transform = "translateY(0)"; }, 60);
     });
+    // scroll reveals
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = "1";
+          e.target.style.transform = "translateY(0) scale(1)";
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: .1 });
+    document.querySelectorAll(".ar").forEach(el => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(36px) scale(.98)";
+      el.style.transition = "opacity .75s ease, transform .75s ease";
+      obs.observe(el);
+    });
+    return () => obs.disconnect();
   }, []);
-
-  const values = [
-    { title:"Speed over perfection",    desc:"We move fast, test quickly and improve continuously. Done beats perfect every time.", icon:"⚡" },
-    { title:"Built for business owners", desc:"We're not an agency that disappears after launch. We're your digital partner long-term.", icon:"🤝" },
-    { title:"Results you can measure",  desc:"Every system we build is tied to a real outcome — more leads, more time, more revenue.", icon:"📊" },
-    { title:"No jargon, no bullshit",   desc:"We explain everything in plain language and only recommend what you actually need.", icon:"💬" },
-  ];
 
   return (
     <div style={{ background:"#070707", overflowX:"hidden" }}>
 
-      {/* ══ HERO with live background ══ */}
+      {/* ══ HERO ══ */}
       <section style={{ minHeight:"100vh", display:"flex", alignItems:"center",
         position:"relative", overflow:"hidden" }}>
         <LiveBg />
-        {/* gradient overlay */}
         <div style={{ position:"absolute", inset:0, zIndex:1, pointerEvents:"none",
-          background:"radial-gradient(ellipse 80% 60% at 20% 50%, rgba(155,124,255,.12) 0%, transparent 60%)" }}/>
-
+          background:"radial-gradient(ellipse 80% 60% at 20% 50%, rgba(155,124,255,.1) 0%, transparent 60%)" }}/>
         <div style={{ position:"relative", zIndex:2, width:"min(1400px,90vw)",
           margin:"0 auto", padding:"130px 0 100px" }}>
-
-          <div className="ab-hero" style={{ fontSize:"11px", letterSpacing:"2.5px",
-            color:"#3a3a3a", marginBottom:"28px", display:"flex", alignItems:"center", gap:"10px" }}>
+          <div className="ah" style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a",
+            marginBottom:"28px", display:"flex", alignItems:"center", gap:"10px" }}>
             <span style={{ width:"20px", height:"1px", background:A }}/>ABOUT GOONYA
           </div>
-
-          {/* Typewriter headline */}
-          <h1 className="ab-hero" style={{ margin:"0 0 12px", fontFamily:"'Space Grotesk',sans-serif",
+          <h1 className="ah" style={{ margin:"0 0 12px", fontFamily:"'Space Grotesk',sans-serif",
             fontWeight:700, letterSpacing:"-3px", lineHeight:.92,
-            fontSize:"clamp(48px,6.5vw,108px)", color:"white" }}>
+            fontSize:"clamp(46px,6.5vw,108px)", color:"white" }}>
             We build systems
           </h1>
-          <h1 className="ab-hero" style={{ margin:"0 0 40px", fontFamily:"'Space Grotesk',sans-serif",
+          <h1 className="ah" style={{ margin:"0 0 36px", fontFamily:"'Space Grotesk',sans-serif",
             fontWeight:700, letterSpacing:"-3px", lineHeight:.92,
-            fontSize:"clamp(48px,6.5vw,108px)" }}>
+            fontSize:"clamp(46px,6.5vw,108px)" }}>
             that make you&nbsp;
-            <Typewriter words={["faster.", "smarter.", "better.", "unstoppable."]} />
+            <Typewriter words={["faster.", "smarter.", "unstoppable."]} />
           </h1>
-
-          <p className="ab-hero" style={{ maxWidth:"500px", color:"#666",
+          <p className="ah" style={{ maxWidth:"500px", color:"#666",
             fontSize:"17px", lineHeight:1.75, marginBottom:"36px" }}>
-            Goonya helps ambitious Australian businesses use technology, automation
-            and digital systems to work smarter — and compete like companies twice their size.
+            Goonya is an Australian digital agency helping ambitious businesses
+            use technology, automation and digital systems to work smarter —
+            and compete like companies twice their size.
           </p>
-
-          <div className="ab-hero" style={{ display:"flex", gap:"14px", flexWrap:"wrap" }}>
+          <div className="ah" style={{ display:"flex", gap:"14px", flexWrap:"wrap" }}>
             <Link to="/services" style={{ display:"inline-flex", alignItems:"center",
               padding:"15px 30px", background:"white", color:"black", borderRadius:"100px",
               fontWeight:700, fontSize:"14px", textDecoration:"none",
-              boxShadow:"0 0 40px rgba(155,124,255,.3)" }}>
-              What we do
-            </Link>
+              boxShadow:"0 0 40px rgba(155,124,255,.3)" }}>What we do</Link>
             <Link to="/contact" style={{ display:"inline-flex", alignItems:"center",
               padding:"15px 30px", color:"white", fontSize:"14px", textDecoration:"none",
-              borderRadius:"100px", border:"1px solid rgba(255,255,255,.15)" }}>
-              Get in touch
-            </Link>
+              borderRadius:"100px", border:"1px solid rgba(255,255,255,.15)" }}>Get in touch</Link>
           </div>
         </div>
       </section>
 
       {/* ══ STATS ══ */}
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto", borderBottom:`1px solid ${L}` }}>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)" }}
-          className="ab-stats-grid">
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)" }} className="ab-sg">
           {[
-            { to:"40", suffix:"+", l:"Projects Delivered" },
-            { to:"3",  suffix:"+", l:"Years Experience" },
-            { to:"98", suffix:"%", l:"Client Satisfaction" },
-            { to:"120",suffix:"h", l:"Avg Hours Saved" },
-          ].map(({to,suffix,l},i) => (
-            <div key={l} className="rv" data-delay={i * 120}
-              style={{ padding:"60px 40px", borderRight:i<3?`1px solid ${L}`:"none" }}>
+            {to:"40",  s:"+", l:"Projects Delivered"},
+            {to:"3",   s:"+", l:"Years Experience"},
+            {to:"98",  s:"%", l:"Client Satisfaction"},
+            {to:"120", s:"h", l:"Hours Saved / Client"},
+          ].map(({to,s,l},i) => (
+            <div key={l} className="ar" style={{ padding:"60px 40px",
+              borderRight:i<3?`1px solid ${L}`:"none" }}>
               <div style={{ fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(44px,4vw,68px)", fontWeight:700, letterSpacing:"-3px",
-                color:"white" }}>
-                <AnimCounter to={to} suffix={suffix} />
+                fontSize:"clamp(44px,4vw,68px)", fontWeight:700,
+                letterSpacing:"-3px", color:"white" }}>
+                <Counter to={to} suffix={s} />
               </div>
               <p style={{ marginTop:"8px", fontSize:"12px", letterSpacing:"1px", color:"#3a3a3a" }}>{l}</p>
             </div>
@@ -256,30 +208,96 @@ export default function About() {
         </div>
       </div>
 
-      {/* ══ VALUES — horizontal scroll on mobile ══ */}
+      {/* ══ PHOTO + ABOUT TEXT ══ */}
+      <div style={{ width:"min(1400px,90vw)", margin:"80px auto 0",
+        display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
+        background:L, border:`1px solid ${L}` }} className="ab-tg">
+        {/* photo */}
+        <div className="ar" style={{ position:"relative", minHeight:"480px", overflow:"hidden" }}>
+          <img
+            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=900&q=75"
+            alt="Goonya team working with a client"
+            style={{ width:"100%", height:"100%", objectFit:"cover", display:"block",
+              filter:"brightness(.75) saturate(.85)",
+              transition:"transform .6s ease, filter .6s ease" }}
+            onMouseEnter={e => { e.target.style.transform="scale(1.03)"; e.target.style.filter="brightness(.85) saturate(.95)"; }}
+            onMouseLeave={e => { e.target.style.transform="scale(1)"; e.target.style.filter="brightness(.75) saturate(.85)"; }}
+            onError={e => { e.target.parentElement.style.background="#0a0818"; e.target.style.display="none"; }}/>
+          {/* colour overlay */}
+          <div style={{ position:"absolute", inset:0,
+            background:"linear-gradient(135deg, rgba(155,124,255,.25) 0%, transparent 60%)",
+            pointerEvents:"none" }}/>
+          {/* badge */}
+          <div style={{ position:"absolute", bottom:"28px", left:"28px",
+            background:"rgba(7,7,7,.85)", border:`1px solid ${L}`,
+            borderRadius:"12px", padding:"14px 20px", backdropFilter:"blur(12px)" }}>
+            <div style={{ fontSize:"10px", letterSpacing:"2px", color:"#555", marginBottom:"4px" }}>BASED IN</div>
+            <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"16px",
+              fontWeight:700, color:"white" }}>Melbourne, Australia</div>
+          </div>
+        </div>
+        {/* text */}
+        <div className="ar" style={{ padding:"70px 60px", background:"#08060f" }}>
+          <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"22px",
+            display:"flex", alignItems:"center", gap:"10px" }}>
+            <span style={{ width:"20px", height:"1px", background:A }}/>WHO WE ARE
+          </div>
+          <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
+            fontSize:"clamp(28px,3.5vw,48px)", fontWeight:700, letterSpacing:"-2px",
+            color:"white", marginBottom:"22px", lineHeight:1.05 }}>
+            A small team that<span style={{color:A}}> punches above its weight.</span>
+          </h2>
+          <p style={{ color:"#666", fontSize:"16px", lineHeight:1.8, marginBottom:"18px" }}>
+            We're a tight-knit team of designers, developers and digital strategists
+            based in Noble Park, Melbourne. We started Goonya because we saw too many
+            good businesses being left behind — not because they weren't good enough,
+            but because they didn't have the right digital systems in place.
+          </p>
+          <p style={{ color:"#555", fontSize:"16px", lineHeight:1.8, marginBottom:"32px" }}>
+            We work with tradies, hospitality businesses, healthcare providers,
+            retailers and service businesses across Australia — building the websites,
+            automation tools and marketing systems that help them grow.
+          </p>
+          {/* coloured tags */}
+          <div style={{ display:"flex", flexWrap:"wrap", gap:"10px" }}>
+            {["Melbourne based","Australian owned","Fast turnaround","Long-term partner"].map(t => (
+              <span key={t} style={{ padding:"6px 14px", borderRadius:"100px",
+                background:"rgba(155,124,255,.1)", border:"1px solid rgba(155,124,255,.25)",
+                fontSize:"12px", color:A }}>{t}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ══ VALUES — colourful cards ══ */}
       <div style={{ padding:"100px 0" }}>
         <div style={{ width:"min(1400px,90vw)", margin:"0 auto" }}>
-          <div className="rv" style={{ fontSize:"11px", letterSpacing:"2.5px",
+          <div className="ar" style={{ fontSize:"11px", letterSpacing:"2.5px",
             color:"#3a3a3a", marginBottom:"48px", display:"flex", alignItems:"center", gap:"10px" }}>
             <span style={{ width:"20px", height:"1px", background:A }}/>WHAT WE STAND FOR
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)",
-            gap:"1px", background:L, border:`1px solid ${L}` }}
-            className="ab-values-grid">
-            {values.map(({title,desc,icon},i) => (
-              <div key={title} className="rv" data-delay={i * 100}
-                style={{ padding:"44px 40px", background:"#08060f",
-                  position:"relative", overflow:"hidden",
-                  transition:"background .3s ease" }}
+            gap:"1px", background:L, border:`1px solid ${L}` }} className="ab-vg">
+            {[
+              { title:"Speed over perfection",    desc:"We move fast, test quickly and improve continuously. Done beats perfect every time.",           accent:"#9b7cff", glow:"rgba(155,124,255,.2)" },
+              { title:"Built for business owners", desc:"We're not an agency that disappears after launch. We're your long-term digital partner.",       accent:"#4ade80", glow:"rgba(74,222,128,.15)" },
+              { title:"Results you can measure",  desc:"Every system we build is tied to a real outcome — more leads, more time, more revenue.",        accent:"#f97316", glow:"rgba(249,115,22,.15)" },
+              { title:"No jargon, no bullshit",   desc:"We explain everything in plain language and only recommend what you actually need.",             accent:"#e879f9", glow:"rgba(232,121,249,.15)" },
+            ].map(({title,desc,accent,glow},i) => (
+              <div key={title} className="ar" style={{ padding:"44px 40px", background:"#08060f",
+                position:"relative", overflow:"hidden",
+                transition:"background .3s ease" }}
                 onMouseEnter={e=>e.currentTarget.style.background="#0d0b18"}
                 onMouseLeave={e=>e.currentTarget.style.background="#08060f"}>
-                {/* animated corner glow */}
-                <div style={{ position:"absolute", top:"-40px", right:"-40px",
-                  width:"120px", height:"120px", borderRadius:"50%",
-                  background:`radial-gradient(circle, rgba(155,124,255,.15), transparent 70%)`,
+                <div style={{ position:"absolute", top:"-30px", right:"-30px",
+                  width:"150px", height:"150px", borderRadius:"50%",
+                  background:`radial-gradient(circle,${glow},transparent 70%)`,
                   filter:"blur(20px)", pointerEvents:"none",
-                  animation:`pulse ${2 + i * .4}s ease-in-out infinite alternate` }}/>
-                <div style={{ fontSize:"28px", marginBottom:"16px" }}>{icon}</div>
+                  animation:`pulse ${2.2+i*.3}s ease-in-out infinite alternate` }}/>
+                {/* coloured top bar */}
+                <div style={{ width:"36px", height:"3px", borderRadius:"2px",
+                  background:accent, marginBottom:"20px",
+                  boxShadow:`0 0 8px ${accent}` }}/>
                 <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"20px",
                   fontWeight:700, color:"white", marginBottom:"10px",
                   letterSpacing:"-.5px" }}>{title}</h3>
@@ -290,69 +308,62 @@ export default function About() {
         </div>
       </div>
 
-      {/* ══ WHO WE ARE ══ */}
+      {/* ══ LIVE ACTIVITY ══ */}
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto 130px",
         display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
-        background:L, border:`1px solid ${L}` }} className="ab-who-grid">
-
-        <div className="rv" style={{ padding:"70px 60px", background:"#08060f" }}>
-          <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"22px",
-            display:"flex", alignItems:"center", gap:"10px" }}>
-            <span style={{ width:"20px", height:"1px", background:A }}/>WHO WE ARE
+        background:L, border:`1px solid ${L}` }} className="ab-ag">
+        {/* left — second photo */}
+        <div className="ar" style={{ position:"relative", minHeight:"420px", overflow:"hidden" }}>
+          <img
+            src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=900&q=75"
+            alt="Digital marketing and analytics"
+            style={{ width:"100%", height:"100%", objectFit:"cover", display:"block",
+              filter:"brightness(.65) saturate(.8)" }}
+            onError={e=>{ e.target.parentElement.style.background="#0a0818"; e.target.style.display="none"; }}/>
+          <div style={{ position:"absolute", inset:0,
+            background:"linear-gradient(to right, rgba(7,7,7,.8) 0%, transparent 60%)",
+            pointerEvents:"none" }}/>
+          <div style={{ position:"absolute", top:"40px", left:"40px", zIndex:2 }}>
+            <div style={{ fontFamily:"'Space Grotesk',sans-serif",
+              fontSize:"clamp(24px,3vw,40px)", fontWeight:700,
+              color:"white", letterSpacing:"-1.5px", lineHeight:1.1 }}>
+              Results that<br/><span style={{color:A}}>speak.</span>
+            </div>
           </div>
-          <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
-            fontSize:"clamp(28px,3.5vw,48px)", fontWeight:700, letterSpacing:"-2px",
-            color:"white", marginBottom:"22px", lineHeight:1.05 }}>
-            A small team that<span style={{color:A}}> punches above its weight.</span>
-          </h2>
-          <p style={{ color:"#555", fontSize:"16px", lineHeight:1.8, marginBottom:"18px" }}>
-            We're designers, developers and strategists based in Australia,
-            working with ambitious businesses that want to grow — not just maintain.
-          </p>
-          <p style={{ color:"#444", fontSize:"16px", lineHeight:1.8 }}>
-            We don't take on every client. We take on the right ones —
-            businesses serious about using technology as a real competitive advantage.
-          </p>
         </div>
-
-        {/* animated mini dashboard */}
-        <div className="rv" style={{ background:"#050410", padding:"60px 52px",
-          position:"relative", overflow:"hidden", display:"flex",
-          flexDirection:"column", justifyContent:"center" }}>
-          <div style={{ position:"absolute", top:"-60px", right:"-60px",
-            width:"300px", height:"300px", borderRadius:"50%",
-            background:"radial-gradient(circle,rgba(155,124,255,.12),transparent 70%)",
-            filter:"blur(40px)", pointerEvents:"none" }}/>
-
-          {/* live activity feed */}
-          <div style={{ position:"relative", zIndex:1 }}>
-            <div style={{ fontSize:"11px", letterSpacing:"2px", color:"#3a3a3a",
-              marginBottom:"20px" }}>LIVE ACTIVITY</div>
-            {[
-              { t:"New website launched", sub:"Hospitality client · just now",    c:"#4ade80", dot:"●" },
-              { t:"Automation running",   sub:"840 tasks handled today",          c:A,         dot:"●" },
-              { t:"Campaign live",        sub:"Instagram · 2,400 new reach",      c:"#f97316", dot:"●" },
-              { t:"Admin tasks done",     sub:"14 / 14 complete today",           c:"#e879f9", dot:"●" },
-            ].map(({t,sub,c,dot},i) => (
-              <div key={i} style={{ display:"flex", alignItems:"center", gap:"12px",
-                padding:"12px 14px", background:"rgba(255,255,255,.03)",
-                borderRadius:"10px", marginBottom:"8px",
-                border:"1px solid rgba(255,255,255,.05)",
-                animation:`slideIn .5s ease ${i*.15+.2}s both` }}>
-                <span style={{ color:c, fontSize:"8px", flexShrink:0,
-                  textShadow:`0 0 8px ${c}`, animation:`dotPulse 1.5s ease ${i*.3}s infinite` }}>{dot}</span>
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontSize:"13px", color:"white", fontWeight:500 }}>{t}</div>
-                  <div style={{ fontSize:"11px", color:"#444", marginTop:"2px" }}>{sub}</div>
-                </div>
-              </div>
-            ))}
+        {/* right — live feed */}
+        <div className="ar" style={{ padding:"56px 52px", background:"#050410",
+          display:"flex", flexDirection:"column", justifyContent:"center" }}>
+          <div style={{ fontSize:"11px", letterSpacing:"2px", color:"#3a3a3a",
+            marginBottom:"24px", display:"flex", alignItems:"center", gap:"10px" }}>
+            <span style={{ width:"20px", height:"1px", background:A }}/>LIVE ACTIVITY
           </div>
+          {[
+            { t:"New website launched",   sub:"Hospitality client · Melbourne",   c:"#4ade80" },
+            { t:"Automation running",     sub:"840 tasks handled today",          c:A },
+            { t:"Campaign live",          sub:"Instagram · 2,400 new reach",      c:"#f97316" },
+            { t:"Admin tasks complete",   sub:"14 / 14 done today",               c:"#e879f9" },
+            { t:"New enquiry received",   sub:"Contact form · 2 mins ago",        c:"#38bdf8" },
+          ].map(({t,sub,c},i) => (
+            <div key={i} style={{ display:"flex", alignItems:"center", gap:"12px",
+              padding:"13px 16px", background:"rgba(255,255,255,.03)",
+              borderRadius:"10px", marginBottom:"8px",
+              border:"1px solid rgba(255,255,255,.05)",
+              animation:`slideIn .5s ease ${i*.12+.1}s both` }}>
+              <span style={{ width:"8px", height:"8px", borderRadius:"50%",
+                background:c, boxShadow:`0 0 8px ${c}`, flexShrink:0,
+                animation:`dotPulse ${1.2+i*.2}s ease infinite` }}/>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:"13px", color:"white", fontWeight:500 }}>{t}</div>
+                <div style={{ fontSize:"11px", color:"#444", marginTop:"2px" }}>{sub}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* ══ CTA ══ */}
-      <div className="rv" style={{ width:"min(1400px,90vw)", margin:"0 auto",
+      <div className="ar" style={{ width:"min(1400px,90vw)", margin:"0 auto",
         padding:"100px 0 140px", textAlign:"center", borderTop:`1px solid ${L}` }}>
         <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
           fontSize:"clamp(42px,6vw,96px)", fontWeight:700, letterSpacing:"-4px",
@@ -368,22 +379,23 @@ export default function About() {
       </div>
 
       <style>{`
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes pulse { from{opacity:.4;transform:scale(.9)} to{opacity:1;transform:scale(1.1)} }
-        @keyframes slideIn { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:translateX(0)} }
-        @keyframes dotPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+        @keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes pulse    { from{opacity:.3;transform:scale(.85)} to{opacity:1;transform:scale(1.2)} }
+        @keyframes slideIn  { from{opacity:0;transform:translateX(-14px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes dotPulse { 0%,100%{opacity:.5} 50%{opacity:1} }
 
         @media(max-width:850px){
-          .ab-stats-grid { grid-template-columns:repeat(2,1fr) !important; }
-          .ab-stats-grid > div:nth-child(2){ border-right:none !important; }
-          .ab-stats-grid > div:nth-child(1),
-          .ab-stats-grid > div:nth-child(2){ border-bottom:1px solid rgba(255,255,255,.08) !important; }
-          .ab-stats-grid > div { padding:36px 24px !important; }
-          .ab-values-grid { grid-template-columns:1fr !important; }
-          .ab-who-grid { grid-template-columns:1fr !important; margin:0 auto 80px !important; }
+          .ab-sg  { grid-template-columns:repeat(2,1fr) !important; }
+          .ab-sg > div:nth-child(2){ border-right:none !important; }
+          .ab-sg > div:nth-child(1),
+          .ab-sg > div:nth-child(2){ border-bottom:1px solid rgba(255,255,255,.08) !important; }
+          .ab-sg > div { padding:36px 20px !important; }
+          .ab-tg  { grid-template-columns:1fr !important; margin:40px auto 0 !important; }
+          .ab-vg  { grid-template-columns:1fr !important; }
+          .ab-ag  { grid-template-columns:1fr !important; margin:0 auto 80px !important; }
           div[style*="padding:70px 60px"] { padding:40px 28px !important; }
-          div[style*="padding:60px 52px"] { padding:36px 28px !important; }
-          h1[style*="clamp(48px"] { letter-spacing:-2px !important; }
+          div[style*="padding:56px 52px"] { padding:36px 28px !important; }
+          div[style*="padding:44px 40px"] { padding:36px 24px !important; }
         }
       `}</style>
     </div>
