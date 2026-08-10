@@ -138,22 +138,39 @@ export default function About() {
             borderRadius:"50%", background:"radial-gradient(circle,rgba(155,124,255,.12),transparent 70%)",
             filter:"blur(40px)" }}/>
           <div style={{ position:"relative", zIndex:1 }}>
-            <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"22px",
+            <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"28px",
               display:"flex", alignItems:"center", gap:"10px" }}>
-              <span style={{ width:"20px", height:"1px", background:A }}/>WHAT DRIVES US
+              <span style={{ width:"20px", height:"1px", background:A }}/>OUR APPROACH
             </div>
-            {[
-              { icon:"🚀", text:"Making small businesses competitive with enterprise-level systems." },
-              { icon:"🤝", text:"Building real relationships, not just client-vendor transactions." },
-              { icon:"⚡", text:"Delivering fast — because speed is a competitive advantage." },
-              { icon:"📊", text:"Obsessing over outcomes, not outputs." },
-            ].map(({icon,text},i) => (
-              <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:"14px",
-                marginBottom:"24px" }}>
-                <span style={{ fontSize:"20px", flexShrink:0 }}>{icon}</span>
-                <span style={{ fontSize:"15px", color:"#666", lineHeight:1.65 }}>{text}</span>
-              </div>
-            ))}
+            {/* animated number stats */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
+              background:"rgba(255,255,255,.06)", border:"1px solid rgba(255,255,255,.06)",
+              marginBottom:"32px" }}>
+              {[
+                {v:"40+",  l:"Projects built",       c:A},
+                {v:"3+",   l:"Years running",         c:"#4ade80"},
+                {v:"98%",  l:"Happy clients",         c:"#f97316"},
+                {v:"6",    l:"Services offered",      c:"#e879f9"},
+              ].map(({v,l,c},i)=>(
+                <div key={l} style={{ padding:"24px 20px",
+                  background:"#08060f",
+                  borderRight: i%2===0 ? "1px solid rgba(255,255,255,.06)" : "none",
+                  borderBottom: i<2 ? "1px solid rgba(255,255,255,.06)" : "none",
+                  animation:`cardIn .5s ease ${i*.1}s both` }}>
+                  <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"36px",
+                    fontWeight:700, color:c, letterSpacing:"-2px", lineHeight:1 }}>{v}</div>
+                  <div style={{ fontSize:"12px", color:"#555", marginTop:"6px", letterSpacing:"1px" }}>{l}</div>
+                </div>
+              ))}
+            </div>
+            <p style={{ color:"#555", fontSize:"15px", lineHeight:1.8, marginBottom:"24px" }}>
+              We're a tight-knit team of designers, developers and strategists based in Australia,
+              working with businesses that want to grow — not just maintain.
+            </p>
+            <p style={{ color:"#444", fontSize:"15px", lineHeight:1.8 }}>
+              We don't take on every client. We take on the right ones — businesses serious
+              about using technology as a real competitive advantage.
+            </p>
           </div>
         </div>
       </div>
@@ -170,15 +187,19 @@ export default function About() {
           padding:"18px 44px", background:"white", color:"black", borderRadius:"100px",
           fontWeight:700, fontSize:"16px", textDecoration:"none",
           boxShadow:"0 0 60px rgba(155,124,255,.35)" }}>
-          Start a project <span>↗</span>
+          Start a project
         </Link>
       </div>
 
       <style>{`
+        @keyframes cardIn {
+          from{opacity:0;transform:translateY(20px)}
+          to{opacity:1;transform:translateY(0)}
+        }
         @media(max-width:850px){
           div[style*="1fr 1fr"]{grid-template-columns:1fr !important;}
           div[style*="repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important;}
-          h1 span{font-size:clamp(48px,12vw,72px) !important;}
+          h1 span{font-size:clamp(48px,12vw,72px) !important; letter-spacing:-2px !important;}
         }
       `}</style>
     </div>
