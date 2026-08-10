@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export default function OurWork() {
 
   useEffect(() => {
+    // hero entrance
     const items = document.querySelectorAll(".ow-fi");
     items.forEach((el, i) => {
       el.style.opacity = "0";
@@ -11,6 +12,20 @@ export default function OurWork() {
       el.style.transition = `opacity .6s ease ${i*.1}s, transform .6s ease ${i*.1}s`;
       setTimeout(() => { el.style.opacity="1"; el.style.transform="translateY(0)"; }, 40);
     });
+
+    // scroll reveal for cards
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = "1";
+          e.target.style.transform = "translateY(0)";
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".ow-card").forEach(el => obs.observe(el));
+    return () => obs.disconnect();
   }, []);
 
   const A = "#9b7cff";
@@ -97,47 +112,80 @@ export default function OurWork() {
 
       {/* ── WORK GRID ── */}
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto 130px" }}>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)",
+        <div className="ow-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)",
           gap:"1px", background:L, border:`1px solid ${L}` }}>
           {projects.map(({tag,name,desc,img,color,services},i) => (
-            <div key={name} className="ow-fi" style={{ position:"relative", overflow:"hidden",
+            <div key={name} className="ow-card" style={{
+              position:"relative", overflow:"hidden",
               background:"#08060f", cursor:"pointer",
-              animation:`cardIn .5s ease ${i*.1}s both` }}
+              opacity:0, transform:"translateY(40px)",
+              transition:`opacity .7s ease ${i*.12}s, transform .7s ease ${i*.12}s`,
+            }}
               onMouseEnter={e=>{
-                e.currentTarget.querySelector(".ow-img").style.transform="scale(1.05)";
+                e.currentTarget.querySelector(".ow-img").style.transform="scale(1.08)";
+                e.currentTarget.querySelector(".ow-img").style.filter="brightness(.5) saturate(.6)";
+                e.currentTarget.querySelector(".ow-info").style.transform="translateY(0)";
+                e.currentTarget.querySelector(".ow-info").style.opacity="1";
                 e.currentTarget.querySelector(".ow-overlay").style.opacity="1";
               }}
               onMouseLeave={e=>{
                 e.currentTarget.querySelector(".ow-img").style.transform="scale(1)";
+                e.currentTarget.querySelector(".ow-img").style.filter="brightness(.6) saturate(.7)";
+                e.currentTarget.querySelector(".ow-info").style.transform="translateY(12px)";
+                e.currentTarget.querySelector(".ow-info").style.opacity="0";
                 e.currentTarget.querySelector(".ow-overlay").style.opacity="0";
               }}>
-              {/* image */}
-              <div style={{ height:"220px", overflow:"hidden" }}>
+
+              {/* full-height image */}
+              <div style={{ height:"320px", overflow:"hidden", position:"relative" }}>
                 <img className="ow-img" src={img} alt={name}
                   style={{ width:"100%", height:"100%", objectFit:"cover", display:"block",
                     filter:"brightness(.6) saturate(.7)",
-                    transition:"transform .5s ease" }}
+                    transition:"transform .6s ease, filter .6s ease" }}
                   onError={e=>{ e.target.parentElement.style.background="#0a0818"; e.target.style.display="none"; }}/>
-              </div>
-              {/* colour overlay on hover */}
-              <div className="ow-overlay" style={{ position:"absolute", top:0, left:0,
-                right:0, height:"220px", opacity:0, transition:"opacity .4s ease",
-                background:`radial-gradient(circle at 50% 50%, ${color}30, transparent 70%)` }}/>
-              {/* info */}
-              <div style={{ padding:"28px 30px" }}>
-                <div style={{ fontSize:"10px", letterSpacing:"2px", color:color,
-                  marginBottom:"10px", fontWeight:600 }}>{tag}</div>
-                <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"22px",
-                  fontWeight:700, letterSpacing:"-1px", color:"white", marginBottom:"10px" }}>{name}</h3>
-                <p style={{ fontSize:"13px", color:"#555", lineHeight:1.6, marginBottom:"18px" }}>{desc}</p>
-                <div style={{ display:"flex", flexWrap:"wrap", gap:"6px" }}>
-                  {services.map(s => (
-                    <span key={s} style={{ padding:"3px 10px", borderRadius:"100px",
-                      background:"rgba(255,255,255,.04)", border:"1px solid rgba(255,255,255,.08)",
-                      fontSize:"11px", color:"#555" }}>{s}</span>
-                  ))}
+
+                {/* colour overlay */}
+                <div className="ow-overlay" style={{ position:"absolute", inset:0,
+                  opacity:0, transition:"opacity .5s ease",
+                  background:`linear-gradient(to top, ${color}40 0%, transparent 60%)` }}/>
+
+                {/* tag badge — always visible */}
+                <div style={{ position:"absolute", top:"16px", left:"16px",
+                  padding:"4px 12px", borderRadius:"100px",
+                  background:`${color}22`, border:`1px solid ${color}44`,
+                  fontSize:"10px", letterSpacing:"1.5px", color, fontWeight:600 }}>
+                  {tag}
+                </div>
+
+                {/* info slides up from bottom on hover */}
+                <div className="ow-info" style={{
+                  position:"absolute", bottom:0, left:0, right:0,
+                  padding:"24px 24px 28px",
+                  background:"linear-gradient(to top, rgba(5,4,16,.98) 0%, rgba(5,4,16,.8) 70%, transparent 100%)",
+                  transform:"translateY(12px)", opacity:0,
+                  transition:"transform .45s ease, opacity .45s ease",
+                }}>
+                  <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"20px",
+                    fontWeight:700, letterSpacing:"-1px", color:"white", marginBottom:"6px" }}>{name}</h3>
+                  <p style={{ fontSize:"12px", color:"rgba(255,255,255,.55)", lineHeight:1.5,
+                    marginBottom:"12px" }}>{desc}</p>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:"5px" }}>
+                    {services.map(s=>(
+                      <span key={s} style={{ padding:"2px 9px", borderRadius:"100px",
+                        background:"rgba(255,255,255,.08)", border:"1px solid rgba(255,255,255,.12)",
+                        fontSize:"10px", color:"rgba(255,255,255,.6)" }}>{s}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
+
+              {/* static info below image — always shown */}
+              <div style={{ padding:"20px 24px 24px" }}>
+                <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"18px",
+                  fontWeight:700, letterSpacing:"-0.5px", color:"white", marginBottom:"6px" }}>{name}</h3>
+                <p style={{ fontSize:"12px", color:"#555", lineHeight:1.55 }}>{desc}</p>
+              </div>
+
             </div>
           ))}
         </div>
@@ -175,14 +223,23 @@ export default function OurWork() {
       </div>
 
       <style>{`
-        @keyframes cardIn {
-          from{opacity:0;transform:translateY(24px)}
-          to{opacity:1;transform:translateY(0)}
-        }
+        /* mobile: 1 col, info overlay hidden, static info shown */
         @media(max-width:850px){
-          div[style*="repeat(3,1fr)"]{grid-template-columns:1fr !important;}
-          div[style*="repeat(2,1fr)"]{grid-template-columns:1fr !important;}
-          h1 span{font-size:clamp(48px,12vw,70px) !important; letter-spacing:-2px !important;}
+          .ow-grid { grid-template-columns:1fr !important; }
+          .ow-info { display:none !important; }
+          .ow-grid > div > div:first-child { height:260px !important; }
+          h1 span { font-size:clamp(46px,12vw,70px) !important; letter-spacing:-2px !important; }
+        }
+
+        /* desktop: hide static info, show on-image overlay instead */
+        @media(min-width:851px){
+          .ow-card > div:last-child { display:none; }
+        }
+
+        /* card focus state for accessibility */
+        .ow-card:focus-within .ow-info {
+          transform:translateY(0) !important;
+          opacity:1 !important;
         }
       `}</style>
     </div>
