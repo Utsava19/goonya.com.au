@@ -1,26 +1,122 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-/* ── TYPEWRITER ── */
-function Typewriter({ words }) {
-  const [display, setDisplay] = useState("");
-  const [wi, setWi] = useState(0);
-  const [ci, setCi] = useState(0);
-  const [del, setDel] = useState(false);
+/* ── HERO BACKGROUND — dot grid + aurora ── */
+function HeroBg() {
+  const ref = useRef(null);
   useEffect(() => {
-    const word = words[wi];
-    let tm;
-    if (!del && ci < word.length) tm = setTimeout(() => setCi(c => c+1), 85);
-    else if (!del && ci === word.length) tm = setTimeout(() => setDel(true), 2000);
-    else if (del && ci > 0) tm = setTimeout(() => setCi(c => c-1), 45);
-    else { setDel(false); setWi(w => (w+1) % words.length); }
-    setDisplay(word.slice(0, ci));
-    return () => clearTimeout(tm);
-  }, [ci, del, wi, words]);
+    const cv = ref.current;
+    if (!cv) return;
+    const ctx = cv.getContext("2d");
+    let W, H, raf, t = 0;
+    const resize = () => {
+      W = cv.width = cv.offsetWidth || window.innerWidth;
+      H = cv.height = cv.offsetHeight || window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+    const blobs = [
+      { x:.65, y:.4,  r:.5,  hue:260, sp:.0003 },
+      { x:.2,  y:.7,  r:.35, hue:280, sp:.0004 },
+      { x:.85, y:.75, r:.3,  hue:240, sp:.0005 },
+    ];
+    const draw = () => {
+      ctx.clearRect(0,0,W,H);
+      t++;
+      blobs.forEach(b => {
+        b._x = (b.x + Math.sin(t*b.sp*3)*.08)*W;
+        b._y = (b.y + Math.cos(t*b.sp*2)*.06)*H;
+      });
+      // dot grid
+      const gap = 40;
+      for (let x=0;x<W;x+=gap) {
+        for (let y=0;y<H;y+=gap) {
+          let g=0;
+          blobs.forEach(b=>{
+            const d=Math.hypot(x-b._x,y-b._y);
+            g+=Math.max(0,1-d/(b.r*W))*.8;
+          });
+          const a=Math.min(.04+g*.3,.5);
+          ctx.beginPath();
+          ctx.arc(x,y,g>.1?1.8:1,0,Math.PI*2);
+          ctx.fillStyle=`rgba(155,124,255,${a})`;
+          ctx.fill();
+        }
+      }
+      // aurora blobs
+      blobs.forEach(b=>{
+        const gr=ctx.createRadialGradient(b._x,b._y,0,b._x,b._y,b.r*W);
+        gr.addColorStop(0,`hsla(${b.hue},80%,65%,.1)`);
+        gr.addColorStop(.5,`hsla(${b.hue},70%,55%,.04)`);
+        gr.addColorStop(1,`hsla(${b.hue},60%,45%,0)`);
+        ctx.beginPath();ctx.arc(b._x,b._y,b.r*W,0,Math.PI*2);
+        ctx.fillStyle=gr;ctx.fill();
+      });
+      raf=requestAnimationFrame(draw);
+    };
+    draw();
+    return ()=>{ cancelAnimationFrame(raf); window.removeEventListener("resize",resize); };
+  },[]);
+  return <canvas ref={ref} style={{ position:"absolute",inset:0,width:"100%",height:"100%",display:"block",zIndex:0 }}/>;
+}
+
+/* ── SCATTER TEXT — letters scatter out then reform ── */
+function ScatterText({ text, style }) {
+  const [phase, setPhase] = useState("visible"); // visible → scatter → reform
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const cycle = () => {
+      // scatter
+      setPhase("scatter");
+      setTimeout(() => {
+        setPhase("hidden");
+        setTimeout(() => {
+          setPhase("reform");
+          setTimeout(() => {
+            setPhase("visible");
+          }, 800);
+        }, 300);
+      }, 600);
+    };
+    const iv = setInterval(cycle, 4000);
+    return () => clearInterval(iv);
+  }, []);
+
+  const letters = text.split("");
+
+  const getLetterStyle = (i) => {
+    const base = {
+      display:"inline-block",
+      transition:`transform .5s ease ${i*.04}s, opacity .5s ease ${i*.04}s`,
+    };
+    if (phase === "scatter") {
+      const angle = (i / letters.length) * Math.PI * 2;
+      const dist = 40 + Math.sin(i * 2.3) * 20;
+      return { ...base,
+        transform:`translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) rotate(${(i%2===0?1:-1)*15}deg)`,
+        opacity:.1,
+      };
+    }
+    if (phase === "hidden") {
+      return { ...base, transform:"translate(0,0) scale(.8)", opacity:0, transition:"none" };
+    }
+    if (phase === "reform") {
+      return { ...base,
+        transform:`translate(${(Math.random()-.5)*60}px, ${(Math.random()-.5)*30}px)`,
+        opacity:.3,
+        transition:`transform .6s cubic-bezier(.34,1.56,.64,1) ${i*.05}s, opacity .4s ease ${i*.05}s`,
+      };
+    }
+    // visible
+    return { ...base, transform:"translate(0,0) rotate(0deg)", opacity:1 };
+  };
+
   return (
-    <span style={{ color:"#9b7cff" }}>
-      {display}
-      <span style={{ borderRight:"3px solid #9b7cff", animation:"blink .7s infinite", marginLeft:"1px" }}/>
+    <span style={style}>
+      {letters.map((l, i) => (
+        <span key={i} style={getLetterStyle(i)}>{l === " " ? "\u00A0" : l}</span>
+      ))}
     </span>
   );
 }
@@ -380,8 +476,9 @@ export default function Home() {
       <section style={{
         minHeight:"100vh", display:"flex", alignItems:"center",
         position:"relative", overflow:"hidden",
-        background:"radial-gradient(ellipse 70% 65% at 62% 45%, rgba(155,124,255,.1) 0%, transparent 70%)",
+        background:"radial-gradient(ellipse 70% 65% at 62% 45%, rgba(155,124,255,.08) 0%, transparent 70%)",
       }}>
+        <HeroBg />
         <div className="hero-grid" style={{ position:"relative", zIndex:1, width:"min(1400px,90vw)", margin:"0 auto",
           padding:"130px 0 100px", display:"grid", gridTemplateColumns:"1fr 1fr",
           gap:"60px", alignItems:"center" }}>
@@ -410,11 +507,10 @@ export default function Home() {
                 WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
                 BUT SMARTER.
               </span>
-              <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
+              <ScatterText text="AUTOMATED." style={{ display:"block",
+                fontFamily:"'Space Grotesk',sans-serif",
                 fontSize:"clamp(64px,7.5vw,112px)", fontWeight:700,
-                letterSpacing:"-4px", lineHeight:.92, paddingBottom:"4px", color:"white" }}>
-                <Typewriter words={["AUTOMATED.","UNSTOPPABLE.","DIFFERENT."]}/>
-              </span>
+                letterSpacing:"-4px", lineHeight:.92, color:"white", paddingBottom:"4px" }}/>
             </h1>
 
             <p className="fi" style={{ maxWidth:"440px", marginTop:"32px",
@@ -512,7 +608,7 @@ export default function Home() {
       </div>
 
       {/* ══ STATS with counting numbers ══ */}
-      <div style={{ width:"min(1400px,90vw)", margin:"0 auto",
+      <div className="stats-grid" style={{ width:"min(1400px,90vw)", margin:"0 auto",
         display:"grid", gridTemplateColumns:"repeat(4,1fr)", borderBottom:`1px solid ${L}` }}>
         {[
           {target:40,  suffix:"+", label:"Projects Delivered"},
@@ -520,7 +616,7 @@ export default function Home() {
           {target:98,  suffix:"%", label:"Client Satisfaction"},
           {target:120, suffix:"h", label:"Hours Saved / Client"},
         ].map(({target,suffix,label},i) => (
-          <div key={label} style={{ padding:"64px 40px", borderRight:i<3?`1px solid ${L}`:"none" }}>
+          <div key={label} className="stat-cell" style={{ padding:"64px 40px", borderRight:i<3?`1px solid ${L}`:"none" }}>
             <div style={{ fontFamily:"'Space Grotesk',sans-serif",
               fontSize:"clamp(48px,4.5vw,76px)", fontWeight:700,
               letterSpacing:"-3px", lineHeight:1, color:"white" }}>
@@ -1026,10 +1122,10 @@ export default function Home() {
 
           /* stats → 2 col */
           .stats-grid { grid-template-columns:repeat(2,1fr) !important; }
-          .stats-grid > div { padding:40px 24px !important; }
-          .stats-grid > div:nth-child(2){ border-right:none !important; }
-          .stats-grid > div:nth-child(1),
-          .stats-grid > div:nth-child(2){ border-bottom:1px solid rgba(255,255,255,.08) !important; }
+          .stat-cell { padding:36px 20px !important; }
+          .stat-cell:nth-child(2){ border-right:none !important; }
+          .stat-cell:nth-child(1),
+          .stat-cell:nth-child(2){ border-bottom:1px solid rgba(255,255,255,.08) !important; }
 
           /* services row → 2 col on mobile */
           .services-row { grid-template-columns:repeat(2,1fr) !important; }
