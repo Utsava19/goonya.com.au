@@ -104,41 +104,60 @@ export default function Contact() {
               </p>
             </div>
           ) : (
-            <form onSubmit={submit} style={{ display:"flex", flexDirection:"column", gap:"14px" }}>
+            <form onSubmit={submit} style={{ display:"flex", flexDirection:"column", gap:"18px" }}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}
                 className="form-2col">
-                <input name="name" value={form.name} onChange={handle}
-                  placeholder="" required style={input}
-                  onFocus={e=>e.target.style.borderColor=A}
-                  onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
-                <input name="email" type="email" value={form.email} onChange={handle}
-                  placeholder="" required style={input}
+                <div>
+                  <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
+                    color:"#555", marginBottom:"8px" }}>YOUR NAME</label>
+                  <input name="name" value={form.name} onChange={handle}
+                    required style={input}
+                    onFocus={e=>e.target.style.borderColor=A}
+                    onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
+                </div>
+                <div>
+                  <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
+                    color:"#555", marginBottom:"8px" }}>EMAIL ADDRESS</label>
+                  <input name="email" type="email" value={form.email} onChange={handle}
+                    required style={input}
+                    onFocus={e=>e.target.style.borderColor=A}
+                    onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
+                </div>
+              </div>
+              <div>
+                <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
+                  color:"#555", marginBottom:"8px" }}>BUSINESS NAME</label>
+                <input name="business" value={form.business} onChange={handle}
+                  style={input}
                   onFocus={e=>e.target.style.borderColor=A}
                   onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
               </div>
-              <input name="business" value={form.business} onChange={handle}
-                placeholder="" style={input}
-                onFocus={e=>e.target.style.borderColor=A}
-                onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
-              <select name="service" value={form.service} onChange={handle} style={{
-                ...input, cursor:"pointer", appearance:"none",
-                backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239b7cff' stroke-width='1.5' fill='none'/%3E%3C/svg%3E")`,
-                backgroundRepeat:"no-repeat", backgroundPosition:"right 16px center",
-              }}>
-                <option value="" style={{background:"#0a0818"}}>Select a service...</option>
-                <option value="ai"      style={{background:"#0a0818"}}>AI Automation</option>
-                <option value="website" style={{background:"#0a0818"}}>Website Design</option>
-                <option value="marketing" style={{background:"#0a0818"}}>Digital Marketing</option>
-                <option value="social"  style={{background:"#0a0818"}}>Social Media</option>
-                <option value="systems" style={{background:"#0a0818"}}>Digital Systems</option>
-                <option value="admin"   style={{background:"#0a0818"}}>Admin & Operations</option>
-                <option value="all"     style={{background:"#0a0818"}}>Not sure — let's chat</option>
-              </select>
-              <textarea name="message" value={form.message} onChange={handle}
-                placeholder="" rows={5}
-                style={{...input, resize:"vertical"}}
-                onFocus={e=>e.target.style.borderColor=A}
-                onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
+              <div>
+                <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
+                  color:"#555", marginBottom:"8px" }}>WHAT DO YOU NEED?</label>
+                <select name="service" value={form.service} onChange={handle} style={{
+                  ...input, cursor:"pointer", appearance:"none",
+                  backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239b7cff' stroke-width='1.5' fill='none'/%3E%3C/svg%3E")`,
+                  backgroundRepeat:"no-repeat", backgroundPosition:"right 16px center",
+                }}>
+                  <option value="" style={{background:"#0a0818"}}>Select a service...</option>
+                  <option value="ai"        style={{background:"#0a0818"}}>AI Automation</option>
+                  <option value="website"   style={{background:"#0a0818"}}>Website Design</option>
+                  <option value="marketing" style={{background:"#0a0818"}}>Digital Marketing</option>
+                  <option value="social"    style={{background:"#0a0818"}}>Social Media</option>
+                  <option value="systems"   style={{background:"#0a0818"}}>Digital Systems</option>
+                  <option value="admin"     style={{background:"#0a0818"}}>Admin & Operations</option>
+                  <option value="all"       style={{background:"#0a0818"}}>Not sure — let's chat</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
+                  color:"#555", marginBottom:"8px" }}>YOUR MESSAGE</label>
+                <textarea name="message" value={form.message} onChange={handle}
+                  rows={5} style={{...input, resize:"vertical"}}
+                  onFocus={e=>e.target.style.borderColor=A}
+                  onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
+              </div>
               <button type="submit" style={{
                 alignSelf:"flex-start", marginTop:"8px",
                 padding:"16px 36px", background:"white", color:"black",
