@@ -170,7 +170,7 @@ export default function OurWork() {
           padding:"18px 44px", background:"white", color:"black", borderRadius:"100px",
           fontWeight:700, fontSize:"16px", textDecoration:"none",
           boxShadow:"0 0 60px rgba(155,124,255,.35)" }}>
-          Start a project <span>↗</span>
+          Start a project
         </Link>
       </div>
 
@@ -181,6 +181,8 @@ export default function OurWork() {
         }
         @media(max-width:850px){
           div[style*="repeat(3,1fr)"]{grid-template-columns:1fr !important;}
+          div[style*="repeat(2,1fr)"]{grid-template-columns:1fr !important;}
+          h1 span{font-size:clamp(48px,12vw,70px) !important; letter-spacing:-2px !important;}
         }
       `}</style>
     </div>
