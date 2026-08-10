@@ -38,9 +38,9 @@ export default function Footer() {
             src="/logo.png"
             alt="Goonya"
             style={{
-              height:"36px", width:"auto", display:"block", marginBottom:"14px",
-              mixBlendMode:"screen",
-              filter:"brightness(1.8) contrast(1.1)",
+              height:"40px", width:"auto", display:"block", marginBottom:"14px",
+              
+              
             }}
           />
           <p style={{ color:"#444", fontSize:"14px", lineHeight:1.7,
