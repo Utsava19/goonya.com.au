@@ -307,7 +307,7 @@ function WebsiteShowcase({ A, L }) {
       {/* cta */}
       <Link to="/our-work" style={{ display:"inline-flex", alignItems:"center", gap:"8px",
         fontSize:"13px", color:A, textDecoration:"none", fontWeight:500 }}>
-        See our work <span>↗</span>
+        See our work 
       </Link>
     </div>
   );
@@ -358,7 +358,7 @@ export default function Home() {
         position:"relative", overflow:"hidden",
         background:"radial-gradient(ellipse 70% 65% at 62% 45%, rgba(155,124,255,.1) 0%, transparent 70%)",
       }}>
-        <div style={{ position:"relative", zIndex:1, width:"min(1400px,90vw)", margin:"0 auto",
+        <div className="hero-grid" style={{ position:"relative", zIndex:1, width:"min(1400px,90vw)", margin:"0 auto",
           padding:"130px 0 100px", display:"grid", gridTemplateColumns:"1fr 1fr",
           gap:"60px", alignItems:"center" }}>
 
@@ -373,7 +373,7 @@ export default function Home() {
               DIGITAL SYSTEMS FOR MODERN BUSINESS
             </div>
 
-            <h1 className="fi" style={{ margin:0, padding:0 }}>
+            <h1 className="fi hero-h1" style={{ margin:0, padding:0 }}>
               <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
                 fontSize:"clamp(72px,7.5vw,112px)", fontWeight:700,
                 letterSpacing:"-4px", lineHeight:.92, color:"white", paddingBottom:"4px" }}>
@@ -401,22 +401,41 @@ export default function Home() {
 
             <div className="fi" style={{ display:"flex", alignItems:"center",
               gap:"14px", marginTop:"40px", flexWrap:"wrap" }}>
-              <Link to="/services" style={{ display:"inline-flex", alignItems:"center", gap:"10px",
+              <Link to="/services" style={{ display:"inline-flex", alignItems:"center",
                 padding:"15px 30px", background:"white", color:"black", borderRadius:"100px",
                 fontWeight:700, fontSize:"14px", textDecoration:"none",
                 boxShadow:"0 0 40px rgba(155,124,255,.3)" }}>
-                Explore what we do <span>↗</span>
+                Explore what we do
               </Link>
-              <Link to="/our-work" style={{ display:"inline-flex", alignItems:"center", gap:"10px",
+              <Link to="/our-work" style={{ display:"inline-flex", alignItems:"center",
                 padding:"15px 30px", color:"white", fontSize:"14px", textDecoration:"none",
                 borderRadius:"100px", border:`1px solid rgba(255,255,255,.15)` }}>
-                See our work <span>↓</span>
+                See our work
               </Link>
+            </div>
+
+            {/* mobile-only mini stats — shown instead of robot */}
+            <div className="hero-mobile-stats" style={{
+              display:"none", gap:"12px", marginTop:"36px", flexWrap:"wrap",
+            }}>
+              {[
+                {v:"40+",  l:"Projects",    c:"#9b7cff"},
+                {v:"98%",  l:"Satisfaction",c:"#4ade80"},
+                {v:"120h", l:"Saved/client",c:"#f97316"},
+              ].map(({v,l,c})=>(
+                <div key={l} style={{ flex:"1 1 calc(33% - 8px)",
+                  background:"rgba(255,255,255,.04)", border:"1px solid rgba(255,255,255,.08)",
+                  borderRadius:"12px", padding:"16px 14px" }}>
+                  <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
+                    fontWeight:700, color:c, letterSpacing:"-1px" }}>{v}</div>
+                  <div style={{ fontSize:"11px", color:"#555", marginTop:"4px" }}>{l}</div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* RIGHT — ROBOT */}
-          <div className="fi" style={{ position:"relative", height:"500px" }}>
+          {/* RIGHT — ROBOT (hidden on mobile) */}
+          <div className="hero-robot fi" style={{ position:"relative", height:"500px" }}>
             <Robot/>
 
             {/* profit card */}
@@ -448,23 +467,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* status card */}
-            <div style={{ position:"absolute", top:"20px", right:"-20px", zIndex:4,
-              background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
-              borderRadius:"14px", padding:"16px 18px", backdropFilter:"blur(14px)", minWidth:"170px" }}>
-              {[
-                {c:"#4ade80", l:"Systems live", v:"12"},
-                {c:A,         l:"Tasks / day",  v:"840"},
-                {c:"#f87171", l:"Hours saved",  v:"∞"},
-              ].map(({c,l,v}) => (
-                <div key={l} style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"10px" }}>
-                  <span style={{ width:"7px", height:"7px", borderRadius:"50%",
-                    background:c, boxShadow:`0 0 5px ${c}`, flexShrink:0 }}/>
-                  <span style={{ fontSize:"11px", color:"#555", flex:1 }}>{l}</span>
-                  <span style={{ fontSize:"11px", color:"white", fontWeight:600 }}>{v}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -555,15 +557,10 @@ export default function Home() {
                 borderRadius:"50%", background:`radial-gradient(circle,${glow},transparent 70%)`,
                 filter:"blur(20px)", pointerEvents:"none" }}/>
               <div style={{ position:"relative", zIndex:1 }}>
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"32px" }}>
-                  <span style={{ fontSize:"11px", letterSpacing:"2px", color:A,
-                    fontFamily:"'Space Grotesk',sans-serif" }}>{n}</span>
-                  <span style={{ fontSize:"20px" }}>{icon}</span>
-                </div>
+                <span style={{ fontSize:"26px", display:"block", marginBottom:"20px" }}>{icon}</span>
                 <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"18px",
                   fontWeight:700, letterSpacing:"-.5px", color:"white", marginBottom:"10px" }}>{t}</h3>
                 <p style={{ color:"#444", fontSize:"13px", lineHeight:1.6 }}>{d}</p>
-                <div style={{ marginTop:"24px", fontSize:"16px", color:A }}>↗</div>
               </div>
             </Link>
           ))}
@@ -797,7 +794,7 @@ export default function Home() {
                 padding:"13px 26px", background:"rgba(155,124,255,.1)",
                 border:`1px solid rgba(155,124,255,.3)`, borderRadius:"100px",
                 fontSize:"13px", fontWeight:500, color:"white", textDecoration:"none" }}>
-                Talk to us about admin <span>↗</span>
+                Talk to us about admin 
               </Link>
             </div>
           </div>
@@ -947,7 +944,7 @@ export default function Home() {
           padding:"20px 48px", background:"white", color:"black", borderRadius:"100px",
           fontWeight:700, fontSize:"16px", textDecoration:"none",
           boxShadow:"0 0 60px rgba(155,124,255,.35)" }}>
-          Start a project <span>↗</span>
+          Start a project 
         </Link>
       </div>
 
@@ -961,9 +958,10 @@ export default function Home() {
           to{transform:scaleY(1);transform-origin:bottom}
         }
         @keyframes cardFlip {
-          from { opacity:0; transform:translateY(12px); }
-          to   { opacity:1; transform:translateY(0); }
+          from{opacity:0;transform:translateY(12px)}
+          to{opacity:1;transform:translateY(0)}
         }
+        @keyframes slideUp {
           from{opacity:0;transform:translateY(16px)}
           to{opacity:1;transform:translateY(0)}
         }
@@ -975,11 +973,61 @@ export default function Home() {
           0%,100%{transform:translateY(0)}
           50%{transform:translateY(-14px)}
         }
+
+        /* ── MOBILE ── */
         @media(max-width:850px){
-          div[style*="1fr 1fr"] { grid-template-columns:1fr !important; }
-          div[style*="1.2fr 1fr"] { grid-template-columns:1fr !important; }
+
+          /* hero — single column, robot hidden */
+          .hero-grid { grid-template-columns:1fr !important; padding:100px 0 70px !important; }
+          .hero-robot { display:none !important; }
+
+          /* hero text smaller but still big */
+          .hero-h1 span { font-size:clamp(48px,13vw,72px) !important; letter-spacing:-2px !important; lineHeight:0.92 !important; }
+
+          /* hero mobile stats replace robot */
+          .hero-mobile-stats { display:flex !important; }
+
+          /* all 2-col grids → 1 col */
+          .grid-2col { grid-template-columns:1fr !important; }
+          .grid-1p2col { grid-template-columns:1fr !important; }
+
+          /* stats → 2 col */
+          .stats-grid { grid-template-columns:repeat(2,1fr) !important; }
+          .stats-grid > div { padding:40px 24px !important; }
+          .stats-grid > div:nth-child(2){ border-right:none !important; }
+          .stats-grid > div:nth-child(1),
+          .stats-grid > div:nth-child(2){ border-bottom:1px solid rgba(255,255,255,.08) !important; }
+
+          /* services row → 2 col */
+          .services-row { grid-template-columns:repeat(2,1fr) !important; }
+
+          /* work showcase → 1 col */
+          .showcase-grid { grid-template-columns:1fr !important; }
+
+          /* social section → 1 col */
+          .social-grid { grid-template-columns:1fr !important; }
+
+          /* admin grid → 1 col */
+          .admin-grid { grid-template-columns:1fr !important; }
+
+          /* testimonials → 1 col */
+          .testi-grid { grid-template-columns:1fr !important; }
+
+          /* process → 2 col */
+          .process-grid { grid-template-columns:repeat(2,1fr) !important; }
+
+          /* section padding tighter */
+          .section-pad { padding:80px 0 !important; }
+
+          /* marquee font */
+          .mq-track b { font-size:10px !important; }
+
+          /* general inline grids */
           div[style*="repeat(4,1fr)"] { grid-template-columns:repeat(2,1fr) !important; }
           div[style*="repeat(3,1fr)"] { grid-template-columns:1fr !important; }
+          div[style*="1.4fr 1fr"]     { grid-template-columns:1fr !important; }
+          div[style*="1.2fr 1fr"]     { grid-template-columns:1fr !important; }
+          div[style*="1fr 1fr"]       { grid-template-columns:1fr !important; }
         }
       `}</style>
     </div>
