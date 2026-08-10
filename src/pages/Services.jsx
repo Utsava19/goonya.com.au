@@ -297,6 +297,32 @@ export default function Services() {
         </div>
       </section>
 
+      {/* MOBILE ANIMATED PILLS — visible on mobile only */}
+      <div className="sv-pills" style={{
+        display:"none",
+        overflowX:"auto", WebkitOverflowScrolling:"touch",
+        padding:"16px 20px 20px",
+        gap:"10px",
+        borderBottom:`1px solid ${L}`,
+        scrollbarWidth:"none",
+      }}>
+        {[
+          {l:"AI Automation", c:"#9b7cff"},
+          {l:"Websites",      c:"#00d2be"},
+          {l:"Marketing",     c:"#ff64b4"},
+          {l:"Systems",       c:"#64b4ff"},
+          {l:"Social Media",  c:"#e879f9"},
+          {l:"Admin",         c:"#4ade80"},
+        ].map(({l,c},i)=>(
+          <div key={l} style={{
+            padding:"8px 16px", borderRadius:"100px", flexShrink:0,
+            background:`${c}18`, border:`1px solid ${c}40`,
+            fontSize:"12px", color:c, fontWeight:500,
+            animation:`pillIn .4s ease ${i*.08}s both`,
+          }}>{l}</div>
+        ))}
+      </div>
+
       {/* SERVICES */}
       <div style={{width:"min(1400px,90vw)",margin:"0 auto 130px"}}>
         {services.map(({title,short,color,accent,desc,features,Anim},i)=>(
@@ -335,17 +361,23 @@ export default function Services() {
 
             {/* live animation panel */}
             <div style={{background:"#050410",position:"relative",overflow:"hidden",
-              minHeight:"360px",order:i%2===0?2:1}} className="sv-anim">
+              minHeight:"360px",order:i%2===0?2:1,
+              display:"flex",flexDirection:"column"}} className="sv-anim">
+              {/* coloured glow */}
               <div style={{position:"absolute",inset:0,
                 background:`radial-gradient(circle at 50% 40%, ${color}, transparent 70%)`,
-                pointerEvents:"none"}}/>
-              <div style={{position:"relative",zIndex:1,height:"100%"}}>
-                <Anim/>
+                pointerEvents:"none",zIndex:0}}/>
+              {/* title badge — TOP not bottom, won't overlap animation */}
+              <div style={{padding:"14px 18px",borderBottom:"1px solid rgba(255,255,255,.05)",
+                display:"flex",alignItems:"center",gap:"8px",
+                position:"relative",zIndex:2,flexShrink:0}}>
+                <div style={{width:"6px",height:"6px",borderRadius:"50%",
+                  background:accent,boxShadow:`0 0 6px ${accent}`}}/>
+                <span style={{fontSize:"11px",color:"#555",letterSpacing:"1.5px"}}>{title.toUpperCase()}</span>
               </div>
-              <div style={{position:"absolute",bottom:"18px",left:"18px",
-                padding:"5px 12px",background:"rgba(7,7,7,.85)",
-                border:"1px solid rgba(255,255,255,.07)",borderRadius:"100px"}}>
-                <span style={{fontSize:"10px",color:"#555",letterSpacing:"1px"}}>{title.toUpperCase()}</span>
+              {/* animation content */}
+              <div style={{position:"relative",zIndex:1,flex:1,minHeight:"260px"}}>
+                <Anim/>
               </div>
             </div>
           </div>
@@ -372,11 +404,42 @@ export default function Services() {
       </div>
 
       <style>{`
+        @keyframes pillIn {
+          from { opacity:0; transform:translateY(10px) scale(.95); }
+          to   { opacity:1; transform:translateY(0) scale(1); }
+        }
+
+        /* show pills on mobile */
+        @media(max-width:850px){
+          .sv-pills { display:flex !important; }
+          .sv-pills::-webkit-scrollbar { display:none; }
+        }
+
+        /* mobile service cards */
         @media(max-width:850px){
           .sv-card { grid-template-columns:1fr !important; }
-          .sv-anim { order:1 !important; min-height:200px !important; }
-          .sv-text  { order:2 !important; padding:36px 24px !important; }
-          div[style*="gridTemplateColumns:\"1fr 1fr\""]:not(.sv-card){ grid-template-columns:1fr !important; }
+          .sv-anim {
+            order:1 !important;
+            min-height:260px !important;
+          }
+          .sv-text {
+            order:2 !important;
+            padding:32px 20px !important;
+          }
+          .sv-text > div[style*="1fr 1fr"] {
+            grid-template-columns:1fr !important;
+          }
+        }
+
+        /* scroll reveal */
+        .sv-rv {
+          transition: opacity .7s ease, transform .7s ease;
+        }
+
+        @media(min-width:851px){
+          .sv-card:hover .sv-anim {
+            filter: brightness(1.1);
+          }
         }
       `}</style>
     </div>
