@@ -67,15 +67,26 @@ export default function Navbar() {
           <img
             src="/logo.png"
             alt="Goonya"
+            onError={e => {
+              e.target.style.display = "none";
+              e.target.nextSibling.style.display = "flex";
+            }}
             style={{
-              height:"38px",
+              height:"44px",
               width:"auto",
               display:"block",
-              mixBlendMode:"screen",
-              filter:"brightness(1.8) contrast(1.1)",
               animation:"logoLoad .8s ease both",
             }}
           />
+          {/* fallback text if image fails */}
+          <span style={{ display:"none", alignItems:"center", gap:"3px",
+            fontFamily:"'Space Grotesk',sans-serif", fontSize:"20px",
+            fontWeight:700, letterSpacing:"-1px", color:"white" }}>
+            GOONYA
+            <span style={{ width:"6px", height:"6px", borderRadius:"50%",
+              background:"#9b7cff", boxShadow:"0 0 8px #9b7cff",
+              marginBottom:"10px", flexShrink:0 }}/>
+          </span>
         </Link>
 
         {/* DESKTOP LINKS */}
@@ -189,7 +200,7 @@ export default function Navbar() {
           {/* logo in mobile menu */}
           <img src="/logo.png" alt="Goonya" style={{
             height:"32px", width:"auto", display:"block",
-            mixBlendMode:"screen", filter:"brightness(1.8) contrast(1.1)",
+             
             marginBottom:"8px",
           }}/>
 
