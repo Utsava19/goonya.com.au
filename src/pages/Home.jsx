@@ -434,6 +434,61 @@ function WebsiteShowcase({ A, L }) {
 }
 
 
+/* ── WORDS MERGE ANIMATION ── */
+function WordsMerge({ A }) {
+  const ref = useRef(null);
+  const [triggered, setTriggered] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setTriggered(true); obs.disconnect(); }
+    }, { threshold: .3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // each word flies in from a different direction
+  const words = [
+    { text:"Your",     from:[-120, -60],  delay:0    },
+    { text:"business", from:[80,  -80],   delay:0.08 },
+    { text:"has",      from:[-60,  60],   delay:0.16 },
+    { text:"enough",   from:[100,  40],   delay:0.24 },
+    { text:"to",       from:[-80, -40],   delay:0.32 },
+    { text:"think",    from:[60,   80],   delay:0.4  },
+    { text:"about.",   from:[-100,  60],  delay:0.48, accent:true },
+  ];
+
+  return (
+    <h2 ref={ref} style={{
+      fontFamily:"'Space Grotesk',sans-serif",
+      fontSize:"clamp(36px,5.5vw,86px)",
+      fontWeight:700, letterSpacing:"-3px", lineHeight:1.05,
+      maxWidth:"900px", margin:0,
+      display:"flex", flexWrap:"wrap", gap:"0.25em",
+      alignItems:"baseline",
+    }}>
+      {words.map(({text, from, delay, accent}) => (
+        <span key={text} style={{
+          display:"inline-block",
+          color: accent ? A : "white",
+          opacity: triggered ? 1 : 0,
+          transform: triggered
+            ? "translate(0,0) rotate(0deg)"
+            : `translate(${from[0]}px, ${from[1]}px) rotate(${from[0] > 0 ? 6 : -6}deg)`,
+          transition: triggered
+            ? `opacity .7s ease ${delay}s, transform .7s cubic-bezier(.34,1.4,.64,1) ${delay}s`
+            : "none",
+          filter: triggered ? "none" : "blur(4px)",
+        }}>
+          {text}
+        </span>
+      ))}
+    </h2>
+  );
+}
+
 export default function Home() {
   useEffect(() => {
     // fade-in on load
@@ -651,20 +706,19 @@ export default function Home() {
         ))}
       </div>
 
-      {/* ══ STATEMENT ══ */}
-      <div className="sr" style={{ padding:"130px 0" }}>
+      {/* ══ STATEMENT — words fly in and merge ══ */}
+      <div style={{ padding:"130px 0", overflow:"hidden" }}>
         <div style={{ width:"min(1400px,90vw)", margin:"0 auto" }}>
-          <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"26px",
+          <div className="sr" style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"36px",
             display:"flex", alignItems:"center", gap:"10px" }}>
             <span style={{ width:"20px", height:"1px", background:A }}/>01 / THE GOONYA IDEA
           </div>
-          <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
-            fontSize:"clamp(42px,5.5vw,86px)", fontWeight:700,
-            letterSpacing:"-3.5px", lineHeight:.96, color:"white",
-            maxWidth:"860px", marginBottom:"28px" }}>
-            Your business has<span style={{color:A}}> enough to think about.</span>
-          </h2>
-          <p style={{ color:"#444", fontSize:"18px", lineHeight:1.75, maxWidth:"500px" }}>
+
+          {/* words that fly in from different directions */}
+          <WordsMerge A={A} />
+
+          <p className="sr" style={{ color:"#444", fontSize:"18px", lineHeight:1.75,
+            maxWidth:"500px", marginTop:"36px" }}>
             Your technology shouldn't be one of them. We connect the digital
             pieces behind your business so everything works together.
           </p>
@@ -1003,7 +1057,7 @@ export default function Home() {
                 <div style={{ marginTop:"10px", padding:"8px 6px",
                   background:"rgba(74,222,128,.05)", border:"1px solid rgba(74,222,128,.15)",
                   borderRadius:"6px", display:"flex", alignItems:"center", gap:"8px" }}>
-                  <span style={{ fontSize:"12px" }}>📅</span>
+                  <span style={{ fontSize:"12px" }}>📆</span>
                   <div>
                     <div style={{ fontSize:"10px", color:"white" }}>2:00pm — Client call</div>
                     <div style={{ fontSize:"9px", color:"#4ade80" }}>Scheduled & confirmed</div>
@@ -1017,28 +1071,50 @@ export default function Home() {
               <div style={{ height:"4px", background:"#120e24",
                 borderRadius:"0 0 8px 8px", margin:"0 16px" }}/>
 
-              {/* floating task card */}
-              <div className="admin-float-card" style={{ position:"absolute", top:"-20px", right:"-40px",
-                background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
-                borderRadius:"12px", padding:"12px 16px",
-                animation:"float1 3s ease-in-out infinite",
-                boxShadow:"0 8px 32px rgba(0,0,0,.4)" }}>
-                <div style={{ fontSize:"9px", color:"#555", marginBottom:"6px", letterSpacing:"1px" }}>TASKS DONE TODAY</div>
-                <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
-                  fontWeight:700, color:"white", letterSpacing:"-1px" }}>14 / 14</div>
-                <div style={{ fontSize:"10px", color:"#4ade80", marginTop:"3px" }}>All complete</div>
-              </div>
+              {/* floating cards — desktop: absolute, mobile: inline row */}
+              <div className="admin-cards-wrap" style={{ marginTop:"16px" }}>
 
-              {/* floating hours saved */}
-              <div className="admin-float-card" style={{ position:"absolute", bottom:"20px", left:"-40px",
-                background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
-                borderRadius:"12px", padding:"12px 16px",
-                animation:"float2 3.5s ease-in-out infinite",
-                boxShadow:"0 8px 32px rgba(0,0,0,.4)" }}>
-                <div style={{ fontSize:"9px", color:"#555", marginBottom:"6px", letterSpacing:"1px" }}>HOURS SAVED</div>
-                <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
-                  fontWeight:700, color:"white", letterSpacing:"-1px" }}>12h</div>
-                <div style={{ fontSize:"10px", color:A, marginTop:"3px" }}>This week</div>
+                {/* tasks card */}
+                <div className="admin-float-card" style={{ position:"absolute", top:"-20px", right:"-40px",
+                  background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
+                  borderRadius:"12px", padding:"12px 16px",
+                  animation:"float1 3s ease-in-out infinite",
+                  boxShadow:"0 8px 32px rgba(0,0,0,.4)", zIndex:3 }}>
+                  <div style={{ fontSize:"9px", color:"#555", marginBottom:"6px", letterSpacing:"1px" }}>TASKS DONE TODAY</div>
+                  <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
+                    fontWeight:700, color:"white", letterSpacing:"-1px" }}>14 / 14</div>
+                  <div style={{ fontSize:"10px", color:"#4ade80", marginTop:"3px" }}>All complete</div>
+                </div>
+
+                {/* hours card */}
+                <div className="admin-float-card" style={{ position:"absolute", bottom:"20px", left:"-40px",
+                  background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
+                  borderRadius:"12px", padding:"12px 16px",
+                  animation:"float2 3.5s ease-in-out infinite",
+                  boxShadow:"0 8px 32px rgba(0,0,0,.4)", zIndex:3 }}>
+                  <div style={{ fontSize:"9px", color:"#555", marginBottom:"6px", letterSpacing:"1px" }}>HOURS SAVED</div>
+                  <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
+                    fontWeight:700, color:"white", letterSpacing:"-1px" }}>12h</div>
+                  <div style={{ fontSize:"10px", color:A, marginTop:"3px" }}>This week</div>
+                </div>
+
+                {/* mobile-only inline cards */}
+                <div className="admin-mobile-cards" style={{ display:"none", gap:"10px", marginTop:"4px" }}>
+                  <div style={{ flex:1, background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
+                    borderRadius:"10px", padding:"12px 14px" }}>
+                    <div style={{ fontSize:"9px", color:"#555", marginBottom:"4px", letterSpacing:"1px" }}>TASKS TODAY</div>
+                    <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"20px",
+                      fontWeight:700, color:"white", letterSpacing:"-1px" }}>14/14</div>
+                    <div style={{ fontSize:"10px", color:"#4ade80", marginTop:"2px" }}>All done</div>
+                  </div>
+                  <div style={{ flex:1, background:"rgba(10,8,22,.95)", border:`1px solid ${L}`,
+                    borderRadius:"10px", padding:"12px 14px" }}>
+                    <div style={{ fontSize:"9px", color:"#555", marginBottom:"4px", letterSpacing:"1px" }}>HOURS SAVED</div>
+                    <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"20px",
+                      fontWeight:700, color:"white", letterSpacing:"-1px" }}>12h</div>
+                    <div style={{ fontSize:"10px", color:A, marginTop:"2px" }}>This week</div>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -1158,8 +1234,9 @@ export default function Home() {
           /* admin grid → 1 col */
           .admin-grid { grid-template-columns:1fr !important; }
 
-          /* hide admin floating cards on mobile */
+          /* hide admin floating cards on mobile, show inline ones */
           .admin-float-card { display:none !important; }
+          .admin-mobile-cards { display:flex !important; }
 
           /* testimonials → 1 col */
           .testi-grid { grid-template-columns:1fr !important; }
