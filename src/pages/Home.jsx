@@ -448,6 +448,48 @@ export default function Home() {
       }, 30);
     });
 
+    // scroll reveal for sections
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = "1";
+          e.target.style.transform = "translateY(0)";
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: .1 });
+
+    document.querySelectorAll(".sr").forEach(el => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(40px)";
+      el.style.transition = "opacity .8s ease, transform .8s ease";
+      obs.observe(el);
+    });
+
+    // stagger children
+    const stObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll(".sr-child").forEach((el, i) => {
+            setTimeout(() => {
+              el.style.opacity = "1";
+              el.style.transform = "translateY(0) scale(1)";
+            }, i * 100);
+          });
+          stObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: .1 });
+
+    document.querySelectorAll(".sr-parent").forEach(p => {
+      p.querySelectorAll(".sr-child").forEach(el => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(30px) scale(.97)";
+        el.style.transition = "opacity .6s ease, transform .6s ease";
+      });
+      stObs.observe(p);
+    });
+
     // marquee
     const track = document.querySelector(".mq-track");
     if (track) {
@@ -461,8 +503,9 @@ export default function Home() {
         raf = requestAnimationFrame(move);
       };
       move();
-      return () => cancelAnimationFrame(raf);
     }
+
+    return () => { obs.disconnect(); stObs.disconnect(); };
   }, []);
 
   const A = "#9b7cff";
@@ -532,25 +575,6 @@ export default function Home() {
                 borderRadius:"100px", border:`1px solid rgba(255,255,255,.15)` }}>
                 See our work
               </Link>
-            </div>
-
-            {/* mobile-only mini stats — shown instead of robot */}
-            <div className="hero-mobile-stats" style={{
-              display:"none", gap:"12px", marginTop:"36px", flexWrap:"wrap",
-            }}>
-              {[
-                {v:"40+",  l:"Projects",    c:"#9b7cff"},
-                {v:"98%",  l:"Satisfaction",c:"#4ade80"},
-                {v:"120h", l:"Saved/client",c:"#f97316"},
-              ].map(({v,l,c})=>(
-                <div key={l} style={{ flex:"1 1 calc(33% - 8px)",
-                  background:"rgba(255,255,255,.04)", border:"1px solid rgba(255,255,255,.08)",
-                  borderRadius:"12px", padding:"16px 14px" }}>
-                  <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"24px",
-                    fontWeight:700, color:c, letterSpacing:"-1px" }}>{v}</div>
-                  <div style={{ fontSize:"11px", color:"#555", marginTop:"4px" }}>{l}</div>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -628,7 +652,7 @@ export default function Home() {
       </div>
 
       {/* ══ STATEMENT ══ */}
-      <div style={{ padding:"130px 0" }}>
+      <div className="sr" style={{ padding:"130px 0" }}>
         <div style={{ width:"min(1400px,90vw)", margin:"0 auto" }}>
           <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"26px",
             display:"flex", alignItems:"center", gap:"10px" }}>
@@ -661,7 +685,7 @@ export default function Home() {
         </div>
 
         {/* ── HORIZONTAL SERVICES ROW ── */}
-        <div className="services-row" style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)",
+        <div className="services-row sr-parent" style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)",
           gap:"1px", background:L, border:`1px solid ${L}`, marginBottom:"1px" }}>
           {[
             {t:"AI Automation",       d:"Intelligent systems that eliminate repetitive work.",    glow:"rgba(155,124,255,.3)", accent:"#9b7cff"},
@@ -669,7 +693,7 @@ export default function Home() {
             {t:"Digital Marketing",   d:"Campaigns that grow revenue, not just traffic.",         glow:"rgba(255,100,180,.2)", accent:"#ff64b4"},
             {t:"Systems Integration", d:"Connect your tools. Run as one efficient machine.",      glow:"rgba(100,180,255,.2)", accent:"#64b4ff"},
           ].map(({t,d,glow,accent}) => (
-            <Link to="/services" key={t} style={{ display:"block", padding:"36px 28px",
+            <Link to="/services" key={t} className="sr-child" style={{ display:"block", padding:"36px 28px",
               background:"#08060f", textDecoration:"none", position:"relative", overflow:"hidden" }}
               onMouseEnter={e=>e.currentTarget.style.background="#0d0b18"}
               onMouseLeave={e=>e.currentTarget.style.background="#08060f"}>
@@ -834,41 +858,34 @@ export default function Home() {
           {/* RIGHT — services list */}
           <div style={{ background:"#08060f" }}>
             {[
-              { icon:"", title:"Social Media Management",
-                desc:"Daily content, scheduling and engagement across Facebook, Instagram and TikTok.",
-                color:"#e1306c" },
-              { icon:"", title:"TikTok & Reel Creation",
-                desc:"Scroll-stopping short-form videos custom made for your brand and audience.",
-                color:"#69c9d0" },
-              { icon:"", title:"Animated Video Production",
-                desc:"Professional animated explainers and promos that tell your story beautifully.",
-                color:A },
-              { icon:"", title:"Paid Social Campaigns",
-                desc:"Facebook and Instagram ads that target the right people and convert them into customers.",
-                color:"#1877f2" },
-              { icon:"", title:"Growth & Analytics",
-                desc:"We track every metric and optimise continuously so your results compound over time.",
-                color:"#4ade80" },
-            ].map(({icon,title,desc,color},i) => (
-              <div key={title} style={{
-                padding:"28px 36px",
+              { title:"Social Media Management",   desc:"Daily content, scheduling and engagement across Facebook, Instagram and TikTok.", color:"#e1306c" },
+              { title:"TikTok & Reel Creation",     desc:"Scroll-stopping short-form videos custom made for your brand and audience.",       color:"#69c9d0" },
+              { title:"Animated Video Production",  desc:"Professional animated explainers and promos that tell your story beautifully.",    color:A },
+              { title:"Paid Social Campaigns",      desc:"Facebook and Instagram ads that target the right people and convert them.",        color:"#1877f2" },
+              { title:"Growth & Analytics",         desc:"We track every metric and optimise continuously so results compound over time.",   color:"#4ade80" },
+            ].map(({title,desc,color},i) => (
+              <div key={title} className="social-row" style={{
+                padding:"24px 32px",
                 borderBottom:`1px solid ${L}`,
-                display:"flex", alignItems:"flex-start", gap:"16px",
-                transition:"background .2s ease",
+                display:"flex", alignItems:"flex-start", gap:"14px",
+                transition:"background .25s ease, transform .25s ease",
+                animation:`rowSlideIn .5s ease ${i*.1+.1}s both`,
               }}
-                onMouseEnter={e=>e.currentTarget.style.background="#0d0b18"}
-                onMouseLeave={e=>e.currentTarget.style.background="transparent"}
+                onMouseEnter={e=>{ e.currentTarget.style.background="#0d0b18"; e.currentTarget.style.transform="translateX(4px)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.transform="translateX(0)"; }}
               >
-                <div style={{ width:"36px", height:"36px", borderRadius:"10px", flexShrink:0,
-                  background:`${color}18`, border:`1px solid ${color}30`,
-                  display:"flex", alignItems:"center", justifyContent:"center",
-                  fontSize:"16px" }}>{icon}</div>
-                <div>
+                {/* coloured dot icon */}
+                <div style={{ width:"32px", height:"32px", borderRadius:"10px", flexShrink:0,
+                  background:`${color}18`, border:`1px solid ${color}35`,
+                  display:"flex", alignItems:"center", justifyContent:"center", marginTop:"2px" }}>
+                  <div style={{ width:"8px", height:"8px", borderRadius:"50%",
+                    background:color, boxShadow:`0 0 6px ${color}` }}/>
+                </div>
+                <div style={{ flex:1 }}>
                   <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"15px",
-                    fontWeight:600, color:"white", marginBottom:"5px" }}>{title}</div>
+                    fontWeight:600, color:"white", marginBottom:"4px" }}>{title}</div>
                   <div style={{ fontSize:"13px", color:"#555", lineHeight:1.6 }}>{desc}</div>
                 </div>
-                <div style={{ marginLeft:"auto", color:color, fontSize:"16px", flexShrink:0, paddingTop:"2px" }}>↗</div>
               </div>
             ))}
           </div>
@@ -1075,6 +1092,10 @@ export default function Home() {
       </div>
 
       <style>{`
+        @keyframes rowSlideIn {
+          from { opacity:0; transform:translateX(-20px); }
+          to   { opacity:1; transform:translateX(0); }
+        }
         @keyframes blink {
           0%,100%{opacity:1} 50%{opacity:0}
         }
@@ -1112,9 +1133,6 @@ export default function Home() {
 
           /* hero text smaller but still big */
           .hero-h1 span { font-size:clamp(48px,13vw,72px) !important; letter-spacing:-2px !important; lineHeight:0.92 !important; }
-
-          /* hero mobile stats replace robot */
-          .hero-mobile-stats { display:flex !important; }
 
           /* all 2-col grids → 1 col */
           .grid-2col { grid-template-columns:1fr !important; }
