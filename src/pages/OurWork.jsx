@@ -71,7 +71,7 @@ export default function OurWork() {
                 <div style={{ position: "absolute", top: "16px", left: "16px", zIndex: 2,
                   background: A, color: "white", fontSize: "10px", fontWeight: 700,
                   letterSpacing: "1.5px", padding: "5px 12px", borderRadius: "100px" }}>
-                  FEATURED · PLUMBING
+                  FEATURED
                 </div>
               )}
               {study.websiteTransform && (

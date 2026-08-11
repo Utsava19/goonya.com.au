@@ -8,7 +8,7 @@ export const CASE_STUDIES = [
     summary:
       "A local plumber losing jobs to competitors on Google — we rebuilt their web presence and automated quote follow-ups.",
     problem:
-      "Mark was running a solid plumbing business but his old website looked like it was built in 2012. It was slow, broken on phones, and had no clear way to request a quote. His Google Business Profile was half-filled out with wrong hours. Quote requests went to a generic email he checked once a day — so weekend and evening enquiries were going cold before he even saw them. Competitors with cleaner sites were winning the jobs he should have been getting.",
+      "Mark was running a solid plumbing business but his old website looked like it was built in 2012. It was slow, broken on phones, and had no clear way to request a quote. His Google Business Profile was half-filled out with wrong hours. Quote requests went to a generic email he checked once a day — so weekend and evening enquiries were going cold before he even saw them.",
     challenge:
       "Mark didn't need a fancy rebrand. He needed people in Dandenong to find him on Google, trust what they saw, and request a quote without playing phone tag.",
     beforePoints: [
@@ -47,12 +47,36 @@ export const CASE_STUDIES = [
     quoteName: "Mark Thompson",
     quoteRole: "Owner, Northline Plumbing",
     services: ["Website", "Google Business", "Local SEO", "SMS automation"],
-    cover:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=80",
+    cover: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=80",
     beforeMood: "😤",
     afterMood: "😊",
     websiteTransform: true,
     featured: true,
+    websiteMockup: {
+      slug: "northlineplumbing",
+      brand: { primary: "#1d4ed8", secondary: "#ea580c" },
+      before: {
+        header: "NORTHLINE PLUMBING!!!",
+        sub: "Welcome — site under construction",
+        body: "We do all plumbing work. Call us maybe.",
+        btn: "CLICK HERE",
+        footer: "© 2019 · Best viewed in Internet Explorer",
+        headerColor: "#003399",
+      },
+      after: {
+        theme: "dark",
+        bg: "#0c1929",
+        siteName: "Northline",
+        tagline: "Dandenong · 24/7 emergency",
+        headline: "Blocked drain? Burst pipe?\nWe're there fast.",
+        cta: "Get a quote",
+        secondary: "Call now",
+        nav: ["Services", "Areas", "Reviews"],
+        cards: ["Hot water", "Blocked drains", "Gas fitting"],
+      },
+      afterNote:
+        "Northline's new site uses their own navy and orange — built for {industry} customers who need to call or quote fast on mobile.",
+    },
   },
   {
     slug: "bloom-cafe",
@@ -63,39 +87,76 @@ export const CASE_STUDIES = [
     summary:
       "A café with great food but weak online presence — we fixed their Google listing, website and booking flow.",
     problem:
-      "Sarah had a loyal local following but new customers couldn't find Bloom online. The website had no online booking, Google hours were wrong, and Instagram hadn't been updated in months. Competitors down the road were filling tables from Google searches.",
+      "Sarah had a loyal local following but new customers couldn't find Bloom online. The website was a single page with no menu, no booking link, and a PDF menu from 2019. Google hours were wrong so people showed up when they were closed. Instagram hadn't been updated in months while competitors down the road were filling tables from Google and Reels.",
+    challenge:
+      "Sarah needed locals to discover Bloom when searching for brunch or coffee nearby — and book a table without calling during the lunch rush.",
     beforePoints: [
       "Website with no booking or menu online",
       "Wrong hours and photos on Google",
       "Social media inactive for 6+ months",
       "Weekend tables sitting empty",
+      "No way to see today's specials online",
     ],
     solution: [
-      "Redesigned website with menu, photos and online reservations",
-      "Fixed and optimised Google Business Profile",
+      "Redesigned website with live menu, photos and online reservations",
+      "Fixed and optimised Google Business Profile with fresh imagery",
       "Monthly social content plan with Reels and stories",
-      "Meta ads targeting locals within 5km",
+      "Meta ads targeting locals within 5km on weekends",
+      "Instagram linked directly to the booking page",
     ],
     afterPoints: [
       "Book a table in two taps from Google or Instagram",
       "Accurate Google listing with fresh photos and reviews",
       "Consistent social posts every week",
       "Weekend bookings up significantly",
+      "Menu updates pushed to Google automatically",
     ],
     results: [
       { label: "Online bookings", value: "3×" },
       { label: "Google visibility", value: "+45%" },
       { label: "Weekend covers", value: "+38%" },
     ],
+    timeline: [
+      { week: "Week 1", detail: "Menu audit, photography brief, booking tool setup" },
+      { week: "Week 2", detail: "New website with menu, gallery and reservations" },
+      { week: "Week 3–4", detail: "Google fix, social relaunch, local Meta ads live" },
+    ],
     quote:
       "People tell us they found us on Google now. That never used to happen. Our weekends are actually busy.",
     quoteName: "Sarah Mitchell",
     quoteRole: "Owner, Bloom Café",
     services: ["Website", "Google Business", "Social Media", "Meta Ads"],
-    cover:
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80",
+    cover: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80",
     beforeMood: "😩",
     afterMood: "🎉",
+    websiteTransform: true,
+    websiteMockup: {
+      slug: "bloomcafe",
+      brand: { primary: "#b45309", secondary: "#78350f" },
+      before: {
+        header: "Bloom Cafe Homepage",
+        sub: "Last updated 2019",
+        body: "We serve coffee and food. Hours may vary.",
+        btn: "Download menu PDF",
+        footer: "© Bloom · Flash required",
+        headerColor: "#663300",
+        nav: ["Home", "Menu PDF", "Contact"],
+      },
+      after: {
+        theme: "light",
+        bg: "#fffbeb",
+        siteName: "Bloom",
+        tagline: "Noble Park · Open 7 days",
+        headline: "Brunch worth the trip.\nBook your table online.",
+        cta: "Book a table",
+        secondary: "View menu",
+        ctaTextColor: "#fffbeb",
+        nav: ["Menu", "Gallery", "Book"],
+        cards: ["Breakfast", "Coffee", "Functions"],
+      },
+      afterNote:
+        "Bloom's rebuild uses warm café tones — not Goonya's colours — so it feels like their brand, not ours.",
+    },
   },
   {
     slug: "maison-beauty",
@@ -106,39 +167,156 @@ export const CASE_STUDIES = [
     summary:
       "A beauty studio managing everything through Instagram DMs — we gave them a website, bookings and follow-ups that actually work.",
     problem:
-      "Lisa's salon was busy but disorganised online. Clients booked through Instagram DMs, messages got lost, no-shows were common, and there was no system to follow up or ask for reviews. She was spending hours every week on admin instead of doing treatments.",
+      "Lisa's salon was busy but disorganised online. Clients booked through Instagram DMs, messages got lost between staff, and double bookings happened weekly. No-shows were common with no reminder system. There was no website — just a Linktree — and Google reviews had stalled because nobody was asked at the right time.",
+    challenge:
+      "Lisa needed clients to self-book online 24/7 and stop losing hours every week chasing messages and no-shows.",
     beforePoints: [
       "All bookings through Instagram DMs",
       "Lost messages and double bookings",
+      "No website — only a Linktree page",
       "No online review strategy",
       "Hours spent on manual admin weekly",
     ],
     solution: [
-      "Website with online booking for all services",
+      "Website with online booking for all services and staff",
       "Integrated booking system with SMS reminders",
-      "Automated review requests after appointments",
+      "Automated review requests after every appointment",
       "Instagram content aligned with the new booking flow",
+      "Service menu with pricing visible before booking",
     ],
     afterPoints: [
       "Clients book online 24/7 without DMs",
       "SMS reminders cut no-shows dramatically",
       "Google reviews growing every month",
       "Admin time cut by over 10 hours a week",
+      "Each stylist has their own bookable calendar",
     ],
     results: [
       { label: "No-shows reduced", value: "-60%" },
       { label: "Google reviews", value: "+40 new" },
       { label: "Admin time saved", value: "12 hrs/wk" },
     ],
+    timeline: [
+      { week: "Week 1", detail: "Service menu, booking rules, reminder setup" },
+      { week: "Week 2", detail: "Website and online booking go live" },
+      { week: "Week 3–4", detail: "Review automation, Instagram refresh, staff training" },
+    ],
     quote:
       "I was drowning in DMs. Now clients book themselves and I get my evenings back. Should've done this years ago.",
     quoteName: "Lisa Tran",
     quoteRole: "Owner, Maison Beauty Studio",
     services: ["Website", "Booking system", "Review automation", "Social Media"],
-    cover:
-      "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=900&q=80",
+    cover: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=900&q=80",
     beforeMood: "😵‍💫",
     afterMood: "✨",
+    websiteTransform: true,
+    websiteMockup: {
+      slug: "maisonbeauty",
+      brand: { primary: "#be185d", secondary: "#9d174d" },
+      before: {
+        header: "Maison Beauty - link in bio",
+        sub: "Book via Instagram DM only",
+        body: "DM us for appointments. Allow 24-48hrs reply.",
+        btn: "Go to Instagram",
+        footer: "Powered by Linktree",
+        headerColor: "#cc0066",
+        nav: ["Instagram", "TikTok"],
+      },
+      after: {
+        theme: "light",
+        bg: "#fdf2f8",
+        siteName: "Maison",
+        tagline: "Springvale · Lashes, brows & skin",
+        headline: "Book your appointment\nin under 60 seconds.",
+        cta: "Book now",
+        secondary: "View services",
+        ctaTextColor: "#fff",
+        nav: ["Services", "Team", "Reviews"],
+        cards: ["Lashes", "Brows", "Facials"],
+      },
+      afterNote:
+        "Maison's site uses soft rose branding — tailored to {industry}, completely separate from every other client we build for.",
+    },
+  },
+  {
+    slug: "harbour-dental",
+    client: "Harbour Dental Care",
+    industry: "Healthcare",
+    location: "Cheltenham, VIC",
+    headline: "Invisible practice to new patient bookings",
+    summary:
+      "A dental clinic relying on word of mouth — we rebuilt their site, fixed Google and added online new-patient booking.",
+    problem:
+      "Dr. Patel's clinic had been in Cheltenham for eight years but new patients barely found them online. The old website was a template from their IT guy — generic stock photos, no online booking, and pages that didn't mention the services people actually searched for like Invisalign and emergency dental. Their Google listing had outdated phone hours and almost no reviews compared to clinics nearby.",
+    challenge:
+      "They needed to look trustworthy to new patients searching on Google — and let people book a check-up without calling reception during work hours.",
+    beforePoints: [
+      "Generic template site with stock photos",
+      "No online booking for new patients",
+      "Weak Google presence vs nearby clinics",
+      "Key services not mentioned on the website",
+      "Reception overloaded with basic booking calls",
+    ],
+    solution: [
+      "Custom website with clear service pages and real clinic photography",
+      "Online new-patient booking integrated with their practice software",
+      "Google Business optimisation for Cheltenham dental searches",
+      "Automated review requests after appointments",
+      "Emergency dental landing page for after-hours searches",
+    ],
+    afterPoints: [
+      "New patients book online without calling",
+      "Service pages ranking for local dental searches",
+      "Google reviews growing steadily each month",
+      "Reception freed up from repetitive booking calls",
+      "Professional look that matches the in-clinic experience",
+    ],
+    results: [
+      { label: "New patient bookings", value: "+58%" },
+      { label: "Google reviews", value: "+32 new" },
+      { label: "Reception call volume", value: "-35%" },
+    ],
+    timeline: [
+      { week: "Week 1", detail: "Patient journey mapping, service page structure" },
+      { week: "Week 2–3", detail: "Website build, photography, booking integration" },
+      { week: "Week 4", detail: "Google optimisation, review flow, emergency page live" },
+    ],
+    quote:
+      "New patients tell us they chose us because the website looked professional and booking was easy. We should have done this years ago.",
+    quoteName: "Dr. Anika Patel",
+    quoteRole: "Principal Dentist, Harbour Dental Care",
+    services: ["Website", "Google Business", "Online booking", "Review automation"],
+    cover: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=900&q=80",
+    beforeMood: "😬",
+    afterMood: "😁",
+    websiteTransform: true,
+    websiteMockup: {
+      slug: "harbourdental",
+      brand: { primary: "#0d9488", secondary: "#0f766e" },
+      before: {
+        header: "Harbour Dental - Home",
+        sub: "Template by WebSolutions 2017",
+        body: "We are a dental practice. Please call to make an appointment.",
+        btn: "Contact us",
+        footer: "© Harbour Dental · Under maintenance",
+        headerColor: "#006666",
+        nav: ["Home", "About", "Staff"],
+      },
+      after: {
+        theme: "light",
+        bg: "#f0fdfa",
+        siteName: "Harbour Dental",
+        tagline: "Cheltenham · New patients welcome",
+        headline: "Gentle care.\nBook your check-up online.",
+        cta: "Book appointment",
+        secondary: "Emergency?",
+        ctaTextColor: "#fff",
+        nav: ["Services", "Team", "Book"],
+        cards: ["Check-ups", "Invisalign", "Emergency"],
+      },
+      afterNote:
+        "Harbour Dental's clean teal palette fits {industry} — calm, trustworthy, and nothing like our other clients' brands.",
+    },
   },
 ];
 

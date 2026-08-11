@@ -79,7 +79,7 @@ export default function CaseStudy() {
               Their old site looked untrustworthy and didn&apos;t work on phones.
               Here&apos;s what customers saw before vs what they see now.
             </p>
-            <WebsiteMockupPair client={study.client} industry={study.industry} />
+            <WebsiteMockupPair mockup={study.websiteMockup} industry={study.industry} />
           </div>
         )}
 
