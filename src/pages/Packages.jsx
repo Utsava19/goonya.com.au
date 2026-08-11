@@ -1,570 +1,518 @@
 import { useEffect, useRef, useState } from "react";
-import "./Packages.css";
+import "./GrowthPlans.css";
 
-function Runner({ progress }) {
+const plans = [
+  {
+    name: "KICKSTART",
+    price: "$499",
+    period: "one-off",
+    description: "Fix the digital foundation and make sure your business looks credible, findable and ready for growth.",
+    features: [
+      "Website audit",
+      "Google Business Profile optimisation",
+      "Local SEO foundations",
+      "Website conversion recommendations",
+      "Google Search optimisation",
+      "Analytics & tracking setup",
+    ],
+  },
+  {
+    name: "GROW",
+    price: "$899",
+    period: "/ month",
+    popular: true,
+    description: "Build a consistent system that gets you found, builds trust and generates more enquiries.",
+    features: [
+      "Website strategy & optimisation",
+      "SEO",
+      "Google Business Profile",
+      "Google Search optimisation",
+      "Facebook & Instagram",
+      "Short-form content",
+      "Meta Ads",
+      "Lead generation",
+      "Retargeting",
+      "Analytics & monthly reporting",
+    ],
+  },
+  {
+    name: "SCALE",
+    price: "$1,699",
+    period: "/ month",
+    description: "Turn your digital presence into a serious growth engine with marketing, content, advertising and automation working together.",
+    features: [
+      "Website strategy & development",
+      "Advanced SEO",
+      "Google Business Profile",
+      "Google Ads",
+      "Meta Ads",
+      "Content strategy",
+      "Short-form video",
+      "Lead generation",
+      "CRM & automation",
+      "Email / SMS follow-up",
+      "Retargeting",
+      "Advanced reporting",
+    ],
+  },
+];
+
+const buildOptions = [
+  {
+    category: "WEBSITE",
+    items: ["Website audit", "Landing page", "Website rebuild", "New website"],
+  },
+  {
+    category: "GET FOUND",
+    items: ["Local SEO", "Google Business Profile", "Google Search optimisation", "Technical SEO"],
+  },
+  {
+    category: "SOCIAL",
+    items: ["Instagram", "Facebook", "TikTok", "Reels"],
+  },
+  {
+    category: "ADS",
+    items: ["Meta Ads", "Google Ads", "Retargeting"],
+  },
+  {
+    category: "AUTOMATION",
+    items: ["Lead capture", "CRM", "Email follow-up", "SMS follow-up"],
+  },
+];
+
+function Runner() {
   const runnerRef = useRef(null);
+  const lastScroll = useRef(window.scrollY);
+  const frame = useRef(null);
 
   useEffect(() => {
-    if (!runnerRef.current) return;
+    const updateRunner = () => {
+      const runner = runnerRef.current;
+      if (!runner) return;
 
-    const maxDistance =
-      document.documentElement.scrollHeight - window.innerHeight;
-
-    const distance = Math.max(0, maxDistance * progress);
-
-    runnerRef.current.style.setProperty("--runner-progress", progress);
-    runnerRef.current.style.setProperty(
-      "--runner-distance",
-      `${distance}px`
-    );
-  }, [progress]);
-
-  return (
-    <div className="runner-track" aria-hidden="true">
-      <div ref={runnerRef} className="runner">
-        <svg
-          viewBox="0 0 80 100"
-          role="presentation"
-          className="runner-svg"
-        >
-          <circle cx="42" cy="14" r="9" />
-
-          <path
-            d="M39 25 L34 48 L49 62"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
-
-          <path
-            d="M35 34 L17 47"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
-
-          <path
-            d="M38 35 L58 43"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
-
-          <path
-            d="M48 61 L29 82"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
-
-          <path
-            d="M48 61 L68 77"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
-        </svg>
-
-        <span className="runner-speed-line speed-one" />
-        <span className="runner-speed-line speed-two" />
-        <span className="runner-speed-line speed-three" />
-      </div>
-    </div>
-  );
-}
-
-function ScoreBar({ label, score }) {
-  return (
-    <div className="score-row">
-      <div className="score-row-top">
-        <span>{label}</span>
-        <strong>{score}</strong>
-      </div>
-
-      <div className="score-bar">
-        <span style={{ width: `${score}%` }} />
-      </div>
-    </div>
-  );
-}
-
-export default function Packages() {
-  const [form, setForm] = useState({
-    business: "",
-    website: "",
-    suburb: "",
-    industry: "",
-    email: "",
-  });
-
-  const [submitted, setSubmitted] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const updateProgress = () => {
       const scrollTop = window.scrollY;
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
 
       const progress =
-        maxScroll > 0 ? Math.min(scrollTop / maxScroll, 1) : 0;
+        maxScroll > 0 ? Math.min(Math.max(scrollTop / maxScroll, 0), 1) : 0;
 
-      setScrollProgress(progress);
-      ticking = false;
+      const direction = scrollTop >= lastScroll.current ? 1 : -1;
+      lastScroll.current = scrollTop;
+
+      /*
+        Corner-to-corner movement:
+
+        0%   = top-left
+        25%  = upper-right
+        50%  = centre-left
+        75%  = lower-right
+        100% = bottom-left/right depending on wave
+
+        The sine wave creates the large sweeping movement.
+      */
+
+      const x =
+        8 +
+        progress * 84 +
+        Math.sin(progress * Math.PI * 4) * 8;
+
+      const y =
+        10 +
+        progress * 72 +
+        Math.sin(progress * Math.PI * 6) * 5;
+
+      const rotation =
+        Math.sin(progress * Math.PI * 4) * 8;
+
+      const scale =
+        0.9 +
+        progress * 0.35;
+
+      runner.style.transform = `
+        translate3d(${x}vw, ${y}vh, 0)
+        rotate(${rotation}deg)
+        scale(${scale})
+        scaleX(${direction})
+      `;
+
+      /*
+        Faster movement as the user progresses
+        through the page.
+      */
+      const speed =
+        1.1 +
+        progress * 1.7;
+
+      runner.style.setProperty("--runner-speed", `${speed}s`);
+
+      frame.current = requestAnimationFrame(updateRunner);
     };
 
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateProgress);
-        ticking = true;
-      }
-    };
-
-    updateProgress();
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    frame.current = requestAnimationFrame(updateRunner);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      if (frame.current) {
+        cancelAnimationFrame(frame.current);
+      }
     };
   }, []);
 
-  const handleChange = (event) => {
+  return (
+    <div className="runner-layer" aria-hidden="true">
+      <div ref={runnerRef} className="runner">
+        <div className="runner-glow" />
+        <img
+          src="/images/runner.png"
+          alt=""
+          draggable="false"
+        />
+      </div>
+    </div>
+  );
+}
+
+function GrowthScore() {
+  const [form, setForm] = useState({
+    business: "",
+    website: "",
+    suburb: "",
+    industry: "",
+  });
+
+  const [submitted, setSubmitted] = useState(false);
+
+  function updateField(e) {
     setForm({
       ...form,
-      [event.target.name]: event.target.value,
+      [e.target.name]: e.target.value,
     });
-  };
+  }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
     setSubmitted(true);
-
-    setTimeout(() => {
-      document
-        .getElementById("business-analysis")
-        ?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  };
+  }
 
   return (
-    <div className="packages-page">
-      <Runner progress={scrollProgress} />
+    <section className="score-section section-shell">
+      <div className="eyebrow">FREE BUSINESS CHECK</div>
 
-      {/* HERO */}
-      <section className="packages-hero">
-        <div className="packages-grid-bg" />
+      <h2>
+        How strong is your
+        <span> online presence?</span>
+      </h2>
 
-        <div className="packages-container packages-hero-content">
-          <div className="eyebrow">
-            <span />
-            GO ON YA / DIGITAL GROWTH
+      <p className="section-intro">
+        Give us a few details and we'll show you where your
+        digital presence could be working harder.
+      </p>
+
+      {!submitted ? (
+        <form className="score-form" onSubmit={handleSubmit}>
+          <input
+            name="business"
+            placeholder="BUSINESS NAME"
+            value={form.business}
+            onChange={updateField}
+            required
+          />
+
+          <input
+            name="website"
+            placeholder="WEBSITE"
+            value={form.website}
+            onChange={updateField}
+          />
+
+          <input
+            name="suburb"
+            placeholder="SUBURB"
+            value={form.suburb}
+            onChange={updateField}
+          />
+
+          <input
+            name="industry"
+            placeholder="INDUSTRY"
+            value={form.industry}
+            onChange={updateField}
+          />
+
+          <button type="submit" className="primary-button">
+            CHECK MY BUSINESS <span>→</span>
+          </button>
+        </form>
+      ) : (
+        <div className="score-preview">
+          <div className="score-number">62</div>
+
+          <div>
+            <div className="score-label">YOUR GOONYA GROWTH SCORE</div>
+            <h3>There's room to GO ON YA.</h3>
+            <p>
+              This is where your real analysis will eventually
+              connect to the backend audit system.
+            </p>
           </div>
+        </div>
+      )}
+    </section>
+  );
+}
 
-          <h1>
-            HOW'S YOUR BUSINESS
-            <br />
-            <span>REALLY DOING ONLINE?</span>
-          </h1>
+export default function GrowthPlans() {
+  const [openPlan, setOpenPlan] = useState(1);
+  const [selected, setSelected] = useState([]);
 
-          <p className="hero-copy">
-            Find out what's holding your business back, see where you're
-            already winning, and get a clear path to move forward.
-          </p>
+  const toggleSelection = (item) => {
+    setSelected((current) =>
+      current.includes(item)
+        ? current.filter((x) => x !== item)
+        : [...current, item]
+    );
+  };
 
-          <a href="#business-check" className="primary-button">
-            CHECK MY BUSINESS
-            <span>→</span>
-          </a>
+  const customPrice = 399 + selected.length * 99;
+
+  return (
+    <div className="growth-page">
+      <Runner />
+
+      <section className="growth-hero section-shell">
+        <div className="eyebrow">GOONYA GROWTH PLANS</div>
+
+        <h1>
+          Your business deserves
+          <br />
+          <span>more than random marketing.</span>
+        </h1>
+
+        <p className="hero-copy">
+          Build a digital system that gets you found,
+          builds trust and generates enquiries.
+        </p>
+
+        <div className="hero-services">
+          <span>WEBSITE</span>
+          <span>SEO</span>
+          <span>SOCIAL</span>
+          <span>ADS</span>
+          <span>AUTOMATION</span>
         </div>
 
-        <div className="hero-scroll">
-          SCROLL TO GET MOVING
-          <span>↓</span>
+        <a href="#plans" className="primary-button hero-button">
+          FIND MY PLAN <span>→</span>
+        </a>
+      </section>
+
+      <section className="problem-section section-shell">
+        <div className="eyebrow">THE PROBLEM</div>
+
+        <h2>
+          Your customers are already looking.
+          <span> Can they find you?</span>
+        </h2>
+
+        <div className="problem-grid">
+          <article>
+            <div className="problem-number">01</div>
+            <h3>CAN'T FIND YOU</h3>
+            <p>
+              Weak search visibility means potential customers
+              can discover your competitors before they discover you.
+            </p>
+          </article>
+
+          <article>
+            <div className="problem-number">02</div>
+            <h3>DON'T TRUST YOU</h3>
+            <p>
+              An outdated website, weak social presence or lack
+              of proof can make a customer keep looking.
+            </p>
+          </article>
+
+          <article>
+            <div className="problem-number">03</div>
+            <h3>DON'T CONVERT</h3>
+            <p>
+              Getting traffic is only half the job. Your digital
+              presence needs to turn attention into enquiries.
+            </p>
+          </article>
+        </div>
+
+        <div className="solution-line">
+          <span>GOONYA FIXES ALL THREE.</span>
+        </div>
+
+        <div className="solution-grid">
+          <strong>GET FOUND</strong>
+          <strong>GET TRUSTED</strong>
+          <strong>GET CHOSEN</strong>
         </div>
       </section>
 
-      {/* BUSINESS CHECK */}
-      <section id="business-check" className="business-check section">
-        <div className="packages-container">
-          <div className="section-heading">
-            <span className="section-number">01</span>
+      <section id="plans" className="plans-section section-shell">
+        <div className="eyebrow">CHOOSE YOUR LEVEL</div>
 
-            <div>
-              <div className="eyebrow">
-                <span />
-                BUSINESS CHECK
-              </div>
+        <h2>
+          Where does your
+          <span> business need to go?</span>
+        </h2>
 
-              <h2>
-                LET'S SEE
-                <br />
-                <em>WHERE YOU'RE AT.</em>
-              </h2>
+        <div className="plans-grid">
+          {plans.map((plan, index) => {
+            const isOpen = openPlan === index;
 
-              <p>
-                Give us a few details and we'll show you where your digital
-                presence could be doing more.
-              </p>
-            </div>
-          </div>
+            return (
+              <article
+                className={`plan-card ${
+                  plan.popular ? "featured" : ""
+                } ${isOpen ? "expanded" : ""}`}
+                key={plan.name}
+              >
+                {plan.popular && (
+                  <div className="popular-badge">
+                    MOST POPULAR
+                  </div>
+                )}
 
-          <form className="business-form" onSubmit={handleSubmit}>
-            <div className="form-field">
-              <label htmlFor="business">BUSINESS NAME</label>
-              <input
-                id="business"
-                name="business"
-                value={form.business}
-                onChange={handleChange}
-                placeholder="Your business"
-                required
-              />
-            </div>
+                <div className="plan-top">
+                  <div className="plan-index">
+                    0{index + 1}
+                  </div>
 
-            <div className="form-field">
-              <label htmlFor="website">WEBSITE</label>
-              <input
-                id="website"
-                name="website"
-                value={form.website}
-                onChange={handleChange}
-                placeholder="yourbusiness.com.au"
-                required
-              />
-            </div>
+                  <h3>{plan.name}</h3>
 
-            <div className="form-field">
-              <label htmlFor="suburb">SUBURB</label>
-              <input
-                id="suburb"
-                name="suburb"
-                value={form.suburb}
-                onChange={handleChange}
-                placeholder="Your suburb"
-                required
-              />
-            </div>
+                  <div className="plan-price">
+                    {plan.price}
+                    <small>{plan.period}</small>
+                  </div>
 
-            <div className="form-field">
-              <label htmlFor="industry">INDUSTRY</label>
-              <input
-                id="industry"
-                name="industry"
-                value={form.industry}
-                onChange={handleChange}
-                placeholder="What do you do?"
-                required
-              />
-            </div>
-
-            <div className="form-field full-width">
-              <label htmlFor="email">EMAIL</label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="you@business.com.au"
-                required
-              />
-            </div>
-
-            <button className="primary-button form-button" type="submit">
-              CHECK MY BUSINESS
-              <span>→</span>
-            </button>
-          </form>
-        </div>
-      </section>
-
-      {/* ANALYSIS */}
-      {submitted && (
-        <section id="business-analysis" className="analysis section">
-          <div className="packages-container">
-            <div className="analysis-header">
-              <div>
-                <div className="eyebrow">
-                  <span />
-                  DIGITAL HEALTH CHECK
+                  <p>{plan.description}</p>
                 </div>
 
-                <h2>
-                  YOUR DIGITAL
-                  <br />
-                  <em>SCORE.</em>
-                </h2>
-              </div>
+                <button
+                  className="plan-toggle"
+                  onClick={() =>
+                    setOpenPlan(isOpen ? -1 : index)
+                  }
+                >
+                  {isOpen ? "HIDE DETAILS" : "SEE WHAT'S INCLUDED"}
+                  <span>{isOpen ? "−" : "+"}</span>
+                </button>
 
-              <div className="big-score">
-                <span>72</span>
-                <small>/100</small>
-              </div>
-            </div>
+                {isOpen && (
+                  <div className="feature-list">
+                    {plan.features.map((feature) => (
+                      <div key={feature}>
+                        <span>+</span>
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+                )}
 
-            <div className="analysis-message">
-              <h3>
-                You're moving.
-                <br />
-                <span>But there's room to GO ON YA.</span>
-              </h3>
-
-              <p>
-                Your digital foundations are heading in the right direction,
-                but there are opportunities to improve visibility, conversion
-                and momentum.
-              </p>
-            </div>
-
-            <div className="scores-grid">
-              <ScoreBar label="WEBSITE" score={78} />
-              <ScoreBar label="SEO" score={64} />
-              <ScoreBar label="GOOGLE VISIBILITY" score={57} />
-              <ScoreBar label="GOOGLE PROFILE" score={81} />
-              <ScoreBar label="REVIEWS" score={74} />
-              <ScoreBar label="CONTENT" score={62} />
-              <ScoreBar label="CTA / CONVERSION" score={49} />
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* WHAT'S HOLDING YOU BACK */}
-      <section className="holding-back section">
-        <div className="packages-container">
-          <div className="section-heading">
-            <span className="section-number">02</span>
-
-            <div>
-              <div className="eyebrow">
-                <span />
-                THE ROAD AHEAD
-              </div>
-
-              <h2>
-                WHAT'S HOLDING
-                <br />
-                <em>YOU BACK?</em>
-              </h2>
-            </div>
-          </div>
-
-          <div className="problem-grid">
-            <article className="problem-card">
-              <span className="problem-number">01</span>
-
-              <h3>YOU'RE HARD TO FIND.</h3>
-
-              <p>
-                Your local search presence could be stronger, meaning potential
-                customers may be finding your competitors first.
-              </p>
-
-              <div className="problem-arrow">↗</div>
-            </article>
-
-            <article className="problem-card">
-              <span className="problem-number">02</span>
-
-              <h3>YOUR WEBSITE ISN'T CONVERTING ENOUGH.</h3>
-
-              <p>
-                People can find information about your business, but the path
-                from visitor to customer could be much clearer.
-              </p>
-
-              <div className="problem-arrow">↗</div>
-            </article>
-
-            <article className="problem-card">
-              <span className="problem-number">03</span>
-
-              <h3>YOUR CONTENT COULD WORK HARDER.</h3>
-
-              <p>
-                There's an opportunity to build more authority, trust and
-                visibility around what your business actually does best.
-              </p>
-
-              <div className="problem-arrow">↗</div>
-            </article>
-          </div>
-
-          <div className="moving-message">
-            <span>LET'S GET YOU</span>
-            <strong>MOVING.</strong>
-          </div>
+                <a href="/contact" className="plan-button">
+                  {plan.name === "KICKSTART"
+                    ? "START HERE"
+                    : plan.name === "GROW"
+                    ? "GROW MY BUSINESS"
+                    : "SCALE MY BUSINESS"}
+                  <span>→</span>
+                </a>
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      {/* PACKAGES */}
-      <section className="packages-section section">
-        <div className="packages-container">
-          <div className="section-heading">
-            <span className="section-number">03</span>
+      <section className="build-section section-shell">
+        <div className="eyebrow">BUILD YOUR GOONYA</div>
 
-            <div>
-              <div className="eyebrow">
-                <span />
-                CHOOSE YOUR SPEED
+        <h2>
+          Don't need the whole package?
+          <span> Build exactly what you need.</span>
+        </h2>
+
+        <p className="section-intro">
+          Pick the services that make sense for your business
+          and build your own growth system.
+        </p>
+
+        <div className="builder">
+          <div className="builder-options">
+            {buildOptions.map((group) => (
+              <div className="builder-group" key={group.category}>
+                <h3>{group.category}</h3>
+
+                <div className="builder-items">
+                  {group.items.map((item) => {
+                    const active = selected.includes(item);
+
+                    return (
+                      <button
+                        key={item}
+                        className={active ? "selected" : ""}
+                        onClick={() => toggleSelection(item)}
+                      >
+                        <span>{active ? "✓" : "+"}</span>
+                        {item}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
+            ))}
+          </div>
 
-              <h2>
-                READY TO
-                <br />
-                <em>GO ON YA?</em>
-              </h2>
+          <aside className="builder-summary">
+            <div className="summary-label">YOUR GOONYA PLAN</div>
 
-              <p>
-                No bloated retainers. No confusing digital jargon. Just clear
-                packages designed to get your business moving.
-              </p>
+            <div className="custom-price">
+              ${customPrice.toLocaleString()}
+              <small>/ month</small>
             </div>
-          </div>
 
-          <div className="package-grid">
-            {/* BOOST */}
-            <article className="package-card">
-              <div className="package-top">
-                <span className="package-index">01</span>
-                <span className="package-label">GET MOVING</span>
-              </div>
+            <p>
+              {selected.length === 0
+                ? "Start selecting services to build your plan."
+                : `${selected.length} service${
+                    selected.length === 1 ? "" : "s"
+                  } selected.`}
+            </p>
 
-              <h3>BOOST</h3>
-
-              <p className="package-description">
-                Get your digital foundations moving in the right direction.
-              </p>
-
-              <div className="package-price">
-                <small>$</small>
-                399
-              </div>
-
-              <span className="price-note">ONE-OFF</span>
-
-              <ul>
-                <li>Digital presence review</li>
-                <li>Website optimisation recommendations</li>
-                <li>Google Business Profile review</li>
-                <li>Local SEO opportunities</li>
-                <li>Action plan</li>
-              </ul>
-
-              <a href="#contact" className="package-button">
-                BOOST MY BUSINESS →
-              </a>
-            </article>
-
-            {/* MOMENTUM */}
-            <article className="package-card featured">
-              <div className="popular-badge">MOST POPULAR</div>
-
-              <div className="package-top">
-                <span className="package-index">02</span>
-                <span className="package-label">BUILD MOMENTUM</span>
-              </div>
-
-              <h3>MOMENTUM</h3>
-
-              <p className="package-description">
-                Build a stronger digital presence and start turning visibility
-                into real enquiries.
-              </p>
-
-              <div className="package-price">
-                <small>$</small>
-                899
-              </div>
-
-              <div className="special-price">
-                <strong>$499</strong>
-                <span>ONE-OFF OFFER</span>
-              </div>
-
-              <ul>
-                <li>Everything in BOOST</li>
-                <li>Website conversion improvements</li>
-                <li>Local SEO setup</li>
-                <li>Google Business optimisation</li>
-                <li>Content recommendations</li>
-                <li>Conversion-focused CTA strategy</li>
-              </ul>
-
-              <a href="#contact" className="package-button">
-                BUILD MOMENTUM →
-              </a>
-            </article>
-
-            {/* ACCELERATE */}
-            <article className="package-card">
-              <div className="package-top">
-                <span className="package-index">03</span>
-                <span className="package-label">FULL SPEED</span>
-              </div>
-
-              <h3>ACCELERATE</h3>
-
-              <p className="package-description">
-                A comprehensive digital growth push for businesses ready to
-                seriously level up.
-              </p>
-
-              <div className="package-price">
-                <small>$</small>
-                1,699
-              </div>
-
-              <span className="price-note">ONE-OFF</span>
-
-              <ul>
-                <li>Everything in MOMENTUM</li>
-                <li>Advanced SEO strategy</li>
-                <li>Full website conversion review</li>
-                <li>Content strategy</li>
-                <li>Google visibility strategy</li>
-                <li>Growth roadmap</li>
-              </ul>
-
-              <a href="#contact" className="package-button">
-                ACCELERATE →
-              </a>
-            </article>
-          </div>
+            <a href="/contact" className="primary-button">
+              LET'S BUILD IT <span>→</span>
+            </a>
+          </aside>
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section id="contact" className="packages-final section">
-        <div className="packages-final-glow" />
+      <GrowthScore />
 
-        <div className="packages-container final-content">
-          <div className="eyebrow">
-            <span />
-            YOUR NEXT MOVE
-          </div>
-
-          <h2>
-            YOUR BUSINESS
-            <br />
-            IS ALREADY <em>MOVING.</em>
-          </h2>
-
-          <p>Let's get it moving faster.</p>
-
-          <a href="/contact" className="primary-button">
-            GO ON YA
-            <span>→</span>
-          </a>
+      <section className="final-section section-shell">
+        <div className="final-runner-line">
+          <span />
         </div>
+
+        <div className="eyebrow">READY?</div>
+
+        <h2>
+          Ready to
+          <span> GO ON YA?</span>
+        </h2>
+
+        <p>
+          Stop guessing what your marketing should be doing.
+          Let's build something that actually moves your business.
+        </p>
+
+        <a href="/contact" className="primary-button">
+          BUILD MY GROWTH PLAN <span>→</span>
+        </a>
       </section>
     </div>
   );
