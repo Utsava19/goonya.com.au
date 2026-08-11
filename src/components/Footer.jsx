@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { SITE, fullAddress } from "../data/siteMeta";
 
 export default function Footer() {
   const A = "#9b7cff";
@@ -87,11 +88,11 @@ export default function Footer() {
         <div>
           <div style={headingStyle}>CONTACT</div>
           <a href="mailto:info@goonya.com.au" style={linkStyle}>info@goonya.com.au</a>
-          <a href="tel:0434785800" style={linkStyle}>0434 785 800</a>
-          <a href="tel:0452542981" style={linkStyle}>0452 542 981</a>
-          <div style={{ fontSize: "13px", color: "#3a3a3a", lineHeight: 1.5, marginTop: "8px" }}>
-            75 Bowmore Rd<br />Noble Park VIC 3174<br />Australia
-          </div>
+          <a href={`tel:${SITE.phoneTel}`} style={linkStyle}>{SITE.phone}</a>
+          <a href={`tel:${SITE.phoneSecondaryTel}`} style={linkStyle}>{SITE.phoneSecondary}</a>
+          <a href={SITE.mapsUrl} target="_blank" rel="noreferrer" style={linkStyle}>
+            {fullAddress()}
+          </a>
         </div>
       </div>
 

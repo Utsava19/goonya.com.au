@@ -30,6 +30,7 @@ export default function GrowthScoreCheck({
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [result, setResult] = useState(null);
 
   function updateField(e) {
@@ -51,10 +52,14 @@ export default function GrowthScoreCheck({
 
     setLoading(true);
     setResult(null);
+    setSubmitError("");
     try {
       const audit = await runGrowthAudit(form);
       setResult(audit);
       setErrors({});
+    } catch (err) {
+      setSubmitError(err.message || "Could not complete the growth check.");
+      setResult(null);
     } finally {
       setLoading(false);
     }
@@ -83,8 +88,8 @@ export default function GrowthScoreCheck({
               How strong is your <span style={{ color: A }}>online presence?</span>
             </h2>
             <p style={{ color: "#666", fontSize: "16px", maxWidth: "560px", lineHeight: 1.7 }}>
-              We scan your website signals, local presence and marketing readiness —
-              then show what's costing you customers.
+              Enter your website and we scan it live — SEO, mobile, Google signals, local presence
+              and conversion issues. Every business gets a different score.
             </p>
           </div>
         )}
@@ -108,7 +113,7 @@ export default function GrowthScoreCheck({
                 {errors.business && <span style={errorStyle}>{errors.business}</span>}
               </div>
               <div>
-                <label style={labelStyle}>Website</label>
+                <label style={labelStyle}>Website *</label>
                 <input name="website" value={form.website} onChange={updateField}
                   placeholder="yourbusiness.com.au" style={inputStyle(errors.website)} maxLength={120} />
                 {errors.website && <span style={errorStyle}>{errors.website}</span>}
@@ -132,9 +137,14 @@ export default function GrowthScoreCheck({
               </div>
             </div>
 
-            <button type="submit" disabled={loading} style={submitStyle}>
-              {loading ? "Analysing your business…" : "Check My Business Growth →"}
+            <button type="submit" disabled={loading} style={{
+              ...submitStyle,
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? "wait" : "pointer",
+            }}>
+              {loading ? "Scanning your website…" : "Check My Business Growth →"}
             </button>
+            {submitError && <p style={{ ...errorStyle, marginTop: "12px" }}>{submitError}</p>}
           </form>
 
           {(loading || result) && (
@@ -148,9 +158,10 @@ export default function GrowthScoreCheck({
               {loading && (
                 <div style={{ color: "#888", fontSize: "15px", lineHeight: 1.7 }}>
                   <div style={{ marginBottom: "16px", color: A, fontWeight: 600 }}>
-                    Running your growth check…
+                    Scanning {form.website || "your site"}…
                   </div>
-                  Checking website reachability, mobile signals, conversion cues and local readiness.
+                  Fetching your homepage, checking SEO tags, mobile setup, local signals,
+                  contact CTAs and Google PageSpeed SEO score.
                 </div>
               )}
 
@@ -172,10 +183,32 @@ export default function GrowthScoreCheck({
                   <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "20px", color: "white", marginBottom: "10px" }}>
                     {scoreHeadline(result.score)}
                   </h3>
-                  <p style={{ color: "#666", fontSize: "14px", lineHeight: 1.65, marginBottom: "20px" }}>
+                  <p style={{ color: "#666", fontSize: "14px", lineHeight: 1.65, marginBottom: "12px" }}>
                     {scoreLabel(result.score)} Analysis for <strong style={{ color: "#aaa" }}>{result.business}</strong>.
-                    {result.scanned ? " Website scanned live." : " Website scan limited — URL signals used."}
+                    {result.scanned
+                      ? ` Live scan of ${result.finalUrl || form.website}.`
+                      : " Full scan limited — site unreachable."}
+                    {result.pageSpeedSeo != null && (
+                      <> Google mobile SEO: <strong style={{ color: "#ccc" }}>{result.pageSpeedSeo}/100</strong>.</>
+                    )}
                   </p>
+
+                  {result.problems?.length > 0 && (
+                    <div style={{
+                      marginBottom: "20px", padding: "16px",
+                      background: "rgba(255,100,100,.06)", border: "1px solid rgba(255,100,100,.2)",
+                      borderRadius: "12px",
+                    }}>
+                      <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#ff6b6b", marginBottom: "10px" }}>
+                        TOP PROBLEMS FOUND
+                      </div>
+                      {result.problems.map((p, i) => (
+                        <div key={i} style={{ fontSize: "13px", color: "#ccc", lineHeight: 1.55, marginBottom: "8px" }}>
+                          ✕ <strong>{p.area}:</strong> {p.text}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "20px" }}
                     className="breakdown-grid">
@@ -190,7 +223,10 @@ export default function GrowthScoreCheck({
                   </div>
 
                   <div style={{ marginBottom: "24px" }}>
-                    {result.findings.slice(0, 6).map((f, i) => (
+                    <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#666", marginBottom: "10px" }}>
+                      FULL AUDIT
+                    </div>
+                    {result.findings.slice(0, 8).map((f, i) => (
                       <div key={i} style={{
                         display: "flex", gap: "10px", padding: "10px 0",
                         borderBottom: `1px solid ${L}`, fontSize: "13px", lineHeight: 1.5,
@@ -308,4 +344,5 @@ const submitStyle = {
   fontSize: "14px",
   cursor: "pointer",
   letterSpacing: "0.5px",
+  opacity: 1,
 };

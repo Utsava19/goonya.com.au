@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
@@ -11,13 +12,25 @@ import CaseStudy from "./pages/CaseStudy";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import { trackPageView } from "./utils/analytics.js";
 import "./App.css";
 import "./styles/pageLayout.css";
+
+function AnalyticsTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    trackPageView(`${location.pathname}${location.search}${location.hash}`);
+  }, [location.pathname, location.search, location.hash]);
+
+  return null;
+}
 
 export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <AnalyticsTracker />
       <div className="site">
         <Navbar />
         <main>

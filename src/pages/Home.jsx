@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import GrowthScoreCheck from "../components/GrowthScoreCheck";
+import { SITE } from "../data/siteMeta";
 import {
   GoonyaPromise,
   PackagePreview,
@@ -688,6 +689,21 @@ export default function Home() {
                 padding:"15px 30px", color:"white", fontSize:"14px", textDecoration:"none",
                 borderRadius:"100px", border:`1px solid rgba(255,255,255,.15)` }}>
                 View Our Packages
+              </Link>
+            </div>
+
+            <div className="fi" style={{
+              marginTop:"18px", display:"flex", flexWrap:"wrap", alignItems:"center",
+              gap:"8px 16px", fontSize:"13px", color:"#555",
+            }}>
+              <span>{SITE.address.suburb}, {SITE.address.state}</span>
+              <span aria-hidden="true">·</span>
+              <a href={`tel:${SITE.phoneTel}`} style={{ color:"#888", textDecoration:"none" }}>
+                Call {SITE.phone}
+              </a>
+              <span aria-hidden="true">·</span>
+              <Link to="/contact" style={{ color:A, fontWeight:600, textDecoration:"none" }}>
+                Send an enquiry →
               </Link>
             </div>
           </div>
