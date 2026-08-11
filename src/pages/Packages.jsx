@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import "./Packages.css";
+import "./packages.css";
 
 function Runner() {
   const runnerRef     = useRef(null);
@@ -37,10 +37,10 @@ function Runner() {
 
       const diff = targetProgress - currentProgress;
       if (Math.abs(diff) > 0.0001) {
-        currentProgress += diff * 0.04; // slow lerp
+        currentProgress += diff * 0.04;
       }
 
-      // Stay in the left margin — never crosses into content
+      // Stay in left margin only — between 2vw and 18vw
       const x = 10 + Math.sin(currentProgress * Math.PI * 2) * 8;
       const y = 8  + currentProgress * 84;
 
@@ -59,8 +59,7 @@ function Runner() {
         scale(${scaleX}, ${scaleY})
       `;
 
-      // Slow animation speed — gets slightly faster as you scroll
-      const speed = Math.max(0.55 - currentProgress * 0.2, 0.35);
+      const speed = Math.max(0.55 - currentProgress * 0.12, 0.35);
       runner.style.setProperty("--run-speed", `${speed}s`);
 
       const translateCSS = `translate3d(calc(${x}vw - 50%), calc(${y}vh - 50%), 0)`;
@@ -204,7 +203,6 @@ function Runner() {
         </svg>
       </div>
 
-      {/* Trail and speed lines are OUTSIDE .runner so scaleX(-1) never flips them */}
       <div ref={trailRef} className="runner-trail-wrap">
         <div className="runner-trail" />
       </div>
