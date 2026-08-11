@@ -1,5 +1,5 @@
 /* =========================================================
-   CSS CUSTOM PROPERTY DEFAULT
+   ROOT VARIABLE
 ========================================================= */
 :root {
   --run-speed: 0.55s;
@@ -7,8 +7,6 @@
 
 /* =========================================================
    RUNNER LAYER
-   Fixed to viewport, sits BEHIND page content.
-   pointer-events: none so it never blocks clicks.
 ========================================================= */
 .runner-layer {
   position: fixed;
@@ -17,13 +15,11 @@
   height: 100%;
   overflow: hidden;
   pointer-events: none;
-  z-index: 2; /* above background, below .growth-page */
+  z-index: 2;
 }
 
 /* =========================================================
    RUNNER WRAPPER
-   Sized small so it fits in the left margin.
-   No ::before glow — removed.
 ========================================================= */
 .runner {
   position: absolute;
@@ -34,9 +30,11 @@
   will-change: transform;
   isolation: isolate;
   filter:
-    drop-shadow(0 0 18px rgba(155, 124, 255, 0.28))
-    drop-shadow(0 20px 30px rgba(0, 0, 0, 0.6));
+    drop-shadow(0 0 25px rgba(155, 124, 255, 0.32))
+    drop-shadow(0 25px 40px rgba(0, 0, 0, 0.75));
 }
+
+/* NO ::before glow — removed */
 
 /* =========================================================
    PERSON
@@ -64,7 +62,7 @@
 }
 
 /* =========================================================
-   RUNNING MOTION — gentler bob
+   RUNNING MOTION
 ========================================================= */
 @keyframes runner-bob {
   0%   { transform: translateY(0)   rotate(0deg);  }
@@ -80,17 +78,16 @@
 .runner-shadow {
   position: absolute;
   width: 65%;
-  height: 18px;
+  height: 22px;
   left: 17%;
   bottom: 1%;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.7);
-  filter: blur(12px);
+  background: rgba(0, 0, 0, 0.8);
+  filter: blur(14px);
 }
 
 /* =========================================================
-   TRAIL WRAPPER
-   Positioned by JS — never flips with the runner.
+   TRAIL
 ========================================================= */
 .runner-trail-wrap {
   position: absolute;
@@ -110,16 +107,15 @@
     90deg,
     transparent 0%,
     rgba(155, 124, 255, 0.04) 25%,
-    rgba(155, 124, 255, 0.18) 50%,
+    rgba(155, 124, 255, 0.25) 50%,
     transparent 100%
   );
-  filter: blur(18px);
-  opacity: 0.8;
+  filter: blur(20px);
+  opacity: 0.9;
 }
 
 /* =========================================================
-   SPEED LINES WRAPPER
-   Positioned by JS — never flips with the runner.
+   SPEED LINES
 ========================================================= */
 .runner-speed-lines {
   position: absolute;
@@ -143,8 +139,8 @@
 }
 
 .line-one   { width: 50%; left: -40%; top: 40%; }
-.line-two   { width: 38%; left: -30%; top: 48%; animation-delay: 0.08s; }
-.line-three { width: 27%; left: -22%; top: 56%; animation-delay: 0.16s; }
+.line-two   { width: 38%; left: -30%; top: 48%; animation-delay: 0.06s; }
+.line-three { width: 27%; left: -22%; top: 56%; animation-delay: 0.12s; }
 
 @keyframes speed-line {
   0%   { opacity: 0; transform: translateX(35px); }
@@ -153,8 +149,7 @@
 }
 
 /* =========================================================
-   PAGE CONTENT
-   Must be above the runner layer.
+   PAGE CONTENT — always above runner
 ========================================================= */
 .growth-page {
   position: relative;
@@ -173,7 +168,9 @@
    MOBILE
 ========================================================= */
 @media (max-width: 700px) {
-  .runner,
+  .runner {
+    width: 100px;
+  }
   .runner-speed-lines,
   .runner-trail-wrap {
     width: 100px;
