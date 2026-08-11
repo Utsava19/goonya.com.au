@@ -40,7 +40,6 @@ function Runner() {
         currentProgress += diff * 0.04;
       }
 
-      // Stay in left margin only — between 2vw and 18vw
       const x = 10 + Math.sin(currentProgress * Math.PI * 2) * 8;
       const y = 8  + currentProgress * 84;
 
@@ -86,10 +85,8 @@ function Runner() {
 
   return (
     <div className="runner-layer" aria-hidden="true">
-
       <div ref={runnerRef} className="runner">
         <div className="runner-shadow" />
-
         <svg
           className="runner-svg"
           viewBox="0 0 240 360"
@@ -212,7 +209,6 @@ function Runner() {
         <div className="runner-speed-line line-two" />
         <div className="runner-speed-line line-three" />
       </div>
-
     </div>
   );
 }
