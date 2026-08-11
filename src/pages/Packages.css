@@ -2,16 +2,13 @@
    CSS CUSTOM PROPERTY DEFAULT
 ========================================================= */
 :root {
-  --run-speed: 0.55s; /* slowed down from 0.35s */
+  --run-speed: 0.55s;
 }
 
 /* =========================================================
    RUNNER LAYER
-   - fixed so it stays in the viewport as the user scrolls
-   - z-index: 2 so it renders ABOVE the page background
-     but we keep pointer-events: none so it never blocks clicks
-   - The runner stays in the LEFT margin (x ≈ 4–18vw) so it
-     never overlaps centred page content
+   Fixed to viewport, sits BEHIND page content.
+   pointer-events: none so it never blocks clicks.
 ========================================================= */
 .runner-layer {
   position: fixed;
@@ -20,35 +17,29 @@
   height: 100%;
   overflow: hidden;
   pointer-events: none;
-  /* FIXED: was z-index 0 which put it BEHIND .growth-page (z-index 1)
-     making it completely invisible. Now 2 so it shows above the page
-     background but pointer-events: none means it never blocks clicks. */
-  z-index: 2;
+  z-index: 2; /* above background, below .growth-page */
 }
 
 /* =========================================================
    RUNNER WRAPPER
+   Sized small so it fits in the left margin.
+   No ::before glow — removed.
 ========================================================= */
 .runner {
   position: absolute;
   left: 0;
   top: 0;
-  width: clamp(120px, 14vw, 220px); /* FIXED: was 220–420px — too large, overlapped content */
+  width: clamp(120px, 14vw, 220px);
   transform-origin: center center;
   will-change: transform;
   isolation: isolate;
   filter:
     drop-shadow(0 0 18px rgba(155, 124, 255, 0.28))
-    drop-shadow(0 18px 30px rgba(0, 0, 0, 0.6));
+    drop-shadow(0 20px 30px rgba(0, 0, 0, 0.6));
 }
 
-/*
-  REMOVED: .runner::before atmospheric glow blob
-  The user asked to remove the background effect entirely.
-*/
-
 /* =========================================================
-   PERSON SVG
+   PERSON
 ========================================================= */
 .runner-svg {
   position: relative;
@@ -73,15 +64,14 @@
 }
 
 /* =========================================================
-   RUNNING MOTION
-   Slowed down to match the slower --run-speed
+   RUNNING MOTION — gentler bob
 ========================================================= */
 @keyframes runner-bob {
-  0%   { transform: translateY(0)     rotate(0deg);  }
-  25%  { transform: translateY(-4px)  rotate(-0.8deg); }
-  50%  { transform: translateY(-8px)  rotate(0.8deg);  }
-  75%  { transform: translateY(-4px)  rotate(-0.8deg); }
-  100% { transform: translateY(0)     rotate(0deg);  }
+  0%   { transform: translateY(0)   rotate(0deg);  }
+  25%  { transform: translateY(-4px) rotate(-1deg); }
+  50%  { transform: translateY(-8px) rotate(1deg);  }
+  75%  { transform: translateY(-4px) rotate(-1deg); }
+  100% { transform: translateY(0)   rotate(0deg);  }
 }
 
 /* =========================================================
@@ -100,8 +90,7 @@
 
 /* =========================================================
    TRAIL WRAPPER
-   Positioned by JS — lives outside .runner so it is NOT
-   flipped when the runner changes direction (scaleX(-1))
+   Positioned by JS — never flips with the runner.
 ========================================================= */
 .runner-trail-wrap {
   position: absolute;
@@ -120,7 +109,7 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(155, 124, 255, 0.03) 25%,
+    rgba(155, 124, 255, 0.04) 25%,
     rgba(155, 124, 255, 0.18) 50%,
     transparent 100%
   );
@@ -130,7 +119,7 @@
 
 /* =========================================================
    SPEED LINES WRAPPER
-   Same as trail — outside .runner, synced by JS
+   Positioned by JS — never flips with the runner.
 ========================================================= */
 .runner-speed-lines {
   position: absolute;
@@ -146,7 +135,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(155, 124, 255, 0.7),
+    rgba(155, 124, 255, 0.8),
     transparent
   );
   transform-origin: right center;
@@ -158,48 +147,35 @@
 .line-three { width: 27%; left: -22%; top: 56%; animation-delay: 0.16s; }
 
 @keyframes speed-line {
-  0%   { opacity: 0; transform: translateX(30px); }
+  0%   { opacity: 0; transform: translateX(35px); }
   30%  { opacity: 1; }
-  100% { opacity: 0; transform: translateX(-35px); }
+  100% { opacity: 0; transform: translateX(-40px); }
 }
 
 /* =========================================================
    PAGE CONTENT
-   z-index: 3 keeps text ABOVE the runner (z-index: 2)
-   while still letting the runner show above the background.
-   pointer-events on .runner-layer is none so this is safe.
+   Must be above the runner layer.
 ========================================================= */
 .growth-page {
   position: relative;
-  z-index: 3; /* FIXED: was 1, runner was z-index 0 — runner was invisible */
+  z-index: 3;
 }
 
 /* =========================================================
    REDUCED MOTION
 ========================================================= */
 @media (prefers-reduced-motion: reduce) {
-  .runner-svg {
-    animation: none;
-  }
-  .runner-speed-line {
-    animation: none;
-    opacity: 0;
-  }
+  .runner-svg        { animation: none; }
+  .runner-speed-line { animation: none; opacity: 0; }
 }
 
 /* =========================================================
    MOBILE
-   On small screens the left margin is tight so we shrink
-   the runner further and reduce its opacity slightly so
-   it doesn't crowd the content.
 ========================================================= */
 @media (max-width: 700px) {
-  .runner {
-    width: 90px;
-    opacity: 0.7;
-  }
+  .runner,
   .runner-speed-lines,
   .runner-trail-wrap {
-    width: 90px;
+    width: 100px;
   }
 }
