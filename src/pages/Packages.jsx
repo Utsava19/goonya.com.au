@@ -35,47 +35,21 @@ function Runner() {
         return;
       }
 
-      // Slow lerp — feels like it moves WITH the page, not snapping
       const diff = targetProgress - currentProgress;
       if (Math.abs(diff) > 0.0001) {
-        currentProgress += diff * 0.04; // was 0.08 — halved for slower feel
+        currentProgress += diff * 0.04; // slow lerp
       }
 
-      /*
-        MARGIN-SAFE WAVE
-        ─────────────────
-        Instead of sweeping 12vw → 88vw (through all content),
-        the runner stays in the LEFT margin only:
-          x oscillates between ~4vw and ~18vw
+      // Stay in the left margin — never crosses into content
+      const x = 10 + Math.sin(currentProgress * Math.PI * 2) * 8;
+      const y = 8  + currentProgress * 84;
 
-        This keeps it well clear of any centred or right-aligned content.
-
-        If you want it on the RIGHT margin instead, change the base from
-        10 to something like 82 and keep the amplitude small (±8).
-      */
-      const x =
-        10 + Math.sin(currentProgress * Math.PI * 2) * 8;
-      //   ^base (left margin)   ^only 2 full waves    ^±8vw amplitude (tight)
-
-      /*
-        Y position is tied directly to scroll progress so the runner
-        moves DOWN the page as the user scrolls — it feels like part
-        of the page rather than a floating overlay.
-
-        Range: 5vh → 89vh (stays within the viewport height band)
-      */
-      const y = 5 + currentProgress * 84;
-
-      // Direction flip
       const nextProgress = Math.min(currentProgress + 0.005, 1);
       const nextX        = 10 + Math.sin(nextProgress * Math.PI * 2) * 8;
       const direction    = nextX >= x ? 1 : -1;
+      const lean         = (nextX - x) * 0.2;
 
-      // Gentle lean — reduced from 0.45 to 0.2 so it doesn't look drunk
-      const lean = (nextX - x) * 0.2;
-
-      // Subtle scale growth as it moves down
-      const scale  = 0.75 + currentProgress * 0.25;
+      const scale  = 0.9 + currentProgress * 0.35;
       const scaleX = direction * scale;
       const scaleY = scale;
 
@@ -85,8 +59,8 @@ function Runner() {
         scale(${scaleX}, ${scaleY})
       `;
 
-      // Slower animation speed — was 0.32s min 0.15s, now 0.55s min 0.35s
-      const speed = Math.max(0.55 - currentProgress * 0.15, 0.35);
+      // Slow animation speed — gets slightly faster as you scroll
+      const speed = Math.max(0.55 - currentProgress * 0.2, 0.35);
       runner.style.setProperty("--run-speed", `${speed}s`);
 
       const translateCSS = `translate3d(calc(${x}vw - 50%), calc(${y}vh - 50%), 0)`;
@@ -133,10 +107,7 @@ function Runner() {
           />
 
           {/* NECK */}
-          <path
-            d="M114 61 L116 77 L137 77 L137 58"
-            className="runner-skin"
-          />
+          <path d="M114 61 L116 77 L137 77 L137 58" className="runner-skin" />
 
           {/* BODY */}
           <path
@@ -146,10 +117,7 @@ function Runner() {
           />
 
           {/* PURPLE SHIRT STRIPE */}
-          <path
-            d="M108 76 L119 154 L135 148 L129 76 Z"
-            className="runner-purple"
-          />
+          <path d="M108 76 L119 154 L135 148 L129 76 Z" className="runner-purple" />
 
           {/* BACK ARM */}
           <path
@@ -236,7 +204,7 @@ function Runner() {
         </svg>
       </div>
 
-      {/* Trail and speed lines outside runner so they don't flip with scaleX */}
+      {/* Trail and speed lines are OUTSIDE .runner so scaleX(-1) never flips them */}
       <div ref={trailRef} className="runner-trail-wrap">
         <div className="runner-trail" />
       </div>
