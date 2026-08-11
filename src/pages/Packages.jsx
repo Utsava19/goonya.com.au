@@ -366,7 +366,7 @@ function GrowthScore() {
   );
 }
 
-export default function GrowthPlans() {
+export default function Packages() {
   const [openPlan, setOpenPlan] = useState(1);
   const [selected, setSelected] = useState([]);
 
