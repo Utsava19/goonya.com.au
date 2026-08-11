@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  CASE_STUDY,
   GROWTH_SYSTEM,
   PACKAGES,
-  PILLARS,
   PROCESS_STEPS,
   TESTIMONIALS,
 } from "../data/siteContent";
@@ -12,80 +10,46 @@ import {
 const A = "#9b7cff";
 const L = "rgba(255,255,255,.08)";
 
-export function WhyGoonya() {
-  return (
-    <div style={{ padding: "100px 0", width: "min(1400px,90vw)", margin: "0 auto" }}>
-      <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
-        display: "flex", alignItems: "center", gap: "10px" }}>
-        <span style={{ width: "20px", height: "1px", background: A }} />WHY GOONYA
-      </div>
-      <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(36px,4.5vw,64px)",
-        fontWeight: 700, letterSpacing: "-2.5px", color: "white", marginBottom: "20px" }}>
-        One business.<span style={{ color: A }}> One growth system.</span>
-      </h2>
-      <p style={{ color: "#666", fontSize: "17px", lineHeight: 1.75, maxWidth: "620px", marginBottom: "48px" }}>
-        Instead of hiring one person for your website, another for social, another for ads
-        and another for automation — Goonya handles the digital side in one place.
-      </p>
-      <div className="why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "1px",
-        background: L, border: `1px solid ${L}` }}>
-        {[
-          "Freelancers who disappear",
-          "Agencies with big retainers",
-          "DIY tools with no strategy",
-          "Disconnected marketing channels",
-        ].map((item) => (
-          <div key={item} style={{ padding: "28px 32px", background: "#08060f", color: "#555", fontSize: "15px" }}>
-            ✕ {item}
-          </div>
-        ))}
-      </div>
-      <p style={{ marginTop: "32px", color: "white", fontSize: "18px", fontWeight: 600 }}>
-        Goonya helps Australian small businesses get found, get leads and save time —
-        without the big agency price tag.
-      </p>
-      <style>{`@media(max-width:768px){ .why-grid{ grid-template-columns:1fr !important; } }`}</style>
-    </div>
-  );
-}
+export function GoonyaPromise() {
+  const items = [
+    { title: "One team", desc: "Website, marketing and automation under one roof — not five different freelancers." },
+    { title: "One plan", desc: "A growth system built around enquiries and revenue, not random posts and pretty slides." },
+    { title: "One invoice", desc: "Clear packages from $399/mo — without the big agency retainers." },
+  ];
 
-export function FourPillars() {
   return (
-    <div style={{ width: "min(1400px,90vw)", margin: "0 auto 100px" }}>
-      <div style={{ marginBottom: "40px" }}>
-        <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
-          display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ width: "20px", height: "1px", background: A }} />WHAT WE ACTUALLY DO
+    <div className="page-container page-section">
+      <div style={{ textAlign: "center", maxWidth: "720px", margin: "0 auto 48px" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px" }}>
+          THE GOONYA DIFFERENCE
         </div>
-        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(32px,4vw,52px)",
-          fontWeight: 700, letterSpacing: "-2px", color: "white" }}>
-          Four pillars.<span style={{ color: A }}> One system.</span>
+        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(36px,4.5vw,56px)",
+          fontWeight: 700, letterSpacing: "-2.5px", color: "white", lineHeight: 1.1 }}>
+          Your digital growth system —<span style={{ color: A }}> not another pile of logins.</span>
         </h2>
       </div>
-      <div className="pillars-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)",
-        gap: "1px", background: L, border: `1px solid ${L}` }}>
-        {PILLARS.map(({ icon, title, subtitle, desc }) => (
-          <div key={title} style={{ padding: "36px 28px", background: "#08060f" }}>
-            <div style={{ fontSize: "28px", marginBottom: "16px" }}>{icon}</div>
-            <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "20px", color: "white",
-              fontWeight: 700, marginBottom: "4px" }}>{title}</h3>
-            <div style={{ fontSize: "12px", color: A, letterSpacing: "1px", marginBottom: "12px" }}>{subtitle}</div>
-            <p style={{ color: "#555", fontSize: "14px", lineHeight: 1.65 }}>{desc}</p>
+      <div className="promise-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px" }}>
+        {items.map((item) => (
+          <div key={item.title} style={{
+            padding: "36px 28px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "16px",
+          }}>
+            <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "22px", color: "white", marginBottom: "12px" }}>
+              {item.title}
+            </h3>
+            <p style={{ color: "#666", fontSize: "15px", lineHeight: 1.65 }}>{item.desc}</p>
           </div>
         ))}
       </div>
-      <style>{`
-        @media(max-width:900px){ .pillars-grid{ grid-template-columns:repeat(2,1fr) !important; } }
-        @media(max-width:520px){ .pillars-grid{ grid-template-columns:1fr !important; } }
-      `}</style>
+      <style>{`@media(max-width:768px){ .promise-grid{ grid-template-columns:1fr !important; } }`}</style>
     </div>
   );
 }
 
 export function PackagePreview() {
+  const preview = PACKAGES.filter((p) => p.id !== "kickstart");
   return (
     <div style={{ padding: "100px 0", borderTop: `1px solid ${L}`, borderBottom: `1px solid ${L}` }}>
-      <div style={{ width: "min(1400px,90vw)", margin: "0 auto" }}>
+      <div className="page-container">
         <div style={{ marginBottom: "48px" }}>
           <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
             display: "flex", alignItems: "center", gap: "10px" }}>
@@ -99,9 +63,8 @@ export function PackagePreview() {
             Don't contact us just to find out if we're $300 or $3,000. See the packages upfront.
           </p>
         </div>
-        <div className="pkg-preview-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)",
-          gap: "20px" }}>
-          {PACKAGES.map((pkg) => (
+        <div className="pkg-preview-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px" }}>
+          {preview.map((pkg) => (
             <article key={pkg.id} style={{
               padding: "32px", borderRadius: "16px", background: "#08060f",
               border: pkg.popular ? `1px solid ${A}` : `1px solid ${L}`,
@@ -132,7 +95,10 @@ export function PackagePreview() {
             </article>
           ))}
         </div>
-        <div style={{ textAlign: "center", marginTop: "40px" }}>
+        <p style={{ color: "#666", fontSize: "14px", marginTop: "20px", textAlign: "center" }}>
+          Also available: <strong style={{ color: "#aaa" }}>Goonya Kickstart</strong> at $499 one-off.
+        </p>
+        <div style={{ textAlign: "center", marginTop: "28px" }}>
           <Link to="/packages" style={{ display: "inline-flex", padding: "16px 32px", background: "white",
             color: "black", borderRadius: "100px", fontWeight: 700, fontSize: "14px", textDecoration: "none" }}>
             View All Packages →

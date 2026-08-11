@@ -1,0 +1,16 @@
+/* Shared page width — matches navbar inner alignment */
+.page-container {
+  width: min(1400px, 90vw);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-section {
+  padding: 100px 0;
+}
+
+@media (max-width: 768px) {
+  .page-section {
+    padding: 72px 0;
+  }
+}
