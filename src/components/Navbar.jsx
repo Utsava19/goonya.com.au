@@ -12,13 +12,13 @@ export default function Navbar() {
     { name:"Home",     path:"/" },
     { name:"About",    path:"/about" },
     { name:"Services", path:"/services" },
-    { name:"Packages", path:"/packages" },
+    { name:"Packages", path:"/packages#plans" },
     { name:"Our Work", path:"/our-work" },
     { name:"Contact",  path:"/contact" },
   ];
 
   const A      = "#9b7cff";
-  const active = (p) => location.pathname === p;
+  const active = (p) => location.pathname === p.split("#")[0];
 
   // scroll detection
   useEffect(() => {
@@ -52,14 +52,17 @@ export default function Navbar() {
       <nav style={{
         position:"fixed", top:0, left:0, width:"100%",
         height: scrolled ? "68px" : "80px",
-        display:"flex", alignItems:"center", justifyContent:"space-between",
-        padding:"0 5vw", zIndex:9999,
+        zIndex:9999,
         background: scrolled ? "rgba(5,4,16,.95)" : "rgba(7,7,7,.7)",
         borderBottom:`1px solid ${scrolled ? "rgba(255,255,255,.09)" : "rgba(255,255,255,.04)"}`,
         backdropFilter:"blur(24px)",
         WebkitBackdropFilter:"blur(24px)",
         transition:"height .3s ease, background .3s ease, border-color .3s ease",
       }}>
+        <div className="page-container" style={{
+          height:"100%",
+          display:"flex", alignItems:"center", justifyContent:"space-between",
+        }}>
 
         {/* BRAND */}
         <Link to="/" style={{ textDecoration:"none", display:"flex", alignItems:"center" }}
@@ -173,6 +176,7 @@ export default function Navbar() {
               transition:"transform .35s cubic-bezier(.4,0,.2,1)",
               transform: open ? "rotate(-45deg) translate(4.5px,-4.5px)" : "none" }}/>
           </button>
+        </div>
         </div>
       </nav>
 

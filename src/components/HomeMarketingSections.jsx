@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FEATURED_CASE } from "../data/caseStudies";
+import BeforeAfter from "./BeforeAfter";
 import {
   GROWTH_SYSTEM,
   PACKAGES,
@@ -46,7 +48,6 @@ export function GoonyaPromise() {
 }
 
 export function PackagePreview() {
-  const preview = PACKAGES.filter((p) => p.id !== "kickstart");
   return (
     <div style={{ padding: "100px 0", borderTop: `1px solid ${L}`, borderBottom: `1px solid ${L}` }}>
       <div className="page-container">
@@ -64,7 +65,7 @@ export function PackagePreview() {
           </p>
         </div>
         <div className="pkg-preview-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px" }}>
-          {preview.map((pkg) => (
+          {PACKAGES.map((pkg) => (
             <article key={pkg.id} style={{
               padding: "32px", borderRadius: "16px", background: "#08060f",
               border: pkg.popular ? `1px solid ${A}` : `1px solid ${L}`,
@@ -82,6 +83,11 @@ export function PackagePreview() {
               <div style={{ fontSize: "32px", fontWeight: 700, color: "white", marginBottom: "4px" }}>
                 From {pkg.price}<small style={{ fontSize: "14px", color: "#666" }}>{pkg.period}</small>
               </div>
+              {pkg.altPrice && (
+                <div style={{ fontSize: "14px", color: "#888", marginBottom: "12px" }}>
+                  or {pkg.altPrice}<span style={{ color: "#666" }}>{pkg.altPeriod}</span>
+                </div>
+              )}
               <p style={{ color: "#555", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>{pkg.tagline}</p>
               <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px" }}>
                 {pkg.features.slice(0, 5).map((f) => (
@@ -89,23 +95,17 @@ export function PackagePreview() {
                     borderBottom: `1px solid ${L}` }}>+ {f}</li>
                 ))}
               </ul>
-              <Link to="/packages" style={{ color: A, fontSize: "13px", fontWeight: 600, textDecoration: "none" }}>
+              <Link to="/packages#plans" style={{ color: A, fontSize: "13px", fontWeight: 600, textDecoration: "none" }}>
                 See full details →
               </Link>
             </article>
           ))}
         </div>
         <p style={{ color: "#666", fontSize: "14px", marginTop: "20px", textAlign: "center" }}>
-          Also available: <strong style={{ color: "#aaa" }}>Goonya Kickstart</strong> at $499 one-off.
+          Not sure which fits? <strong style={{ color: "#aaa" }}>Growth</strong> is also available as a $499 one-off setup.
         </p>
         <div style={{ textAlign: "center", marginTop: "28px" }}>
-          <Link to="/packages" style={{ display: "inline-flex", padding: "16px 32px", background: "white",
-            color: "black", borderRadius: "100px", fontWeight: 700, fontSize: "14px", textDecoration: "none" }}>
-            View All Packages →
-          </Link>
-        </div>
-        <div style={{ textAlign: "center", marginTop: "28px" }}>
-          <Link to="/packages" style={{ display: "inline-flex", padding: "16px 32px", background: "white",
+          <Link to="/packages#plans" style={{ display: "inline-flex", padding: "16px 32px", background: "white",
             color: "black", borderRadius: "100px", fontWeight: 700, fontSize: "14px", textDecoration: "none" }}>
             View All Packages →
           </Link>
@@ -163,62 +163,20 @@ export function CaseStudyHighlight() {
           </div>
           <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(32px,4vw,48px)",
             fontWeight: 700, letterSpacing: "-2px", color: "#111" }}>
-            From frustrated owner to <span style={{ color: A }}>fully booked.</span>
+            {FEATURED_CASE.headline.split(" to ")[0]} to{" "}
+            <span style={{ color: A }}>{FEATURED_CASE.headline.split(" to ").slice(1).join(" to ")}</span>
           </h2>
+          <p style={{ color: "#666", fontSize: "16px", marginTop: "12px", maxWidth: "560px", marginInline: "auto" }}>
+            {FEATURED_CASE.summary}
+          </p>
         </div>
 
-        <div className="case-visual" style={{
-          display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "32px", alignItems: "center",
-          background: "white", borderRadius: "24px", padding: "48px 40px",
-          boxShadow: "0 24px 80px rgba(0,0,0,.08)",
-        }}>
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "11px", letterSpacing: "2px", color: "#999", marginBottom: "16px" }}>BEFORE</div>
-            <img
-              src="https://images.unsplash.com/photo-1584824486509-048e875e8038?w=400&h=400&fit=crop&crop=face"
-              alt="Frustrated business owner before"
-              style={{ width: "160px", height: "160px", borderRadius: "50%", objectFit: "cover",
-                border: "4px solid #eee", filter: "grayscale(1) contrast(.9)", marginBottom: "20px" }}
-            />
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, textAlign: "left", maxWidth: "260px", marginInline: "auto" }}>
-              {["Website didn't work on mobile", "No clear way to book", "Invisible on Google"].map((t) => (
-                <li key={t} style={{ color: "#666", fontSize: "14px", padding: "8px 0", borderBottom: "1px solid #eee" }}>
-                  ✕ {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div style={{ fontSize: "32px", color: A, fontWeight: 700 }}>→</div>
-
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "16px" }}>AFTER GOONYA</div>
-            <img
-              src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face"
-              alt="Happy business owner after Goonya"
-              style={{ width: "160px", height: "160px", borderRadius: "50%", objectFit: "cover",
-                border: `4px solid ${A}`, boxShadow: `0 0 30px rgba(155,124,255,.25)`, marginBottom: "20px" }}
-            />
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, textAlign: "left", maxWidth: "260px", marginInline: "auto" }}>
-              {["+68% more enquiries", "3× online bookings", "Google visibility up 45%"].map((t) => (
-                <li key={t} style={{ color: "#333", fontSize: "14px", padding: "8px 0", borderBottom: "1px solid #eee" }}>
-                  ✓ {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <BeforeAfter study={FEATURED_CASE} />
 
         <div style={{ textAlign: "center", marginTop: "32px" }}>
           <Link to="/our-work" style={{ color: A, fontWeight: 600, textDecoration: "none" }}>See more work →</Link>
         </div>
       </div>
-      <style>{`
-        @media(max-width:768px){
-          .case-visual{ grid-template-columns:1fr !important; padding:32px 24px !important; }
-          .case-visual > div:nth-child(2){ transform:rotate(90deg); margin:0 auto; }
-        }
-      `}</style>
     </div>
   );
 }

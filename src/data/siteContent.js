@@ -1,21 +1,5 @@
 export const PACKAGES = [
   {
-    id: "kickstart",
-    name: "Goonya Kickstart",
-    price: "$499",
-    period: "one-off",
-    tagline: "Fix the digital foundation before you scale.",
-    features: [
-      "Website audit",
-      "Google Business Profile optimisation",
-      "Local SEO foundations",
-      "Conversion recommendations",
-      "Analytics & tracking setup",
-    ],
-    cta: "Start with Kickstart",
-    popular: false,
-  },
-  {
     id: "launch",
     name: "Goonya Launch",
     price: "$399",
@@ -37,6 +21,9 @@ export const PACKAGES = [
     name: "Goonya Growth",
     price: "$899",
     period: "/ month",
+    altPrice: "$499",
+    altPeriod: " one-off",
+    altNote: "One-off website & setup package",
     tagline: "For businesses that already have customers but want more.",
     features: [
       "Everything in Launch",

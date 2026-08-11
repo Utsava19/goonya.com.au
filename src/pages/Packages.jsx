@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { PACKAGES, BUILD_ITEMS } from "../data/siteContent";
 import GrowthScoreCheck from "../components/GrowthScoreCheck";
 import "./Packages.css";
@@ -84,10 +85,9 @@ function interpolateWaypoints(progress, waypoints) {
 }
 
 function getPlanPace() {
-  const kick = document.getElementById("plan-0");
-  const launch = document.getElementById("plan-1");
-  const grow = document.getElementById("plan-2");
-  const scale = document.getElementById("plan-3");
+  const launch = document.getElementById("plan-0");
+  const grow = document.getElementById("plan-1");
+  const scale = document.getElementById("plan-2");
 
   const visible = (el) => {
     if (!el) return 0;
@@ -97,15 +97,13 @@ function getPlanPace() {
     return Math.max(overlap, 0);
   };
 
-  const vKick = visible(kick);
   const vLaunch = visible(launch);
   const vGrow = visible(grow);
   const vScale = visible(scale);
 
-  if (vScale >= vGrow && vScale >= vLaunch && vScale >= vKick && vScale > 0) return PACE_SPRINT;
-  if (vGrow >= vLaunch && vGrow >= vKick && vGrow >= vScale && vGrow > 0) return PACE_JOG;
-  if (vLaunch >= vKick && vLaunch > 0) return PACE_WALK;
-  if (vKick > 0) return PACE_WALK;
+  if (vScale >= vGrow && vScale >= vLaunch && vScale > 0) return PACE_SPRINT;
+  if (vGrow >= vLaunch && vGrow >= vScale && vGrow > 0) return PACE_JOG;
+  if (vLaunch > 0) return PACE_WALK;
   return null;
 }
 
@@ -428,8 +426,17 @@ function Runner() {
 }
 
 export default function Packages() {
-  const [openPlan, setOpenPlan] = useState(2);
+  const location = useLocation();
+  const [openPlan, setOpenPlan] = useState(1);
   const [selected, setSelected] = useState([]);
+
+  useEffect(() => {
+    if (location.hash === "#plans") {
+      setTimeout(() => {
+        document.getElementById("plans")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
+  }, [location.hash, location.pathname]);
 
   const toggleSelection = (id) => {
     setSelected((current) =>
@@ -444,8 +451,6 @@ export default function Packages() {
   return (
     <div className="growth-page">
       <Runner />
-
-      <GrowthScoreCheck id="growth-check" onPackagesPage />
 
       {/* HERO */}
       <section className="growth-hero section-shell">
@@ -467,7 +472,7 @@ export default function Packages() {
           <span>AUTOMATION</span>
         </div>
         <a href="#plans" className="primary-button hero-button">
-          FIND MY PLAN <span>→</span>
+          SEE PLANS & PRICING <span>→</span>
         </a>
       </section>
 
@@ -522,7 +527,7 @@ export default function Packages() {
           <span> business need to go?</span>
         </h2>
         <p className="speed-hint">
-          Scroll with the runner — walking at Kickstart/Launch, jogging at Growth, sprinting at Scale.
+          Scroll with the runner — walking at Launch, jogging at Growth, sprinting at Scale.
         </p>
         <div className="plans-grid">
           {plans.map((plan, index) => {
@@ -543,6 +548,13 @@ export default function Packages() {
                     From {plan.price}
                     <small>{plan.period}</small>
                   </div>
+                  {plan.altPrice && (
+                    <div className="plan-alt-price">
+                      or {plan.altPrice}
+                      <small>{plan.altPeriod}</small>
+                      {plan.altNote && <span className="plan-alt-note">{plan.altNote}</span>}
+                    </div>
+                  )}
                   <p>{plan.tagline}</p>
                 </div>
                 <button
@@ -639,6 +651,8 @@ export default function Packages() {
           </aside>
         </div>
       </section>
+
+      <GrowthScoreCheck id="growth-check" onPackagesPage />
 
       {/* FINAL CTA */}
       <section className="final-section section-shell">

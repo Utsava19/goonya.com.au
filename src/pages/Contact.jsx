@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 
+const ENQUIRY_EMAIL = "admin@goonya.com.au";
+
 export default function Contact() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({ name:"", email:"", business:"", service:"", message:"" });
 
   useEffect(() => {
@@ -18,10 +22,34 @@ export default function Contact() {
 
   const submit = async (e) => {
     e.preventDefault();
-    // Send to info@goonya.com.au
-    // In production connect to your backend/emailjs/formspree
-    // For now simulate success
-    setSent(true);
+    setSending(true);
+    setError("");
+
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${ENQUIRY_EMAIL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          business: form.business || "Not provided",
+          service: form.service || "Not specified",
+          message: form.message || "No message",
+          _subject: `New enquiry from ${form.name} — goonya.com.au`,
+          _template: "table",
+        }),
+      });
+
+      if (!res.ok) throw new Error("Send failed");
+      setSent(true);
+    } catch {
+      setError("Something went wrong sending your message. Please email us directly.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const A = "#9b7cff";
@@ -158,18 +186,25 @@ export default function Contact() {
                   onFocus={e=>e.target.style.borderColor=A}
                   onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
               </div>
-              <button type="submit" style={{
+              <button type="submit" disabled={sending} style={{
                 alignSelf:"flex-start", marginTop:"8px",
                 padding:"16px 36px", background:"white", color:"black",
                 borderRadius:"100px", fontWeight:700, fontSize:"15px",
-                cursor:"pointer", border:"none",
+                cursor: sending ? "wait" : "pointer", border:"none",
                 fontFamily:"'DM Sans',sans-serif",
                 boxShadow:"0 0 40px rgba(155,124,255,.3)",
-                transition:"transform .2s, box-shadow .2s" }}
-                onMouseEnter={e=>{ e.target.style.transform="translateY(-2px)"; e.target.style.boxShadow="0 8px 40px rgba(155,124,255,.5)"; }}
+                transition:"transform .2s, box-shadow .2s",
+                opacity: sending ? 0.7 : 1 }}
+                onMouseEnter={e=>{ if (!sending) { e.target.style.transform="translateY(-2px)"; e.target.style.boxShadow="0 8px 40px rgba(155,124,255,.5)"; }}}
                 onMouseLeave={e=>{ e.target.style.transform="none"; e.target.style.boxShadow="0 0 40px rgba(155,124,255,.3)"; }}>
-                Send enquiry
+                {sending ? "Sending..." : "Send enquiry"}
               </button>
+              {error && (
+                <p style={{ color:"#ff6b6b", fontSize:"14px", marginTop:"8px" }}>
+                  {error}{" "}
+                  <a href={`mailto:${ENQUIRY_EMAIL}`} style={{ color: A }}>{ENQUIRY_EMAIL}</a>
+                </p>
+              )}
             </form>
           )}
         </div>
@@ -210,7 +245,7 @@ export default function Contact() {
               GET IN TOUCH
             </div>
             {[
-              { label:"Email",   val:"info@goonya.com.au",                href:"mailto:info@goonya.com.au" },
+              { label:"Email",   val:ENQUIRY_EMAIL, href:`mailto:${ENQUIRY_EMAIL}` },
               { label:"Phone",   val:"0434 785 800",                      href:"tel:0434785800" },
               { label:"Phone",   val:"0452 542 981",                      href:"tel:0452542981" },
               { label:"Address", val:"75 Bowmore Rd, Noble Park VIC 3174", href:null },

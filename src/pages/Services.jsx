@@ -207,11 +207,23 @@ export default function Services() {
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.replace("#", "");
-      setTimeout(() => {
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 120);
+      const scrollToTarget = () => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          return true;
+        }
+        return false;
+      };
+      const attempts = [120, 400, 800];
+      const timers = attempts.map((delay) =>
+        setTimeout(() => scrollToTarget(), delay)
+      );
+      return () => timers.forEach(clearTimeout);
     }
+  }, [location.pathname, location.hash]);
 
+  useEffect(() => {
     document.querySelectorAll(".sv-fi").forEach((el,i)=>{
       el.style.opacity="0";
       el.style.transform="translateY(20px)";
@@ -234,7 +246,7 @@ export default function Services() {
       obs.observe(el);
     });
     return ()=>obs.disconnect();
-  }, [location.hash]);
+  }, []);
 
   const services = [
     {
@@ -323,7 +335,7 @@ export default function Services() {
           {l:"Social Media",  c:"#e879f9", slug:"social-media"},
           {l:"Admin",         c:"#4ade80", slug:"admin-operations"},
         ].map(({l,c,slug},i)=>(
-          <Link key={l} to={`#${slug}`} style={{
+          <Link key={l} to={`/services#${slug}`} style={{
             padding:"8px 16px", borderRadius:"100px", flexShrink:0,
             background:`${c}18`, border:`1px solid ${c}40`,
             fontSize:"12px", color:c, fontWeight:500,

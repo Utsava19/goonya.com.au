@@ -27,7 +27,8 @@ export default function Footer() {
   ];
 
   return (
-    <footer style={{ background: "#050505", borderTop: `1px solid ${L}`, padding: "70px 5vw 32px" }}>
+    <footer style={{ background: "#050505", borderTop: `1px solid ${L}`, padding: "70px 0 32px" }}>
+      <div className="page-container">
       <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 1fr",
         gap: "40px", marginBottom: "56px" }} className="footer-grid">
 
@@ -67,7 +68,7 @@ export default function Footer() {
           {[
             { name: "About", path: "/about" },
             { name: "Services", path: "/services" },
-            { name: "Packages", path: "/packages" },
+            { name: "Packages", path: "/packages#plans" },
             { name: "Our Work", path: "/our-work" },
             { name: "Contact", path: "/contact" },
           ].map((l) => (
@@ -78,7 +79,7 @@ export default function Footer() {
         <div>
           <div style={headingStyle}>RESOURCES</div>
           <a href="/#growth-check" style={linkStyle}>Business Growth Check</a>
-          <Link to="/packages" style={linkStyle}>View Packages</Link>
+          <Link to="/packages#plans" style={linkStyle}>View Packages</Link>
           <Link to="/our-work" style={linkStyle}>Case Studies</Link>
           <Link to="/contact" style={linkStyle}>Book a Strategy Call</Link>
         </div>
@@ -102,6 +103,7 @@ export default function Footer() {
           <Link to="/privacy" style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>Privacy Policy</Link>
           <Link to="/terms" style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>Terms & Conditions</Link>
         </div>
+      </div>
       </div>
 
       <style>{`

@@ -226,6 +226,9 @@ export default function GrowthScoreCheck({
           gap: 24px;
           align-items: start;
         }
+        .growth-result-panel {
+          overflow: visible;
+        }
         @media (min-width: 960px) {
           .growth-check-layout {
             grid-template-columns: 1fr 1fr;

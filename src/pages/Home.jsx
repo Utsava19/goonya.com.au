@@ -684,7 +684,7 @@ export default function Home() {
                 boxShadow:"0 0 40px rgba(155,124,255,.3)" }}>
                 Check Your Business Growth
               </a>
-              <Link to="/packages" style={{ display:"inline-flex", alignItems:"center",
+              <Link to="/packages#plans" style={{ display:"inline-flex", alignItems:"center",
                 padding:"15px 30px", color:"white", fontSize:"14px", textDecoration:"none",
                 borderRadius:"100px", border:`1px solid rgba(255,255,255,.15)` }}>
                 View Our Packages
