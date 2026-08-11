@@ -1,277 +1,214 @@
 /* =========================================================
    RUNNER BACKGROUND
 ========================================================= */
-
 .runner-layer {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
-
   pointer-events: none;
-
   z-index: 0;
 }
 
 .runner {
   position: absolute;
-
   left: 0;
   top: 0;
-
   width: clamp(220px, 24vw, 420px);
-
   transform-origin: center center;
-
   will-change: transform;
-
+  /* FIX: added position context so ::before anchors correctly */
+  isolation: isolate;
   filter:
-    drop-shadow(
-      0 0 25px rgba(155, 124, 255, 0.32)
-    )
-    drop-shadow(
-      0 25px 40px rgba(0, 0, 0, 0.75)
-    );
+    drop-shadow(0 0 25px rgba(155, 124, 255, 0.32))
+    drop-shadow(0 25px 40px rgba(0, 0, 0, 0.75));
 }
 
 /* BIG ATMOSPHERIC GLOW */
-
 .runner::before {
   content: "";
-
   position: absolute;
-
   width: 180%;
   height: 180%;
-
   left: -40%;
   top: -40%;
-
   border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(155, 124, 255, 0.22) 0%,
-      rgba(155, 124, 255, 0.08) 30%,
-      transparent 70%
-    );
-
+  background: radial-gradient(
+    circle,
+    rgba(155, 124, 255, 0.22) 0%,
+    rgba(155, 124, 255, 0.08) 30%,
+    transparent 70%
+  );
   filter: blur(30px);
-
   z-index: -1;
 }
 
 /* =========================================================
    PERSON
 ========================================================= */
-
 .runner-svg {
   position: relative;
-
   display: block;
-
   width: 100%;
   height: auto;
-
   overflow: visible;
-
-  animation:
-    runner-bob var(--run-speed, 0.35s)
-    ease-in-out infinite;
+  animation: runner-bob var(--run-speed, 0.35s) ease-in-out infinite;
 }
 
-.runner-skin {
-  fill: #c98f6d;
-}
-
-.runner-hair {
-  fill: #111;
-}
-
-.runner-shirt {
-  fill: #090909;
-}
-
-.runner-purple {
-  fill: #9b7cff;
-}
-
-.runner-shorts {
-  fill: #050505;
-}
-
-.runner-shoe {
-  fill: #f2f0ff;
-}
-
+.runner-skin        { fill: #c98f6d; }
+.runner-hair        { fill: #111; }
+.runner-shirt       { fill: #090909; }
+.runner-purple      { fill: #9b7cff; }
+.runner-shorts      { fill: #050505; }
+.runner-shoe        { fill: #f2f0ff; }
 .runner-shoe-detail {
   stroke: #9b7cff;
   stroke-width: 4;
   stroke-linecap: round;
+  fill: none;
 }
 
 /* =========================================================
    RUNNING MOTION
 ========================================================= */
-
 @keyframes runner-bob {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-
-  25% {
-    transform: translateY(-5px) rotate(-1deg);
-  }
-
-  50% {
-    transform: translateY(-11px) rotate(1deg);
-  }
-
-  75% {
-    transform: translateY(-5px) rotate(-1deg);
-  }
-
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
+  0%   { transform: translateY(0)    rotate(0deg);  }
+  25%  { transform: translateY(-5px) rotate(-1deg); }
+  50%  { transform: translateY(-11px) rotate(1deg); }
+  75%  { transform: translateY(-5px) rotate(-1deg); }
+  100% { transform: translateY(0)    rotate(0deg);  }
 }
 
 /* =========================================================
    GROUND SHADOW
 ========================================================= */
-
 .runner-shadow {
   position: absolute;
-
+  /* FIX: use % widths so shadow scales with runner size */
   width: 65%;
   height: 22px;
-
   left: 17%;
   bottom: 1%;
-
   border-radius: 50%;
-
   background: rgba(0, 0, 0, 0.8);
-
   filter: blur(14px);
-
-  transform: scaleX(1.3);
+  /* FIX: removed scaleX(1.3) — width: 65% already handles proportions */
 }
 
 /* =========================================================
    TRAIL
+   FIX: trail is on a separate wrapper so it doesn't flip
+        with scaleX(-1) when the runner changes direction.
 ========================================================= */
+.runner-trail-wrap {
+  position: absolute;
+  /* matches runner size/position — updated by JS */
+  top: 0;
+  left: 0;
+  width: clamp(220px, 24vw, 420px);
+  pointer-events: none;
+}
 
 .runner-trail {
   position: absolute;
-
   width: 220%;
   height: 45%;
-
   left: -190%;
   top: 28%;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(155, 124, 255, 0.04) 25%,
-      rgba(155, 124, 255, 0.25) 50%,
-      transparent 100%
-    );
-
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(155, 124, 255, 0.04) 25%,
+    rgba(155, 124, 255, 0.25) 50%,
+    transparent 100%
+  );
   filter: blur(20px);
-
   opacity: 0.9;
 }
 
 /* =========================================================
    SPEED LINES
+   FIX: moved outside .runner so they don't flip with
+        scaleX(-1). Positioned by JS to follow the runner.
 ========================================================= */
+.runner-speed-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(220px, 24vw, 420px);
+  pointer-events: none;
+}
 
 .runner-speed-line {
   position: absolute;
-
   height: 2px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(155, 124, 255, 0.8),
-      transparent
-    );
-
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(155, 124, 255, 0.8),
+    transparent
+  );
   transform-origin: right center;
-
-  animation:
-    speed-line var(--run-speed, 0.35s)
-    linear infinite;
+  animation: speed-line var(--run-speed, 0.35s) linear infinite;
 }
 
-.line-one {
-  width: 120px;
-  left: -95px;
-  top: 40%;
-}
-
-.line-two {
-  width: 90px;
-  left: -70px;
-  top: 48%;
-
-  animation-delay: 0.06s;
-}
-
-.line-three {
-  width: 65px;
-  left: -50px;
-  top: 56%;
-
-  animation-delay: 0.12s;
-}
+/* FIX: use % offsets so lines scale with the container */
+.line-one   { width: 50%; left: -40%; top: 40%; }
+.line-two   { width: 38%; left: -30%; top: 48%; animation-delay: 0.06s; }
+.line-three { width: 27%; left: -22%; top: 56%; animation-delay: 0.12s; }
 
 @keyframes speed-line {
-  0% {
-    opacity: 0;
-    transform: translateX(35px);
-  }
-
-  30% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
+  0%   { opacity: 0; transform: translateX(35px); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-40px); }
 }
 
 /* =========================================================
-   KEEP PACKAGES CONTENT ABOVE RUNNER
+   KEEP PAGE CONTENT ABOVE RUNNER
 ========================================================= */
-
 .growth-page {
   position: relative;
   z-index: 1;
 }
 
-/*
-   The runner remains visible on mobile.
-*/
+/* =========================================================
+   REDUCED MOTION
+   FIX: respect user accessibility preference
+========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .runner-svg {
+    animation: none;
+  }
+  .runner-speed-line {
+    animation: none;
+    opacity: 0;
+  }
+}
 
+/* =========================================================
+   MOBILE
+========================================================= */
 @media (max-width: 700px) {
   .runner {
     width: 190px;
   }
-
   .runner-layer {
     display: block;
   }
-
   .runner::before {
     filter: blur(20px);
   }
+  .runner-speed-lines,
+  .runner-trail-wrap {
+    width: 190px;
+  }
+}
+
+/* =========================================================
+   CSS CUSTOM PROPERTY DEFAULT
+   FIX: declare --run-speed at :root so JS can override it
+========================================================= */
+:root {
+  --run-speed: 0.35s;
 }
