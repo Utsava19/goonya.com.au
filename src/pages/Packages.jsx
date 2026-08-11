@@ -1,24 +1,18 @@
 import { useEffect, useRef } from "react";
-import "./Packages.css";
+import "./packages.css";
 
 function Runner() {
-  const runnerRef      = useRef(null);
-  const speedLinesRef  = useRef(null);
-  const trailRef       = useRef(null);
+  const runnerRef     = useRef(null);
+  const speedLinesRef = useRef(null);
+  const trailRef      = useRef(null);
 
   useEffect(() => {
-    // FIX: respect prefers-reduced-motion — bail out entirely
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let animationFrame;
-
-    // FIX: use refs for mutable values instead of plain let variables
-    //      so the closure always reads the latest value without stale captures
     let targetProgress  = 0;
     let currentProgress = 0;
 
-    // FIX: passive scroll listener sets target; rAF loop reads it.
-    //      This is more efficient than reading window.scrollY every frame.
     const onScroll = () => {
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
@@ -28,9 +22,7 @@ function Runner() {
           : 0;
     };
 
-    // Seed the initial value so the runner starts at the right position
     onScroll();
-
     window.addEventListener("scroll", onScroll, { passive: true });
 
     const update = () => {
@@ -43,34 +35,47 @@ function Runner() {
         return;
       }
 
-      // FIX: only lerp when there is a meaningful difference — prevents
-      //      the loop from doing floating-point work when nothing has changed
+      // Slow lerp — feels like it moves WITH the page, not snapping
       const diff = targetProgress - currentProgress;
       if (Math.abs(diff) > 0.0001) {
-        currentProgress += diff * 0.08;
+        currentProgress += diff * 0.04; // was 0.08 — halved for slower feel
       }
 
       /*
-        LARGE SIDE-TO-SIDE WAVE
-        The runner moves diagonally across the page:
-          LEFT → RIGHT → LEFT → RIGHT
-        while continuing down the page.
-      */
-      const x = 50 + Math.sin(currentProgress * Math.PI * 4) * 38;
-      const y = 8  + currentProgress * 84;
+        MARGIN-SAFE WAVE
+        ─────────────────
+        Instead of sweeping 12vw → 88vw (through all content),
+        the runner stays in the LEFT margin only:
+          x oscillates between ~4vw and ~18vw
 
-      // Calculate direction of travel for the flip
+        This keeps it well clear of any centred or right-aligned content.
+
+        If you want it on the RIGHT margin instead, change the base from
+        10 to something like 82 and keep the amplitude small (±8).
+      */
+      const x =
+        10 + Math.sin(currentProgress * Math.PI * 2) * 8;
+      //   ^base (left margin)   ^only 2 full waves    ^±8vw amplitude (tight)
+
+      /*
+        Y position is tied directly to scroll progress so the runner
+        moves DOWN the page as the user scrolls — it feels like part
+        of the page rather than a floating overlay.
+
+        Range: 5vh → 89vh (stays within the viewport height band)
+      */
+      const y = 5 + currentProgress * 84;
+
+      // Direction flip
       const nextProgress = Math.min(currentProgress + 0.005, 1);
-      const nextX        = 50 + Math.sin(nextProgress * Math.PI * 4) * 38;
+      const nextX        = 10 + Math.sin(nextProgress * Math.PI * 2) * 8;
       const direction    = nextX >= x ? 1 : -1;
 
-      const lean = (nextX - x) * 0.45;
+      // Gentle lean — reduced from 0.45 to 0.2 so it doesn't look drunk
+      const lean = (nextX - x) * 0.2;
 
-      // Gets larger further down the page
-      const scale = 0.9 + currentProgress * 0.35;
-
-      // FIX: combine scale and scaleX into a single scale(x, y) call
-      //      to avoid the two transforms multiplying unexpectedly
+      // Subtle scale growth as it moves down
+      const scale  = 0.75 + currentProgress * 0.25;
       const scaleX = direction * scale;
       const scaleY = scale;
 
@@ -80,12 +85,10 @@ function Runner() {
         scale(${scaleX}, ${scaleY})
       `;
 
-      // FIX: speed has a hard lower bound so it never reaches 0 or goes negative
-      const speed = Math.max(0.32 - currentProgress * 0.12, 0.15);
+      // Slower animation speed — was 0.32s min 0.15s, now 0.55s min 0.35s
+      const speed = Math.max(0.55 - currentProgress * 0.15, 0.35);
       runner.style.setProperty("--run-speed", `${speed}s`);
 
-      // FIX: sync speed lines and trail to the runner's position
-      //      but on their OWN wrappers so they are NOT affected by scaleX(-1)
       const translateCSS = `translate3d(calc(${x}vw - 50%), calc(${y}vh - 50%), 0)`;
 
       if (speedLines) {
@@ -111,11 +114,9 @@ function Runner() {
   return (
     <div className="runner-layer" aria-hidden="true">
 
-      {/* Runner figure — this element gets flipped via scaleX */}
       <div ref={runnerRef} className="runner">
         <div className="runner-shadow" />
 
-        {/* FIX: correct xmlns — removed erroneous angle-bracket wrapping */}
         <svg
           className="runner-svg"
           viewBox="0 0 240 360"
@@ -230,16 +231,12 @@ function Runner() {
           />
 
           {/* SHOE DETAILS */}
-          <path d="M15 325 L48 325"  className="runner-shoe-detail" />
+          <path d="M15 325 L48 325"   className="runner-shoe-detail" />
           <path d="M201 308 L229 313" className="runner-shoe-detail" />
         </svg>
       </div>
 
-      {/*
-        FIX: trail and speed lines live OUTSIDE the runner div
-             so they are never affected by the scaleX(-1) direction flip.
-             JS syncs their position to match the runner each frame.
-      */}
+      {/* Trail and speed lines outside runner so they don't flip with scaleX */}
       <div ref={trailRef} className="runner-trail-wrap">
         <div className="runner-trail" />
       </div>
