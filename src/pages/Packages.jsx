@@ -1,58 +1,63 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Packages.css";
+
 function Runner() {
   const runnerRef = useRef(null);
-  const lastScroll = useRef(window.scrollY);
-  const frame = useRef(null);
 
   useEffect(() => {
-    const updateRunner = () => {
+    let animationFrame;
+    let targetProgress = window.scrollY;
+    let currentProgress = window.scrollY;
+
+    const update = () => {
       const runner = runnerRef.current;
 
-      if (!runner) return;
-
-      const scrollTop = window.scrollY;
+      if (!runner) {
+        animationFrame = requestAnimationFrame(update);
+        return;
+      }
 
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
 
-      const progress =
+      const scrollProgress =
         maxScroll > 0
-          ? Math.min(Math.max(scrollTop / maxScroll, 0), 1)
+          ? Math.min(Math.max(window.scrollY / maxScroll, 0), 1)
           : 0;
 
-      const direction =
-        scrollTop >= lastScroll.current ? 1 : -1;
+      targetProgress = scrollProgress;
 
-      lastScroll.current = scrollTop;
-
-      /*
-       * LARGE SIDE-TO-SIDE WAVE
-       *
-       * The runner travels across the screen:
-       *
-       * LEFT → RIGHT
-       * RIGHT → LEFT
-       * LEFT → RIGHT
-       * RIGHT → LEFT
-       *
-       * while slowly moving down the page.
-       */
-
-      const waveX =
-        Math.sin(progress * Math.PI * 4) * 38;
-
-      const x = 50 + waveX;
-
-      const y = 12 + progress * 76;
+      // Smooth the movement instead of snapping to scroll position.
+      currentProgress +=
+        (targetProgress - currentProgress) * 0.08;
 
       /*
-       * Work out which direction
-       * the wave is travelling.
-       */
+        LARGE SIDE-TO-SIDE WAVE
 
+        The runner moves diagonally across the page:
+
+        LEFT
+             \
+              RIGHT
+                    \
+                     LEFT
+                           \
+                            RIGHT
+
+        while continuing down the page.
+      */
+
+      const x =
+        50 +
+        Math.sin(currentProgress * Math.PI * 4) * 38;
+
+      const y =
+        8 +
+        currentProgress * 84;
+
+      // Calculate the direction of the path.
       const nextProgress = Math.min(
-        progress + 0.01,
+        currentProgress + 0.005,
         1
       );
 
@@ -60,20 +65,18 @@ function Runner() {
         50 +
         Math.sin(nextProgress * Math.PI * 4) * 38;
 
-      const angle =
-        Math.atan2(
-          nextX - x,
-          0.01
-        ) *
-        (180 / Math.PI);
+      const direction = nextX >= x ? 1 : -1;
+
+      const lean =
+        (nextX - x) * 0.45;
 
       /*
-       * Make the runner slightly
-       * larger further down the page.
-       */
-
+        Gets larger further down the page.
+        This makes the runner feel like part
+        of the environment rather than an icon.
+      */
       const scale =
-        0.9 + progress * 0.25;
+        0.9 + currentProgress * 0.35;
 
       runner.style.transform = `
         translate3d(
@@ -81,48 +84,39 @@ function Runner() {
           calc(${y}vh - 50%),
           0
         )
-        rotate(${angle * 0.08}deg)
+        rotate(${lean}deg)
         scale(${scale})
         scaleX(${direction})
       `;
 
       /*
-       * Running animation gets faster.
-       */
-
+        Faster animation as we move down the page.
+      */
       const speed =
-        0.42 - progress * 0.15;
+        0.32 - currentProgress * 0.12;
 
       runner.style.setProperty(
         "--run-speed",
         `${speed}s`
       );
 
-      frame.current =
-        requestAnimationFrame(updateRunner);
+      animationFrame =
+        requestAnimationFrame(update);
     };
 
-    frame.current =
-      requestAnimationFrame(updateRunner);
+    animationFrame =
+      requestAnimationFrame(update);
 
     return () => {
-      if (frame.current) {
-        cancelAnimationFrame(frame.current);
-      }
+      cancelAnimationFrame(animationFrame);
     };
   }, []);
 
   return (
-    <div
-      className="runner-layer"
-      aria-hidden="true"
-    >
-      <div
-        ref={runnerRef}
-        className="runner"
-      >
-        <div className="runner-shadow" />
+    <div className="runner-layer" aria-hidden="true">
+      <div ref={runnerRef} className="runner">
 
+        <div className="runner-shadow" />
         <div className="runner-trail" />
 
         <svg
@@ -131,7 +125,6 @@ function Runner() {
           xmlns="http://www.w3.org/2000/svg"
         >
           {/* HEAD */}
-
           <circle
             cx="124"
             cy="42"
@@ -140,7 +133,6 @@ function Runner() {
           />
 
           {/* HAIR */}
-
           <path
             d="
               M101 39
@@ -153,7 +145,6 @@ function Runner() {
           />
 
           {/* NECK */}
-
           <path
             d="
               M114 61
@@ -165,7 +156,6 @@ function Runner() {
           />
 
           {/* BODY */}
-
           <path
             d="
               M111 72
@@ -180,8 +170,7 @@ function Runner() {
             className="runner-shirt"
           />
 
-          {/* PURPLE SHIRT DETAIL */}
-
+          {/* PURPLE SHIRT */}
           <path
             d="
               M108 76
@@ -194,7 +183,6 @@ function Runner() {
           />
 
           {/* BACK ARM */}
-
           <path
             d="
               M86 90
@@ -221,7 +209,6 @@ function Runner() {
           />
 
           {/* FRONT ARM */}
-
           <path
             d="
               M149 92
@@ -248,7 +235,6 @@ function Runner() {
           />
 
           {/* SHORTS */}
-
           <path
             d="
               M74 144
@@ -264,7 +250,6 @@ function Runner() {
           />
 
           {/* BACK THIGH */}
-
           <path
             d="
               M108 174
@@ -280,7 +265,6 @@ function Runner() {
           />
 
           {/* FRONT THIGH */}
-
           <path
             d="
               M129 181
@@ -296,7 +280,6 @@ function Runner() {
           />
 
           {/* BACK LOWER LEG */}
-
           <path
             d="
               M73 244
@@ -312,7 +295,6 @@ function Runner() {
           />
 
           {/* FRONT LOWER LEG */}
-
           <path
             d="
               M177 239
@@ -328,7 +310,6 @@ function Runner() {
           />
 
           {/* BACK SHOE */}
-
           <path
             d="
               M36 304
@@ -342,7 +323,6 @@ function Runner() {
           />
 
           {/* FRONT SHOE */}
-
           <path
             d="
               M198 294
@@ -355,8 +335,6 @@ function Runner() {
             className="runner-shoe"
           />
 
-          {/* SHOE DETAILS */}
-
           <path
             d="M15 325 L48 325"
             className="runner-shoe-detail"
@@ -368,11 +346,10 @@ function Runner() {
           />
         </svg>
 
-        {/* SPEED LINES */}
-
         <div className="runner-speed-line line-one" />
         <div className="runner-speed-line line-two" />
         <div className="runner-speed-line line-three" />
+
       </div>
     </div>
   );
