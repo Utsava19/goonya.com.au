@@ -1,5 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import GrowthScoreCheck from "../components/GrowthScoreCheck";
+import {
+  WhyGoonya,
+  FourPillars,
+  PackagePreview,
+  HowItWorks,
+  CaseStudyHighlight,
+  RoiCalculator,
+  GrowthSystemVisual,
+  TestimonialsWithPhotos,
+} from "../components/HomeMarketingSections";
 
 /* ── HERO BACKGROUND — dot grid + aurora ── */
 function HeroBg() {
@@ -589,46 +600,42 @@ export default function Home() {
               color:A, marginBottom:"32px" }}>
               <span style={{ width:"7px", height:"7px", borderRadius:"50%", background:A,
                 boxShadow:`0 0 10px ${A}`, animation:"pdot 2s infinite" }}/>
-              DIGITAL SYSTEMS FOR MODERN BUSINESS
+              AUSTRALIAN SMALL BUSINESS GROWTH
             </div>
 
             <h1 className="fi hero-h1" style={{ margin:0, padding:0 }}>
               <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(64px,7.5vw,112px)", fontWeight:700,
-                letterSpacing:"-4px", lineHeight:.92, color:"white", paddingBottom:"4px" }}>
-                YOUR BUSINESS.
+                fontSize:"clamp(40px,5.5vw,72px)", fontWeight:700,
+                letterSpacing:"-3px", lineHeight:1.05, color:"white", paddingBottom:"8px" }}>
+                We help small businesses get more customers
               </span>
               <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(64px,7.5vw,112px)", fontWeight:700,
-                letterSpacing:"-4px", lineHeight:.92, paddingBottom:"4px",
+                fontSize:"clamp(40px,5.5vw,72px)", fontWeight:700,
+                letterSpacing:"-3px", lineHeight:1.05, paddingBottom:"8px",
                 background:`linear-gradient(90deg,${A},#e0b0ff 55%,${A})`,
                 WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
-                BUT SMARTER.
+                without the big agency price tag.
               </span>
-              <ScatterText text="AUTOMATED." style={{ display:"block",
-                fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(64px,7.5vw,112px)", fontWeight:700,
-                letterSpacing:"-4px", lineHeight:.92, color:"white", paddingBottom:"4px" }}/>
             </h1>
 
-            <p className="fi" style={{ maxWidth:"440px", marginTop:"32px",
+            <p className="fi" style={{ maxWidth:"520px", marginTop:"28px",
               color:"#666", fontSize:"17px", lineHeight:1.75 }}>
-              Goonya builds websites, automation and digital systems that help
-              ambitious businesses attract customers, save time and grow fast.
+              Websites, marketing and smart automation built around one goal:
+              more enquiries, bookings and sales.
             </p>
 
             <div className="fi" style={{ display:"flex", alignItems:"center",
-              gap:"14px", marginTop:"40px", flexWrap:"wrap" }}>
-              <Link to="/services" style={{ display:"inline-flex", alignItems:"center",
+              gap:"14px", marginTop:"36px", flexWrap:"wrap" }}>
+              <a href="#growth-check" style={{ display:"inline-flex", alignItems:"center",
                 padding:"15px 30px", background:"white", color:"black", borderRadius:"100px",
                 fontWeight:700, fontSize:"14px", textDecoration:"none",
                 boxShadow:"0 0 40px rgba(155,124,255,.3)" }}>
-                Explore what we do
-              </Link>
-              <Link to="/our-work" style={{ display:"inline-flex", alignItems:"center",
+                Check Your Business Growth
+              </a>
+              <Link to="/packages" style={{ display:"inline-flex", alignItems:"center",
                 padding:"15px 30px", color:"white", fontSize:"14px", textDecoration:"none",
                 borderRadius:"100px", border:`1px solid rgba(255,255,255,.15)` }}>
-                See our work
+                View Our Packages
               </Link>
             </div>
           </div>
@@ -670,12 +677,14 @@ export default function Home() {
         </div>
       </section>
 
+      <GrowthScoreCheck id="growth-check" />
+
       {/* ══ MARQUEE ══ */}
       <div style={{ overflow:"hidden", borderTop:`1px solid ${L}`, borderBottom:`1px solid ${L}`, padding:"13px 0" }}>
         <div className="mq-track" style={{ display:"flex", width:"max-content" }}>
           {[...Array(3)].map((_,i) => (
             <span key={i} style={{ display:"flex", alignItems:"center", gap:"26px", paddingRight:"26px" }}>
-              {["AI AUTOMATION","WEBSITES","DIGITAL SYSTEMS","MARKETING","GOONYA.COM.AU","BUILD WHAT'S NEXT"].map(w => (
+              {["GET FOUND","GET LEADS","SAVE TIME","GOONYA.COM.AU","MORE CUSTOMERS","GROWTH SYSTEM"].map(w => (
                 <span key={w} style={{ display:"inline-flex", alignItems:"center", gap:"26px" }}>
                   <b style={{ fontSize:"11px", letterSpacing:"2px", fontWeight:500, color:"#2a2a2a" }}>{w}</b>
                   <em style={{ fontStyle:"normal", color:A, fontSize:"9px" }}>✦</em>
@@ -706,71 +715,17 @@ export default function Home() {
         ))}
       </div>
 
-      {/* ══ STATEMENT — words fly in and merge ══ */}
-      <div style={{ padding:"130px 0", overflow:"hidden" }}>
-        <div style={{ width:"min(1400px,90vw)", margin:"0 auto" }}>
-          <div className="sr" style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"36px",
-            display:"flex", alignItems:"center", gap:"10px" }}>
-            <span style={{ width:"20px", height:"1px", background:A }}/>01 / THE GOONYA IDEA
-          </div>
+      <WhyGoonya />
 
-          {/* words that fly in from different directions */}
-          <WordsMerge A={A} />
+      <FourPillars />
 
-          <p className="sr" style={{ color:"#444", fontSize:"18px", lineHeight:1.75,
-            maxWidth:"500px", marginTop:"36px" }}>
-            Your technology shouldn't be one of them. We connect the digital
-            pieces behind your business so everything works together.
-          </p>
-        </div>
-      </div>
+      <PackagePreview />
 
-      {/* ══ SERVICES — horizontal line + website showcase ══ */}
+      <HowItWorks />
+
+      <CaseStudyHighlight />
+
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto 130px" }}>
-        <div style={{ marginBottom:"56px" }}>
-          <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"18px",
-            display:"flex", alignItems:"center", gap:"10px" }}>
-            <span style={{ width:"20px", height:"1px", background:A }}/>02 / WHAT WE DO
-          </div>
-          <h2 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"clamp(36px,4.2vw,64px)",
-            fontWeight:700, letterSpacing:"-2.5px", color:"white" }}>
-            The machine<span style={{color:A}}> behind your business.</span>
-          </h2>
-        </div>
-
-        {/* ── HORIZONTAL SERVICES ROW ── */}
-        <div className="services-row sr-parent" style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)",
-          gap:"1px", background:L, border:`1px solid ${L}`, marginBottom:"1px" }}>
-          {[
-            {t:"AI Automation",       d:"Intelligent systems that eliminate repetitive work.",    glow:"rgba(155,124,255,.3)", accent:"#9b7cff"},
-            {t:"Website Design",      d:"High-performance sites built to convert.",               glow:"rgba(0,210,190,.25)",  accent:"#00d2be"},
-            {t:"Digital Marketing",   d:"Campaigns that grow revenue, not just traffic.",         glow:"rgba(255,100,180,.2)", accent:"#ff64b4"},
-            {t:"Systems Integration", d:"Connect your tools. Run as one efficient machine.",      glow:"rgba(100,180,255,.2)", accent:"#64b4ff"},
-          ].map(({t,d,glow,accent}) => (
-            <Link to="/services" key={t} className="sr-child" style={{ display:"block", padding:"36px 28px",
-              background:"#08060f", textDecoration:"none", position:"relative", overflow:"hidden" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#0d0b18"}
-              onMouseLeave={e=>e.currentTarget.style.background="#08060f"}>
-              <div style={{ position:"absolute", top:"-40px", right:"-40px", width:"150px", height:"150px",
-                borderRadius:"50%", background:`radial-gradient(circle,${glow},transparent 70%)`,
-                filter:"blur(20px)", pointerEvents:"none" }}/>
-              <div style={{ position:"relative", zIndex:1 }}>
-                <div style={{ width:"28px", height:"28px", borderRadius:"8px",
-                  background:`${accent}20`, border:`1px solid ${accent}40`,
-                  display:"flex", alignItems:"center", justifyContent:"center",
-                  marginBottom:"18px" }}>
-                  <div style={{ width:"8px", height:"8px", borderRadius:"50%",
-                    background:accent, boxShadow:`0 0 6px ${accent}` }}/>
-                </div>
-                <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"16px",
-                  fontWeight:700, letterSpacing:"-.5px", color:"white", marginBottom:"8px" }}>{t}</h3>
-                <p style={{ color:"#444", fontSize:"12px", lineHeight:1.6 }}>{d}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* ── WEBSITE SHOWCASE — flipping cards ── */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
           background:L, border:`1px solid ${L}` }}>
 
@@ -1122,49 +1077,37 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ══ TESTIMONIALS ══ */}
-      <div style={{ borderTop:`1px solid ${L}`, borderBottom:`1px solid ${L}`,
-        padding:"80px 0", marginBottom:"130px" }}>
-        <div style={{ width:"min(1400px,90vw)", margin:"0 auto" }}>
-          <div style={{ textAlign:"center", marginBottom:"52px" }}>
-            <h2 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"clamp(30px,3.5vw,50px)",
-              fontWeight:700, letterSpacing:"-2px", color:"white" }}>
-              Results that <span style={{color:A}}>speak for themselves.</span>
-            </h2>
-          </div>
-          <div className="testi-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)",
-            gap:"1px", background:L, border:`1px solid ${L}` }}>
-            {[
-              {q:'"Goonya automated our lead follow-up. We went from missing enquiries to closing 3x more deals."', n:"Sarah M.", r:"Retail Business Owner"},
-              {q:'"Our website traffic doubled in 60 days. The systems they built just work."',                      n:"James K.", r:"Trade Services CEO"},
-              {q:'"Best investment we\'ve made. Saves us 20+ hours a week, every single week."',                    n:"Lisa T.",  r:"Marketing Director"},
-            ].map(({q,n,r},i) => (
-              <div key={i} style={{ padding:"44px 38px", background:"#08060f" }}>
-                <div style={{ fontSize:"26px", color:A, marginBottom:"18px" }}>"</div>
-                <p style={{ color:"#555", fontSize:"15px", lineHeight:1.7, marginBottom:"26px" }}>{q}</p>
-                <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"14px",
-                  color:"white", fontWeight:600 }}>{n}</div>
-                <div style={{ fontSize:"12px", color:"#3a3a3a", marginTop:"4px" }}>{r}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <RoiCalculator />
+
+      <GrowthSystemVisual />
+
+      <TestimonialsWithPhotos />
 
       {/* ══ CTA ══ */}
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto", padding:"130px 0 160px",
         textAlign:"center", borderTop:`1px solid ${L}` }}>
         <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
-          fontSize:"clamp(52px,7.5vw,120px)", fontWeight:700,
-          letterSpacing:"-5px", lineHeight:.88, color:"white", margin:"0 0 56px" }}>
-          Let's build something<br/><span style={{color:A}}>people remember.</span>
+          fontSize:"clamp(42px,6vw,96px)", fontWeight:700,
+          letterSpacing:"-4px", lineHeight:.92, color:"white", margin:"0 0 24px" }}>
+          Ready to get more customers<br/><span style={{color:A}}>without the big agency bill?</span>
         </h2>
-        <Link to="/contact" style={{ display:"inline-flex", alignItems:"center", gap:"12px",
-          padding:"20px 48px", background:"white", color:"black", borderRadius:"100px",
-          fontWeight:700, fontSize:"16px", textDecoration:"none",
-          boxShadow:"0 0 60px rgba(155,124,255,.35)" }}>
-          Start a project 
-        </Link>
+        <p style={{ color:"#666", fontSize:"17px", maxWidth:"480px", margin:"0 auto 40px", lineHeight:1.7 }}>
+          Check your growth score, pick a package, or book a strategy call — whatever fits where you're at.
+        </p>
+        <div style={{ display:"flex", gap:"14px", justifyContent:"center", flexWrap:"wrap" }}>
+          <a href="#growth-check" style={{ display:"inline-flex", alignItems:"center", gap:"12px",
+            padding:"18px 36px", background:"white", color:"black", borderRadius:"100px",
+            fontWeight:700, fontSize:"15px", textDecoration:"none",
+            boxShadow:"0 0 60px rgba(155,124,255,.35)" }}>
+            Check My Business Growth
+          </a>
+          <Link to="/contact" style={{ display:"inline-flex", alignItems:"center",
+            padding:"18px 36px", color:"white", borderRadius:"100px",
+            fontWeight:600, fontSize:"15px", textDecoration:"none",
+            border:`1px solid rgba(255,255,255,.2)` }}>
+            Book a Strategy Call
+          </Link>
+        </div>
       </div>
 
       <style>{`

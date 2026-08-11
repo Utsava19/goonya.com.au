@@ -7,6 +7,8 @@ import Services from "./pages/Services";
 import Packages from "./pages/Packages";
 import OurWork from "./pages/OurWork";
 import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import "./App.css";
 
 export default function App() {
@@ -22,6 +24,8 @@ export default function App() {
             <Route path="/packages" element={<Packages />} />
             <Route path="/our-work" element={<OurWork />} />
             <Route path="/contact"  element={<Contact />} />
+            <Route path="/privacy"  element={<Privacy />} />
+            <Route path="/terms"    element={<Terms />} />
           </Routes>
         </main>
         <Footer />

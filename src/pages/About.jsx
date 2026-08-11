@@ -160,19 +160,18 @@ export default function About() {
           <h1 className="ah" style={{ margin:"0 0 12px", fontFamily:"'Space Grotesk',sans-serif",
             fontWeight:700, letterSpacing:"-3px", lineHeight:.92,
             fontSize:"clamp(46px,6.5vw,108px)", color:"white" }}>
-            We build systems
+            Why Goonya exists
           </h1>
           <h1 className="ah" style={{ margin:"0 0 36px", fontFamily:"'Space Grotesk',sans-serif",
             fontWeight:700, letterSpacing:"-3px", lineHeight:.92,
-            fontSize:"clamp(46px,6.5vw,108px)" }}>
-            that make you&nbsp;
-            <Typewriter words={["faster.", "smarter.", "unstoppable."]} />
+            fontSize:"clamp(32px,4.5vw,72px)", color:A }}>
+            Small businesses shouldn't need a $5,000/month agency to compete online.
           </h1>
-          <p className="ah" style={{ maxWidth:"500px", color:"#666",
+          <p className="ah" style={{ maxWidth:"560px", color:"#666",
             fontSize:"17px", lineHeight:1.75, marginBottom:"36px" }}>
-            Goonya is an Australian digital agency helping ambitious businesses
-            use technology, automation and digital systems to work smarter —
-            and compete like companies twice their size.
+            Goonya helps Australian small businesses get found, get leads and save time —
+            with websites, marketing and smart automation in one growth system, not a pile of
+            disconnected freelancers and tools.
           </p>
           <div className="ah" style={{ display:"flex", gap:"14px", flexWrap:"wrap" }}>
             <Link to="/services" style={{ display:"inline-flex", alignItems:"center",

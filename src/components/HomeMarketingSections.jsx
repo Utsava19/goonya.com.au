@@ -1,0 +1,361 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  CASE_STUDY,
+  GROWTH_SYSTEM,
+  PACKAGES,
+  PILLARS,
+  PROCESS_STEPS,
+  TESTIMONIALS,
+} from "../data/siteContent";
+
+const A = "#9b7cff";
+const L = "rgba(255,255,255,.08)";
+
+export function WhyGoonya() {
+  return (
+    <div style={{ padding: "100px 0", width: "min(1400px,90vw)", margin: "0 auto" }}>
+      <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
+        display: "flex", alignItems: "center", gap: "10px" }}>
+        <span style={{ width: "20px", height: "1px", background: A }} />WHY GOONYA
+      </div>
+      <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(36px,4.5vw,64px)",
+        fontWeight: 700, letterSpacing: "-2.5px", color: "white", marginBottom: "20px" }}>
+        One business.<span style={{ color: A }}> One growth system.</span>
+      </h2>
+      <p style={{ color: "#666", fontSize: "17px", lineHeight: 1.75, maxWidth: "620px", marginBottom: "48px" }}>
+        Instead of hiring one person for your website, another for social, another for ads
+        and another for automation — Goonya handles the digital side in one place.
+      </p>
+      <div className="why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "1px",
+        background: L, border: `1px solid ${L}` }}>
+        {[
+          "Freelancers who disappear",
+          "Agencies with big retainers",
+          "DIY tools with no strategy",
+          "Disconnected marketing channels",
+        ].map((item) => (
+          <div key={item} style={{ padding: "28px 32px", background: "#08060f", color: "#555", fontSize: "15px" }}>
+            ✕ {item}
+          </div>
+        ))}
+      </div>
+      <p style={{ marginTop: "32px", color: "white", fontSize: "18px", fontWeight: 600 }}>
+        Goonya helps Australian small businesses get found, get leads and save time —
+        without the big agency price tag.
+      </p>
+      <style>{`@media(max-width:768px){ .why-grid{ grid-template-columns:1fr !important; } }`}</style>
+    </div>
+  );
+}
+
+export function FourPillars() {
+  return (
+    <div style={{ width: "min(1400px,90vw)", margin: "0 auto 100px" }}>
+      <div style={{ marginBottom: "40px" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
+          display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ width: "20px", height: "1px", background: A }} />WHAT WE ACTUALLY DO
+        </div>
+        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(32px,4vw,52px)",
+          fontWeight: 700, letterSpacing: "-2px", color: "white" }}>
+          Four pillars.<span style={{ color: A }}> One system.</span>
+        </h2>
+      </div>
+      <div className="pillars-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)",
+        gap: "1px", background: L, border: `1px solid ${L}` }}>
+        {PILLARS.map(({ icon, title, subtitle, desc }) => (
+          <div key={title} style={{ padding: "36px 28px", background: "#08060f" }}>
+            <div style={{ fontSize: "28px", marginBottom: "16px" }}>{icon}</div>
+            <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "20px", color: "white",
+              fontWeight: 700, marginBottom: "4px" }}>{title}</h3>
+            <div style={{ fontSize: "12px", color: A, letterSpacing: "1px", marginBottom: "12px" }}>{subtitle}</div>
+            <p style={{ color: "#555", fontSize: "14px", lineHeight: 1.65 }}>{desc}</p>
+          </div>
+        ))}
+      </div>
+      <style>{`
+        @media(max-width:900px){ .pillars-grid{ grid-template-columns:repeat(2,1fr) !important; } }
+        @media(max-width:520px){ .pillars-grid{ grid-template-columns:1fr !important; } }
+      `}</style>
+    </div>
+  );
+}
+
+export function PackagePreview() {
+  return (
+    <div style={{ padding: "100px 0", borderTop: `1px solid ${L}`, borderBottom: `1px solid ${L}` }}>
+      <div style={{ width: "min(1400px,90vw)", margin: "0 auto" }}>
+        <div style={{ marginBottom: "48px" }}>
+          <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
+            display: "flex", alignItems: "center", gap: "10px" }}>
+            <span style={{ width: "20px", height: "1px", background: A }} />PACKAGES
+          </div>
+          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(36px,4.5vw,64px)",
+            fontWeight: 700, letterSpacing: "-2.5px", color: "white" }}>
+            Clear pricing.<span style={{ color: A }}> No guessing.</span>
+          </h2>
+          <p style={{ color: "#666", fontSize: "16px", marginTop: "12px" }}>
+            Don't contact us just to find out if we're $300 or $3,000. See the packages upfront.
+          </p>
+        </div>
+        <div className="pkg-preview-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)",
+          gap: "20px" }}>
+          {PACKAGES.map((pkg) => (
+            <article key={pkg.id} style={{
+              padding: "32px", borderRadius: "16px", background: "#08060f",
+              border: pkg.popular ? `1px solid ${A}` : `1px solid ${L}`,
+              position: "relative",
+            }}>
+              {pkg.popular && (
+                <div style={{ position: "absolute", top: "-12px", left: "50%", transform: "translateX(-50%)",
+                  background: A, color: "white", fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px",
+                  padding: "4px 14px", borderRadius: "20px" }}>
+                  MOST POPULAR
+                </div>
+              )}
+              <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "22px", color: "white",
+                marginBottom: "8px" }}>{pkg.name}</h3>
+              <div style={{ fontSize: "32px", fontWeight: 700, color: "white", marginBottom: "4px" }}>
+                From {pkg.price}<small style={{ fontSize: "14px", color: "#666" }}>{pkg.period}</small>
+              </div>
+              <p style={{ color: "#555", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>{pkg.tagline}</p>
+              <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px" }}>
+                {pkg.features.slice(0, 5).map((f) => (
+                  <li key={f} style={{ color: "#888", fontSize: "13px", padding: "6px 0",
+                    borderBottom: `1px solid ${L}` }}>+ {f}</li>
+                ))}
+              </ul>
+              <Link to="/packages" style={{ color: A, fontSize: "13px", fontWeight: 600, textDecoration: "none" }}>
+                See full details →
+              </Link>
+            </article>
+          ))}
+        </div>
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
+          <Link to="/packages" style={{ display: "inline-flex", padding: "16px 32px", background: "white",
+            color: "black", borderRadius: "100px", fontWeight: 700, fontSize: "14px", textDecoration: "none" }}>
+            View All Packages →
+          </Link>
+        </div>
+      </div>
+      <style>{`@media(max-width:900px){ .pkg-preview-grid{ grid-template-columns:1fr !important; } }`}</style>
+    </div>
+  );
+}
+
+export function HowItWorks() {
+  return (
+    <div style={{ padding: "100px 0", width: "min(1400px,90vw)", margin: "0 auto" }}>
+      <div style={{ marginBottom: "48px" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
+          display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ width: "20px", height: "1px", background: A }} />HOW GOONYA WORKS
+        </div>
+        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(36px,4.5vw,64px)",
+          fontWeight: 700, letterSpacing: "-2.5px", color: "white" }}>
+          What happens<span style={{ color: A }}> after you contact us?</span>
+        </h2>
+      </div>
+      <div className="process-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: "16px" }}>
+        {PROCESS_STEPS.map((step, i) => (
+          <div key={step.step} style={{ position: "relative" }}>
+            <div style={{ fontSize: "28px", fontWeight: 700, color: "rgba(155,124,255,.2)", marginBottom: "8px" }}>
+              {step.step}
+            </div>
+            <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "16px",
+              marginBottom: "8px" }}>{step.title}</h3>
+            <p style={{ color: "#555", fontSize: "13px", lineHeight: 1.6 }}>{step.desc}</p>
+            {i < PROCESS_STEPS.length - 1 && (
+              <div style={{ position: "absolute", top: "20px", right: "-8px", color: A, fontSize: "18px",
+                opacity: 0.4 }} className="process-arrow">↓</div>
+            )}
+          </div>
+        ))}
+      </div>
+      <style>{`
+        @media(max-width:900px){ .process-grid{ grid-template-columns:repeat(2,1fr) !important; } .process-arrow{ display:none; } }
+        @media(max-width:520px){ .process-grid{ grid-template-columns:1fr !important; } }
+      `}</style>
+    </div>
+  );
+}
+
+export function CaseStudyHighlight() {
+  return (
+    <div style={{ padding: "80px 0", borderTop: `1px solid ${L}`, borderBottom: `1px solid ${L}` }}>
+      <div style={{ width: "min(1400px,90vw)", margin: "0 auto" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
+          display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ width: "20px", height: "1px", background: A }} />CASE STUDY
+        </div>
+        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(32px,4vw,48px)",
+          fontWeight: 700, letterSpacing: "-2px", color: "white", marginBottom: "40px" }}>
+          {CASE_STUDY.industry} — <span style={{ color: A }}>before & after</span>
+        </h2>
+        <div className="case-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
+          <div style={{ padding: "28px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "12px" }}>
+            <div style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", marginBottom: "16px" }}>BEFORE</div>
+            {CASE_STUDY.before.map((item) => (
+              <div key={item} style={{ color: "#888", fontSize: "14px", padding: "8px 0" }}>✕ {item}</div>
+            ))}
+          </div>
+          <div style={{ padding: "28px", background: "rgba(155,124,255,.06)",
+            border: `1px solid rgba(155,124,255,.2)`, borderRadius: "12px" }}>
+            <div style={{ fontSize: "11px", color: A, letterSpacing: "2px", marginBottom: "16px" }}>GOONYA</div>
+            {CASE_STUDY.after.map((item) => (
+              <div key={item} style={{ color: "#ccc", fontSize: "14px", padding: "8px 0" }}>✓ {item}</div>
+            ))}
+          </div>
+          <div style={{ padding: "28px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "12px" }}>
+            <div style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", marginBottom: "16px" }}>RESULT</div>
+            {CASE_STUDY.results.map(({ label, value }) => (
+              <div key={label} style={{ marginBottom: "16px" }}>
+                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "32px", fontWeight: 700,
+                  color: "white" }}>{value}</div>
+                <div style={{ fontSize: "13px", color: "#555" }}>{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <Link to="/our-work" style={{ display: "inline-flex", marginTop: "32px", color: A,
+          fontSize: "14px", fontWeight: 600, textDecoration: "none" }}>See more work →</Link>
+      </div>
+      <style>{`@media(max-width:768px){ .case-grid{ grid-template-columns:1fr !important; } }`}</style>
+    </div>
+  );
+}
+
+export function RoiCalculator() {
+  return (
+    <RoiCalcInner />
+  );
+}
+
+function RoiCalcInner() {
+  const [customerValue, setCustomerValue] = useState(500);
+  const [currentCustomers, setCurrentCustomers] = useState(10);
+  const [additional, setAdditional] = useState(5);
+
+  const revenue = customerValue * additional;
+
+  return (
+    <div style={{ padding: "100px 0", width: "min(1400px,90vw)", margin: "0 auto" }}>
+      <div style={{ marginBottom: "40px" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
+          display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ width: "20px", height: "1px", background: A }} />ROI
+        </div>
+        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(32px,4vw,52px)",
+          fontWeight: 700, letterSpacing: "-2px", color: "white" }}>
+          How much could better marketing <span style={{ color: A }}>be worth?</span>
+        </h2>
+      </div>
+      <div className="roi-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", alignItems: "center" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          <RoiSlider label="Average customer value ($)" value={customerValue} min={100} max={5000} step={50}
+            onChange={setCustomerValue} />
+          <RoiSlider label="New customers per month" value={currentCustomers} min={1} max={50} step={1}
+            onChange={setCurrentCustomers} />
+          <RoiSlider label="Additional customers (goal)" value={additional} min={1} max={30} step={1}
+            onChange={setAdditional} />
+        </div>
+        <div style={{ padding: "40px", background: "rgba(155,124,255,.08)", border: `1px solid rgba(155,124,255,.2)`,
+          borderRadius: "16px", textAlign: "center" }}>
+          <div style={{ fontSize: "12px", color: "#666", letterSpacing: "2px", marginBottom: "12px" }}>
+            POTENTIAL ADDITIONAL REVENUE
+          </div>
+          <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(40px,6vw,64px)",
+            fontWeight: 700, color: "white" }}>
+            ${revenue.toLocaleString()}<span style={{ fontSize: "20px", color: "#666" }}>/mo</span>
+          </div>
+          <p style={{ color: "#666", fontSize: "15px", marginTop: "20px", lineHeight: 1.6 }}>
+            Goonya's job isn't to get you "likes". It's to help turn attention into revenue.
+          </p>
+        </div>
+      </div>
+      <style>{`@media(max-width:768px){ .roi-grid{ grid-template-columns:1fr !important; } }`}</style>
+    </div>
+  );
+}
+
+function RoiSlider({ label, value, min, max, step, onChange }) {
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+        <span style={{ fontSize: "14px", color: "#888" }}>{label}</span>
+        <span style={{ fontSize: "14px", color: "white", fontWeight: 600 }}>{value}</span>
+      </div>
+      <input type="range" min={min} max={max} step={step} value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        style={{ width: "100%", accentColor: A }} />
+    </div>
+  );
+}
+
+export function GrowthSystemVisual() {
+  return (
+    <div style={{ padding: "80px 0", borderTop: `1px solid ${L}` }}>
+      <div style={{ width: "min(1400px,90vw)", margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(32px,4vw,48px)",
+          fontWeight: 700, letterSpacing: "-2px", color: "white", marginBottom: "40px", textAlign: "center" }}>
+          The <span style={{ color: A }}>Goonya Growth System</span>
+        </h2>
+        <div className="system-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "16px" }}>
+          {GROWTH_SYSTEM.map((block, i) => (
+            <div key={block.phase} style={{ textAlign: "center" }}>
+              <div style={{ padding: "28px 20px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "12px" }}>
+                <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "12px" }}>{block.phase}</div>
+                {block.items.map((item) => (
+                  <div key={item} style={{ color: "#888", fontSize: "13px", padding: "4px 0" }}>{item}</div>
+                ))}
+              </div>
+              {i < GROWTH_SYSTEM.length - 1 && (
+                <div style={{ color: A, margin: "8px 0", fontSize: "20px" }} className="system-arrow">↓</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @media(max-width:768px){
+          .system-grid{ grid-template-columns:1fr !important; }
+          .system-arrow{ display:none; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+export function TestimonialsWithPhotos() {
+  return (
+    <div style={{ borderTop: `1px solid ${L}`, borderBottom: `1px solid ${L}`, padding: "80px 0" }}>
+      <div style={{ width: "min(1400px,90vw)", margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(30px,3.5vw,50px)",
+          fontWeight: 700, letterSpacing: "-2px", color: "white", textAlign: "center", marginBottom: "52px" }}>
+          Results that <span style={{ color: A }}>speak for themselves.</span>
+        </h2>
+        <div className="testi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)",
+          gap: "1px", background: L, border: `1px solid ${L}` }}>
+          {TESTIMONIALS.map((t) => (
+            <div key={t.name} style={{ padding: "40px 32px", background: "#08060f" }}>
+              <div style={{ color: A, fontSize: "14px", marginBottom: "12px" }}>
+                {"★".repeat(t.stars)}
+              </div>
+              <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.7, marginBottom: "24px" }}>"{t.quote}"</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                <img src={t.photo} alt={t.name} width={48} height={48}
+                  style={{ borderRadius: "50%", objectFit: "cover", border: `2px solid rgba(155,124,255,.3)` }} />
+                <div>
+                  <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "14px", color: "white",
+                    fontWeight: 600 }}>{t.name}</div>
+                  <div style={{ fontSize: "12px", color: "#3a3a3a" }}>{t.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

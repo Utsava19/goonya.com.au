@@ -1,61 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { PACKAGES } from "../data/siteContent";
+import GrowthScoreCheck from "../components/GrowthScoreCheck";
 import "./Packages.css";
 
-const plans = [
-  {
-    name: "KICKSTART",
-    price: "$499",
-    period: "one-off",
-    description: "Fix the digital foundation and make sure your business looks credible, findable and ready for growth.",
-    features: [
-      "Website audit",
-      "Google Business Profile optimisation",
-      "Local SEO foundations",
-      "Website conversion recommendations",
-      "Google Search optimisation",
-      "Analytics & tracking setup",
-    ],
-  },
-  {
-    name: "GROW",
-    price: "$899",
-    period: "/ month",
-    popular: true,
-    description: "Build a consistent system that gets you found, builds trust and generates more enquiries.",
-    features: [
-      "Website strategy & optimisation",
-      "SEO",
-      "Google Business Profile",
-      "Google Search optimisation",
-      "Facebook & Instagram",
-      "Short-form content",
-      "Meta Ads",
-      "Lead generation",
-      "Retargeting",
-      "Analytics & monthly reporting",
-    ],
-  },
-  {
-    name: "SCALE",
-    price: "$1,699",
-    period: "/ month",
-    description: "Turn your digital presence into a serious growth engine with marketing, content, advertising and automation working together.",
-    features: [
-      "Website strategy & development",
-      "Advanced SEO",
-      "Google Business Profile",
-      "Google Ads",
-      "Meta Ads",
-      "Content strategy",
-      "Short-form video",
-      "Lead generation",
-      "CRM & automation",
-      "Email / SMS follow-up",
-      "Retargeting",
-      "Advanced reporting",
-    ],
-  },
-];
+const plans = PACKAGES;
 
 const buildOptions = [
   {
@@ -81,20 +29,52 @@ const buildOptions = [
 ];
 
 const RUNNER_WAYPOINTS = [
-  { progress: 0,    x: 14, y: 76, pace: 0.95 },
-  { progress: 0.08, x: 86, y: 70, pace: 0.95 },
-  { progress: 0.18, x: 12, y: 62, pace: 0.9 },
-  { progress: 0.28, x: 88, y: 56, pace: 0.75 },
-  { progress: 0.36, x: 18, y: 50, pace: 0.95 },
-  { progress: 0.44, x: 34, y: 48, pace: 0.95 },
-  { progress: 0.5,  x: 52, y: 46, pace: 0.55 },
-  { progress: 0.56, x: 72, y: 44, pace: 0.28 },
-  { progress: 0.64, x: 88, y: 48, pace: 0.55 },
-  { progress: 0.74, x: 16, y: 54, pace: 0.75 },
-  { progress: 0.84, x: 84, y: 62, pace: 0.9 },
-  { progress: 0.92, x: 22, y: 70, pace: 0.75 },
-  { progress: 1,    x: 50, y: 82, pace: 0.28 },
+  { progress: 0,    x: 14, y: 76, pace: 1.5 },
+  { progress: 0.07, x: 86, y: 70, pace: 1.5 },
+  { progress: 0.16, x: 12, y: 62, pace: 1.45 },
+  { progress: 0.25, x: 88, y: 56, pace: 1.35 },
+  { progress: 0.34, x: 18, y: 50, pace: 1.5 },
+  { progress: 0.42, x: 34, y: 48, pace: 1.5 },
+  { progress: 0.48, x: 52, y: 46, pace: 1.0 },
+  { progress: 0.54, x: 72, y: 44, pace: 0.68 },
+  { progress: 0.62, x: 88, y: 48, pace: 1.0 },
+  { progress: 0.72, x: 16, y: 54, pace: 1.2 },
+  { progress: 0.82, x: 84, y: 62, pace: 1.35 },
+  { progress: 0.91, x: 22, y: 70, pace: 1.2 },
+  { progress: 1,    x: 50, y: 82, pace: 0.68 },
 ];
+
+const PACE_WALK = 1.5;
+const PACE_JOG = 1.0;
+const PACE_SPRINT = 0.68;
+
+function buildJourneyPath(waypoints) {
+  if (waypoints.length < 2) return "";
+
+  let path = `M ${waypoints[0].x} ${waypoints[0].y}`;
+
+  for (let i = 1; i < waypoints.length; i += 1) {
+    const prev = waypoints[i - 1];
+    const curr = waypoints[i];
+    const midX = (prev.x + curr.x) / 2;
+    const midY = (prev.y + curr.y) / 2;
+    path += ` Q ${prev.x} ${prev.y} ${midX} ${midY}`;
+  }
+
+  const end = waypoints[waypoints.length - 1];
+  path += ` L ${end.x} ${end.y}`;
+  return path;
+}
+
+const JOURNEY_PATH = buildJourneyPath(RUNNER_WAYPOINTS);
+
+function smoothStep(t) {
+  return t * t * (3 - 2 * t);
+}
+
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -111,7 +91,8 @@ function interpolateWaypoints(progress, waypoints) {
   const start = waypoints[index];
   const end = waypoints[index + 1] ?? start;
   const span = end.progress - start.progress;
-  const t = span > 0 ? (p - start.progress) / span : 0;
+  const rawT = span > 0 ? (p - start.progress) / span : 0;
+  const t = smoothStep(rawT);
 
   return {
     x: start.x + (end.x - start.x) * t,
@@ -137,17 +118,27 @@ function getPlanPace() {
   const vGrow = visible(grow);
   const vScale = visible(scale);
 
-  if (vScale >= vGrow && vScale >= vKick && vScale > 0) return 0.28;
-  if (vGrow >= vKick && vGrow >= vScale && vGrow > 0) return 0.55;
-  if (vKick > 0) return 0.95;
+  if (vScale >= vGrow && vScale >= vKick && vScale > 0) return PACE_SPRINT;
+  if (vGrow >= vKick && vGrow >= vScale && vGrow > 0) return PACE_JOG;
+  if (vKick > 0) return PACE_WALK;
   return null;
+}
+
+function paceToMode(pace) {
+  if (pace >= 1.25) return "walk";
+  if (pace >= 0.85) return "jog";
+  return "sprint";
 }
 
 function Runner() {
   const wrapRef = useRef(null);
+  const canvasRef = useRef(null);
+  const pathProgressRef = useRef(null);
   const facingRef = useRef(1);
   const posRef = useRef({ x: RUNNER_WAYPOINTS[0].x, y: RUNNER_WAYPOINTS[0].y });
+  const particlesRef = useRef([]);
   const frameRef = useRef(null);
+  const lastSpawnRef = useRef(0);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -155,17 +146,96 @@ function Runner() {
     let targetProgress = 0;
     let currentProgress = 0;
 
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+
+    const resizeCanvas = () => {
+      if (!canvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
     const onScroll = () => {
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
-      targetProgress =
-        maxScroll > 0
-          ? clamp(window.scrollY / maxScroll, 0, 1)
-          : 0;
+      const raw =
+        maxScroll > 0 ? clamp(window.scrollY / maxScroll, 0, 1) : 0;
+      targetProgress = easeOutCubic(raw);
     };
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+
+    const spawnParticles = (xVw, yVh, pace, facing) => {
+      const count =
+        pace <= PACE_SPRINT ? 4 : pace <= PACE_JOG ? 2 : 1;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const originX = (xVw / 100) * w;
+      const originY = (yVh / 100) * h;
+
+      for (let i = 0; i < count; i += 1) {
+        particlesRef.current.push({
+          px: originX + (Math.random() - 0.5) * 28,
+          py: originY + (Math.random() - 0.5) * 20,
+          vx: facing * -(0.25 + Math.random() * 0.9),
+          vy: (Math.random() - 0.5) * 0.6,
+          life: 1,
+          decay: 0.006 + Math.random() * 0.006,
+          size: 1.2 + Math.random() * 3.2,
+        });
+      }
+
+      if (particlesRef.current.length > 100) {
+        particlesRef.current = particlesRef.current.slice(-100);
+      }
+    };
+
+    const drawParticles = () => {
+      if (!ctx || !canvas) return;
+
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      particlesRef.current = particlesRef.current.filter((particle) => {
+        particle.px += particle.vx;
+        particle.py += particle.vy;
+        particle.vy += 0.02;
+        particle.life -= particle.decay;
+
+        if (particle.life <= 0) return false;
+
+        const glow = ctx.createRadialGradient(
+          particle.px,
+          particle.py,
+          0,
+          particle.px,
+          particle.py,
+          particle.size * 3
+        );
+        glow.addColorStop(0, `rgba(155, 124, 255, ${particle.life * 0.45})`);
+        glow.addColorStop(1, "rgba(155, 124, 255, 0)");
+
+        ctx.beginPath();
+        ctx.arc(
+          particle.px,
+          particle.py,
+          particle.size * particle.life,
+          0,
+          Math.PI * 2
+        );
+        ctx.fillStyle = glow;
+        ctx.fill();
+
+        return true;
+      });
+    };
 
     const update = () => {
       const wrap = wrapRef.current;
@@ -174,33 +244,50 @@ function Runner() {
         return;
       }
 
-      currentProgress += (targetProgress - currentProgress) * 0.1;
+      currentProgress += (targetProgress - currentProgress) * 0.035;
 
       const waypoint = interpolateWaypoints(currentProgress, RUNNER_WAYPOINTS);
       const planPace = getPlanPace();
       const pace = planPace ?? waypoint.pace;
 
       const prevX = posRef.current.x;
-      posRef.current.x += (waypoint.x - posRef.current.x) * 0.12;
-      posRef.current.y += (waypoint.y - posRef.current.y) * 0.12;
+      posRef.current.x += (waypoint.x - posRef.current.x) * 0.045;
+      posRef.current.y += (waypoint.y - posRef.current.y) * 0.045;
 
       const x = posRef.current.x;
       const y = posRef.current.y;
       const deltaX = x - prevX;
 
-      if (Math.abs(deltaX) > 0.08) {
+      if (Math.abs(deltaX) > 0.04) {
         facingRef.current = deltaX > 0 ? 1 : -1;
       }
 
       const facing = facingRef.current;
-      const bodyScale = 0.88 + currentProgress * 0.14;
+      const bodyScale = 0.86 + currentProgress * 0.12;
+      const now = performance.now();
+      const spawnGap =
+        pace <= PACE_SPRINT ? 220 : pace <= PACE_JOG ? 320 : 480;
+
+      if (now - lastSpawnRef.current > spawnGap) {
+        lastSpawnRef.current = now;
+        spawnParticles(x, y, pace, facing);
+      }
+
+      drawParticles();
 
       wrap.style.transform = `translate3d(calc(${x}vw - 50%), calc(${y}vh - 50%), 0)`;
       wrap.style.setProperty("--run-speed", `${pace}s`);
       wrap.style.setProperty("--runner-scale", String(bodyScale));
       wrap.style.setProperty("--runner-facing", String(facing));
-      wrap.dataset.pace =
-        pace >= 0.8 ? "walk" : pace >= 0.45 ? "jog" : "sprint";
+      wrap.style.setProperty("--journey-progress", String(currentProgress));
+      wrap.dataset.pace = paceToMode(pace);
+
+      if (pathProgressRef.current) {
+        const pathLength = pathProgressRef.current.getTotalLength();
+        pathProgressRef.current.style.strokeDashoffset = String(
+          pathLength * (1 - currentProgress)
+        );
+      }
 
       frameRef.current = requestAnimationFrame(update);
     };
@@ -210,20 +297,57 @@ function Runner() {
     return () => {
       cancelAnimationFrame(frameRef.current);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", resizeCanvas);
     };
   }, []);
 
   return (
     <div className="runner-layer" aria-hidden="true">
+      <div className="runner-ambient" />
+      <div className="runner-ambient runner-ambient-alt" />
+
+      <svg
+        className="runner-journey-svg"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="journey-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(155, 124, 255, 0.05)" />
+            <stop offset="50%" stopColor="rgba(155, 124, 255, 0.22)" />
+            <stop offset="100%" stopColor="rgba(155, 124, 255, 0.08)" />
+          </linearGradient>
+        </defs>
+        <path
+          className="runner-journey-path"
+          d={JOURNEY_PATH}
+          pathLength="1"
+        />
+        <path
+          ref={pathProgressRef}
+          className="runner-journey-progress"
+          d={JOURNEY_PATH}
+          pathLength="1"
+        />
+      </svg>
+
+      <canvas ref={canvasRef} className="runner-particle-canvas" />
+
       <div ref={wrapRef} className="runner-wrap" data-pace="walk">
+        <div className="runner-aura" />
+        <div className="runner-orbit" />
+
         <div className="runner-trail-wrap">
           <div className="runner-trail" />
+          <div className="runner-trail runner-trail-soft" />
         </div>
 
         <div className="runner-speed-lines">
           <div className="runner-speed-line line-one" />
           <div className="runner-speed-line line-two" />
           <div className="runner-speed-line line-three" />
+          <div className="runner-speed-line line-four" />
+          <div className="runner-speed-line line-five" />
         </div>
 
         <div className="runner-body">
@@ -318,83 +442,6 @@ function Runner() {
   );
 }
 
-function GrowthScore() {
-  const [form, setForm] = useState({
-    business: "",
-    website: "",
-    suburb: "",
-    industry: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  function updateField(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    setSubmitted(true);
-  }
-
-  return (
-    <section className="score-section section-shell">
-      <div className="eyebrow">FREE BUSINESS CHECK</div>
-      <h2>
-        How strong is your
-        <span> online presence?</span>
-      </h2>
-      <p className="section-intro">
-        Give us a few details and we'll show you where your
-        digital presence could be working harder.
-      </p>
-      {!submitted ? (
-        <form className="score-form" onSubmit={handleSubmit}>
-          <input
-            name="business"
-            placeholder="BUSINESS NAME"
-            value={form.business}
-            onChange={updateField}
-            required
-          />
-          <input
-            name="website"
-            placeholder="WEBSITE"
-            value={form.website}
-            onChange={updateField}
-          />
-          <input
-            name="suburb"
-            placeholder="SUBURB"
-            value={form.suburb}
-            onChange={updateField}
-          />
-          <input
-            name="industry"
-            placeholder="INDUSTRY"
-            value={form.industry}
-            onChange={updateField}
-          />
-          <button type="submit" className="primary-button">
-            CHECK MY BUSINESS <span>→</span>
-          </button>
-        </form>
-      ) : (
-        <div className="score-preview">
-          <div className="score-number">62</div>
-          <div>
-            <div className="score-label">YOUR GOONYA GROWTH SCORE</div>
-            <h3>There's room to GO ON YA.</h3>
-            <p>
-              This is where your real analysis will eventually
-              connect to the backend audit system.
-            </p>
-          </div>
-        </div>
-      )}
-    </section>
-  );
-}
-
 export default function Packages() {
   const [openPlan, setOpenPlan] = useState(1);
   const [selected, setSelected] = useState([]);
@@ -413,17 +460,21 @@ export default function Packages() {
     <div className="growth-page">
       <Runner />
 
+      <div className="section-shell" style={{ paddingTop: "40px" }}>
+        <GrowthScoreCheck id="growth-check" />
+      </div>
+
       {/* HERO */}
       <section className="growth-hero section-shell">
-        <div className="eyebrow">GOONYA GROWTH PLANS</div>
+        <div className="eyebrow">GOONYA PACKAGES</div>
         <h1>
-          Your business deserves
+          Clear pricing.
           <br />
-          <span>more than random marketing.</span>
+          <span>No guessing what we cost.</span>
         </h1>
         <p className="hero-copy">
-          Build a digital system that gets you found,
-          builds trust and generates enquiries.
+          Three packages built around one goal — more enquiries, bookings and sales.
+          Pick Launch, Growth or Scale based on where your business is today.
         </p>
         <div className="hero-services">
           <span>WEBSITE</span>
@@ -488,7 +539,7 @@ export default function Packages() {
           <span> business need to go?</span>
         </h2>
         <p className="speed-hint">
-          Scroll with the runner — walking at KICKSTART, jogging at GROW, sprinting at SCALE.
+          Scroll with the runner — walking at Launch, jogging at Growth, sprinting at Scale.
         </p>
         <div className="plans-grid">
           {plans.map((plan, index) => {
@@ -506,10 +557,10 @@ export default function Packages() {
                   <div className="plan-index">0{index + 1}</div>
                   <h3>{plan.name}</h3>
                   <div className="plan-price">
-                    {plan.price}
+                    From {plan.price}
                     <small>{plan.period}</small>
                   </div>
-                  <p>{plan.description}</p>
+                  <p>{plan.tagline}</p>
                 </div>
                 <button
                   className="plan-toggle"
@@ -529,11 +580,7 @@ export default function Packages() {
                   </div>
                 )}
                 <a href="/contact" className="plan-button">
-                  {plan.name === "KICKSTART"
-                    ? "START HERE"
-                    : plan.name === "GROW"
-                    ? "GROW MY BUSINESS"
-                    : "SCALE MY BUSINESS"}
+                  {plan.cta}
                   <span>→</span>
                 </a>
               </article>
@@ -593,9 +640,6 @@ export default function Packages() {
           </aside>
         </div>
       </section>
-
-      {/* GROWTH SCORE */}
-      <GrowthScore />
 
       {/* FINAL CTA */}
       <section className="final-section section-shell">
