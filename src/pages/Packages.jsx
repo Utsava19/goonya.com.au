@@ -289,7 +289,7 @@ function Runner() {
   );
 }
 
-function GrowthScore() {
+function <Packages></Packages>() {
   const [form, setForm] = useState({
     business: "",
     website: "",
@@ -366,7 +366,7 @@ function GrowthScore() {
   );
 }
 
-export default function Packages() {
+export default function GrowthPlans() {
   const [openPlan, setOpenPlan] = useState(1);
   const [selected, setSelected] = useState([]);
 
