@@ -10,6 +10,7 @@ import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import "./App.css";
+import "./styles/pageLayout.css";
 
 export default function App() {
   return (

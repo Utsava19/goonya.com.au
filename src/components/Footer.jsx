@@ -51,8 +51,14 @@ export default function Footer() {
 
         <div>
           <div style={headingStyle}>SERVICES</div>
-          {["Website Development", "Digital Marketing", "SEO & Google", "Social Media", "Automation & CRM"].map((s) => (
-            <Link key={s} to="/services" style={linkStyle}>{s}</Link>
+          {[
+            { name: "AI Automation", path: "/services#ai-automation" },
+            { name: "Website Design", path: "/services#website-design" },
+            { name: "Digital Marketing", path: "/services#digital-marketing" },
+            { name: "Social Media", path: "/services#social-media" },
+            { name: "Digital Systems", path: "/services#digital-systems" },
+          ].map((l) => (
+            <Link key={l.path} to={l.path} style={linkStyle}>{l.name}</Link>
           ))}
         </div>
 

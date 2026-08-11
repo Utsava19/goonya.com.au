@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { SERVICE_SLUGS } from "../data/siteContent";
 
 /* ── AI NODES ANIMATION ── */
 function AIAnim() {
@@ -201,8 +202,16 @@ function AdminAnim() {
 export default function Services() {
   const A = "#9b7cff";
   const L = "rgba(255,255,255,.08)";
+  const location = useLocation();
 
   useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 120);
+    }
+
     document.querySelectorAll(".sv-fi").forEach((el,i)=>{
       el.style.opacity="0";
       el.style.transform="translateY(20px)";
@@ -225,46 +234,46 @@ export default function Services() {
       obs.observe(el);
     });
     return ()=>obs.disconnect();
-  },[]);
+  }, [location.hash]);
 
   const services = [
     {
-      title:"AI Automation", short:"Make repetitive work disappear.",
+      title:"AI Automation", slug: SERVICE_SLUGS["AI Automation"], short:"Make repetitive work disappear.",
       accent:"#9b7cff", color:"rgba(155,124,255,.2)",
       desc:"We build intelligent automation systems that handle your repetitive tasks — customer follow-ups, data entry, scheduling, reporting and more. Your team focuses on what matters. The system handles the rest.",
       features:["Lead follow-up automation","Email & CRM workflows","Appointment scheduling","Invoice & billing automation","Custom chatbots","Reporting dashboards"],
       Anim: AIAnim,
     },
     {
-      title:"Website Design", short:"Turn attention into customers.",
+      title:"Website Design", slug: SERVICE_SLUGS["Website Design"], short:"Turn attention into customers.",
       accent:"#00d2be", color:"rgba(0,210,190,.2)",
       desc:"We design and build high-performance websites that don't just look great — they convert. Every page is built around your customer's journey, from first click to enquiry. Fast, mobile-first and built to rank.",
       features:["Custom design & development","Mobile-first responsive","SEO foundation built in","Fast load speeds","CMS for easy updates","Landing pages & funnels"],
       Anim: WebAnim,
     },
     {
-      title:"Digital Marketing", short:"Get discovered. Get chosen.",
+      title:"Digital Marketing", slug: SERVICE_SLUGS["Digital Marketing"], short:"Get discovered. Get chosen.",
       accent:"#ff64b4", color:"rgba(255,100,180,.2)",
       desc:"From Facebook and Instagram to TikTok and Google — we run data-driven campaigns that reach the right people at the right time. We handle the content, targeting, budget and reporting. You watch the leads come in.",
       features:["Facebook & Instagram ads","TikTok content & ads","Google Ads management","Social media management","Animated video creation","Monthly reporting"],
       Anim: MarketingAnim,
     },
     {
-      title:"Digital Systems", short:"Connect everything. Run smarter.",
+      title:"Digital Systems", slug: SERVICE_SLUGS["Digital Systems"], short:"Connect everything. Run smarter.",
       accent:"#64b4ff", color:"rgba(100,180,255,.2)",
       desc:"We connect your tools, apps and workflows into one intelligent system. CRM, invoicing, bookings, communications — all talking to each other so nothing falls through the cracks.",
       features:["CRM setup & integration","Zapier & Make automations","Booking system setup","Payment & invoicing systems","Team workflow systems","Custom integrations"],
       Anim: SystemsAnim,
     },
     {
-      title:"Social Media", short:"Grow your audience daily.",
+      title:"Social Media", slug: SERVICE_SLUGS["Social Media"], short:"Grow your audience daily.",
       accent:"#e879f9", color:"rgba(232,121,249,.2)",
       desc:"Daily content creation, scheduling and community management across all platforms. We create the posts, write the captions, film and edit videos — everything your brand needs to stay active and growing.",
       features:["Daily content creation","Instagram & Facebook management","TikTok strategy & posting","Story & reel creation","Community engagement","Monthly analytics report"],
       Anim: SocialAnim,
     },
     {
-      title:"Admin & Operations", short:"Take the tedious work off your plate.",
+      title:"Admin & Operations", slug: SERVICE_SLUGS["Admin & Operations"], short:"Take the tedious work off your plate.",
       accent:"#4ade80", color:"rgba(74,222,128,.15)",
       desc:"Email management, data entry, scheduling, research, document preparation and more. We handle the back-end operations that eat your time every day, so you can focus on growing your business.",
       features:["Email & inbox management","Data entry & cleanup","Scheduling & calendars","Document preparation","Research & sourcing","Process documentation"],
@@ -278,7 +287,7 @@ export default function Services() {
       {/* HERO */}
       <section style={{minHeight:"55vh",display:"flex",alignItems:"center",
         background:"radial-gradient(ellipse 60% 70% at 50% 40%, rgba(155,124,255,.1) 0%, transparent 70%)"}}>
-        <div style={{width:"min(1400px,90vw)",margin:"0 auto",padding:"130px 0 80px"}}>
+        <div style={{width:"min(1400px,90vw)",margin:"0 auto",padding:"130px 0 80px"}} className="page-container">
           <div className="sv-fi" style={{fontSize:"11px",letterSpacing:"2.5px",color:"#3a3a3a",
             marginBottom:"28px",display:"flex",alignItems:"center",gap:"10px"}}>
             <span style={{width:"20px",height:"1px",background:A}}/>SERVICES
@@ -307,28 +316,31 @@ export default function Services() {
         scrollbarWidth:"none",
       }}>
         {[
-          {l:"AI Automation", c:"#9b7cff"},
-          {l:"Websites",      c:"#00d2be"},
-          {l:"Marketing",     c:"#ff64b4"},
-          {l:"Systems",       c:"#64b4ff"},
-          {l:"Social Media",  c:"#e879f9"},
-          {l:"Admin",         c:"#4ade80"},
-        ].map(({l,c},i)=>(
-          <div key={l} style={{
+          {l:"AI Automation", c:"#9b7cff", slug:"ai-automation"},
+          {l:"Websites",      c:"#00d2be", slug:"website-design"},
+          {l:"Marketing",     c:"#ff64b4", slug:"digital-marketing"},
+          {l:"Systems",       c:"#64b4ff", slug:"digital-systems"},
+          {l:"Social Media",  c:"#e879f9", slug:"social-media"},
+          {l:"Admin",         c:"#4ade80", slug:"admin-operations"},
+        ].map(({l,c,slug},i)=>(
+          <Link key={l} to={`#${slug}`} style={{
             padding:"8px 16px", borderRadius:"100px", flexShrink:0,
             background:`${c}18`, border:`1px solid ${c}40`,
             fontSize:"12px", color:c, fontWeight:500,
             animation:`pillIn .4s ease ${i*.08}s both`,
-          }}>{l}</div>
+            textDecoration:"none",
+          }}>{l}</Link>
         ))}
       </div>
 
       {/* SERVICES */}
-      <div style={{width:"min(1400px,90vw)",margin:"0 auto 130px"}}>
-        {services.map(({title,short,color,accent,desc,features,Anim},i)=>(
-          <div key={title} className="sv-rv sv-card" style={{
+      <div className="page-container" style={{margin:"0 auto 130px"}}>
+        {services.map(({title,slug,short,color,accent,desc,features,Anim},i)=>(
+          <div key={title} id={slug} className="sv-rv sv-card" style={{
             display:"grid",gridTemplateColumns:"1fr 1fr",
-            gap:"1px",background:L,border:`1px solid ${L}`,marginBottom:"1px"}}>
+            gap:"1px",background:L,border:`1px solid ${L}`,marginBottom:"1px",
+            scrollMarginTop:"100px",
+          }}>
 
             {/* text */}
             <div style={{padding:"56px 52px",background:"#08060f",

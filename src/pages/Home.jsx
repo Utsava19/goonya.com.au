@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import GrowthScoreCheck from "../components/GrowthScoreCheck";
 import {
-  WhyGoonya,
-  FourPillars,
+  GoonyaPromise,
   PackagePreview,
   HowItWorks,
   CaseStudyHighlight,
@@ -12,7 +11,60 @@ import {
   TestimonialsWithPhotos,
 } from "../components/HomeMarketingSections";
 
-/* ── HERO BACKGROUND — dot grid + aurora ── */
+/* ── HERO ROTATING OUTCOME ── */
+function HeroRotator() {
+  const words = ["enquiries", "bookings", "sales", "calls"];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setIndex((i) => (i + 1) % words.length), 2600);
+    return () => clearInterval(timer);
+  }, [words.length]);
+
+  return (
+    <span style={{
+      display: "inline-block",
+      minWidth: "180px",
+      background: "linear-gradient(90deg,#9b7cff,#e0b0ff,#9b7cff)",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      backgroundClip: "text",
+      transition: "opacity .4s ease",
+    }}>
+      {words[index]}
+    </span>
+  );
+}
+
+/* ── LIVE HERO STATS ── */
+function HeroLiveStats() {
+  const [n, setN] = useState(12);
+  useEffect(() => {
+    const t = setInterval(() => setN((v) => v + Math.floor(Math.random() * 3)), 4000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "28px" }}>
+      {[
+        { label: "NEW ENQUIRIES THIS WEEK", value: `+${n}`, color: "#4ade80" },
+        { label: "AVG. RESPONSE TIME", value: "0.8s", color: "#9b7cff" },
+      ].map((s) => (
+        <div key={s.label} style={{
+          display: "inline-flex", alignItems: "center", gap: "12px",
+          padding: "10px 18px", borderRadius: "100px",
+          border: "1px solid rgba(155,124,255,.2)", background: "rgba(155,124,255,.06)",
+          width: "fit-content", animation: "heroPulse 3s ease-in-out infinite",
+        }}>
+          <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: s.color,
+            boxShadow: `0 0 10px ${s.color}` }} />
+          <span style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#666" }}>{s.label}</span>
+          <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, color: "white" }}>{s.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function HeroBg() {
   const ref = useRef(null);
   useEffect(() => {
@@ -588,7 +640,7 @@ export default function Home() {
         background:"radial-gradient(ellipse 70% 65% at 62% 45%, rgba(155,124,255,.08) 0%, transparent 70%)",
       }}>
         <HeroBg />
-        <div className="hero-grid" style={{ position:"relative", zIndex:1, width:"min(1400px,90vw)", margin:"0 auto",
+        <div className="hero-grid page-container" style={{ position:"relative", zIndex:1,
           padding:"130px 0 100px", display:"grid", gridTemplateColumns:"1fr 1fr",
           gap:"60px", alignItems:"center" }}>
 
@@ -605,24 +657,24 @@ export default function Home() {
 
             <h1 className="fi hero-h1" style={{ margin:0, padding:0 }}>
               <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(40px,5.5vw,72px)", fontWeight:700,
+                fontSize:"clamp(44px,5.8vw,78px)", fontWeight:700,
                 letterSpacing:"-3px", lineHeight:1.05, color:"white", paddingBottom:"8px" }}>
-                We help small businesses get more customers
+                Stop losing customers online.
               </span>
               <span style={{ display:"block", fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(40px,5.5vw,72px)", fontWeight:700,
-                letterSpacing:"-3px", lineHeight:1.05, paddingBottom:"8px",
-                background:`linear-gradient(90deg,${A},#e0b0ff 55%,${A})`,
-                WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
-                without the big agency price tag.
+                fontSize:"clamp(36px,4.5vw,64px)", fontWeight:700,
+                letterSpacing:"-2px", lineHeight:1.1, color:"#888", paddingBottom:"8px" }}>
+                We build systems that bring you more <HeroRotator />.
               </span>
             </h1>
 
-            <p className="fi" style={{ maxWidth:"520px", marginTop:"28px",
+            <p className="fi" style={{ maxWidth:"520px", marginTop:"20px",
               color:"#666", fontSize:"17px", lineHeight:1.75 }}>
-              Websites, marketing and smart automation built around one goal:
-              more enquiries, bookings and sales.
+              Without the big agency price tag. Websites, marketing and smart automation —
+              built around one goal: more revenue for your business.
             </p>
+
+            <HeroLiveStats />
 
             <div className="fi" style={{ display:"flex", alignItems:"center",
               gap:"14px", marginTop:"36px", flexWrap:"wrap" }}>
@@ -715,9 +767,7 @@ export default function Home() {
         ))}
       </div>
 
-      <WhyGoonya />
-
-      <FourPillars />
+      <GoonyaPromise />
 
       <PackagePreview />
 
@@ -1117,6 +1167,10 @@ export default function Home() {
         }
         @keyframes blink {
           0%,100%{opacity:1} 50%{opacity:0}
+        }
+        @keyframes heroPulse {
+          0%,100%{ opacity:1; transform:translateY(0); }
+          50%{ opacity:.85; transform:translateY(-2px); }
         }
         @keyframes pdot {
           0%,100%{box-shadow:0 0 6px #9b7cff}

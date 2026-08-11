@@ -1,32 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { PACKAGES } from "../data/siteContent";
+import { PACKAGES, BUILD_ITEMS } from "../data/siteContent";
 import GrowthScoreCheck from "../components/GrowthScoreCheck";
 import "./Packages.css";
 
 const plans = PACKAGES;
 
-const buildOptions = [
-  {
-    category: "WEBSITE",
-    items: ["Website audit", "Landing page", "Website rebuild", "New website"],
-  },
-  {
-    category: "GET FOUND",
-    items: ["Local SEO", "Google Business Profile", "Google Search optimisation", "Technical SEO"],
-  },
-  {
-    category: "SOCIAL",
-    items: ["Instagram", "Facebook", "TikTok", "Reels"],
-  },
-  {
-    category: "ADS",
-    items: ["Meta Ads", "Google Ads", "Retargeting"],
-  },
-  {
-    category: "AUTOMATION",
-    items: ["Lead capture", "CRM", "Email follow-up", "SMS follow-up"],
-  },
-];
+const buildGroups = [...new Set(BUILD_ITEMS.map((i) => i.category))].map((category) => ({
+  category,
+  items: BUILD_ITEMS.filter((i) => i.category === category),
+}));
 
 const RUNNER_WAYPOINTS = [
   { progress: 0,    x: 14, y: 76, pace: 1.5 },
@@ -103,8 +85,9 @@ function interpolateWaypoints(progress, waypoints) {
 
 function getPlanPace() {
   const kick = document.getElementById("plan-0");
-  const grow = document.getElementById("plan-1");
-  const scale = document.getElementById("plan-2");
+  const launch = document.getElementById("plan-1");
+  const grow = document.getElementById("plan-2");
+  const scale = document.getElementById("plan-3");
 
   const visible = (el) => {
     if (!el) return 0;
@@ -115,11 +98,13 @@ function getPlanPace() {
   };
 
   const vKick = visible(kick);
+  const vLaunch = visible(launch);
   const vGrow = visible(grow);
   const vScale = visible(scale);
 
-  if (vScale >= vGrow && vScale >= vKick && vScale > 0) return PACE_SPRINT;
-  if (vGrow >= vKick && vGrow >= vScale && vGrow > 0) return PACE_JOG;
+  if (vScale >= vGrow && vScale >= vLaunch && vScale >= vKick && vScale > 0) return PACE_SPRINT;
+  if (vGrow >= vLaunch && vGrow >= vKick && vGrow >= vScale && vGrow > 0) return PACE_JOG;
+  if (vLaunch >= vKick && vLaunch > 0) return PACE_WALK;
   if (vKick > 0) return PACE_WALK;
   return null;
 }
@@ -443,26 +428,24 @@ function Runner() {
 }
 
 export default function Packages() {
-  const [openPlan, setOpenPlan] = useState(1);
+  const [openPlan, setOpenPlan] = useState(2);
   const [selected, setSelected] = useState([]);
 
-  const toggleSelection = (item) => {
+  const toggleSelection = (id) => {
     setSelected((current) =>
-      current.includes(item)
-        ? current.filter((x) => x !== item)
-        : [...current, item]
+      current.includes(id) ? current.filter((x) => x !== id) : [...current, id]
     );
   };
 
-  const customPrice = 399 + selected.length * 99;
+  const selectedItems = BUILD_ITEMS.filter((i) => selected.includes(i.id));
+  const onceTotal = selectedItems.filter((i) => !i.recurring).reduce((s, i) => s + i.price, 0);
+  const monthlyTotal = selectedItems.filter((i) => i.recurring).reduce((s, i) => s + i.price, 0);
 
   return (
     <div className="growth-page">
       <Runner />
 
-      <div className="section-shell" style={{ paddingTop: "40px" }}>
-        <GrowthScoreCheck id="growth-check" />
-      </div>
+      <GrowthScoreCheck id="growth-check" onPackagesPage />
 
       {/* HERO */}
       <section className="growth-hero section-shell">
@@ -539,7 +522,7 @@ export default function Packages() {
           <span> business need to go?</span>
         </h2>
         <p className="speed-hint">
-          Scroll with the runner — walking at Launch, jogging at Growth, sprinting at Scale.
+          Scroll with the runner — walking at Kickstart/Launch, jogging at Growth, sprinting at Scale.
         </p>
         <div className="plans-grid">
           {plans.map((plan, index) => {
@@ -602,20 +585,23 @@ export default function Packages() {
         </p>
         <div className="builder">
           <div className="builder-options">
-            {buildOptions.map((group) => (
+            {buildGroups.map((group) => (
               <div className="builder-group" key={group.category}>
                 <h3>{group.category}</h3>
                 <div className="builder-items">
                   {group.items.map((item) => {
-                    const active = selected.includes(item);
+                    const active = selected.includes(item.id);
                     return (
                       <button
-                        key={item}
+                        key={item.id}
                         className={active ? "selected" : ""}
-                        onClick={() => toggleSelection(item)}
+                        onClick={() => toggleSelection(item.id)}
                       >
                         <span>{active ? "✓" : "+"}</span>
-                        {item}
+                        {item.label}
+                        <em style={{ marginLeft: "auto", fontStyle: "normal", color: active ? "#9b7cff" : "#666", fontSize: "0.75rem" }}>
+                          ${item.price}{item.recurring ? "/mo" : ""}
+                        </em>
                       </button>
                     );
                   })}
@@ -625,10 +611,23 @@ export default function Packages() {
           </div>
           <aside className="builder-summary">
             <div className="summary-label">YOUR GOONYA PLAN</div>
-            <div className="custom-price">
-              ${customPrice.toLocaleString()}
-              <small>/ month</small>
-            </div>
+            {onceTotal > 0 && (
+              <div className="custom-price" style={{ fontSize: "1.8rem", marginBottom: "8px" }}>
+                ${onceTotal.toLocaleString()}
+                <small> one-off</small>
+              </div>
+            )}
+            {monthlyTotal > 0 && (
+              <div className="custom-price">
+                ${monthlyTotal.toLocaleString()}
+                <small>/ month</small>
+              </div>
+            )}
+            {onceTotal === 0 && monthlyTotal === 0 && (
+              <div className="custom-price" style={{ fontSize: "1.5rem", color: "#666" }}>
+                $0
+              </div>
+            )}
             <p>
               {selected.length === 0
                 ? "Start selecting services to build your plan."

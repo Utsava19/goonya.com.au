@@ -349,11 +349,12 @@
 }
 
 .section-shell {
-  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 100px 40px;
+  padding: 100px max(5vw, calc((100vw - min(1400px, 90vw)) / 2));
   position: relative;
   z-index: 3;
+  box-sizing: border-box;
 }
 
 .eyebrow {
@@ -522,8 +523,21 @@
 
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
+}
+
+.packages-growth-check {
+  background: #070707;
+  isolation: isolate;
+}
+
+.builder-items button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: flex-start;
 }
 
 .plan-card {

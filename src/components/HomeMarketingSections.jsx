@@ -104,6 +104,12 @@ export function PackagePreview() {
             View All Packages →
           </Link>
         </div>
+        <div style={{ textAlign: "center", marginTop: "28px" }}>
+          <Link to="/packages" style={{ display: "inline-flex", padding: "16px 32px", background: "white",
+            color: "black", borderRadius: "100px", fontWeight: 700, fontSize: "14px", textDecoration: "none" }}>
+            View All Packages →
+          </Link>
+        </div>
       </div>
       <style>{`@media(max-width:900px){ .pkg-preview-grid{ grid-template-columns:1fr !important; } }`}</style>
     </div>
@@ -149,45 +155,70 @@ export function HowItWorks() {
 
 export function CaseStudyHighlight() {
   return (
-    <div style={{ padding: "80px 0", borderTop: `1px solid ${L}`, borderBottom: `1px solid ${L}` }}>
-      <div style={{ width: "min(1400px,90vw)", margin: "0 auto" }}>
-        <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "18px",
-          display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ width: "20px", height: "1px", background: A }} />CASE STUDY
+    <div style={{ padding: "80px 0", background: "#f5f5f5" }}>
+      <div className="page-container">
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#888", marginBottom: "12px" }}>
+            REAL RESULTS
+          </div>
+          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(32px,4vw,48px)",
+            fontWeight: 700, letterSpacing: "-2px", color: "#111" }}>
+            From frustrated owner to <span style={{ color: A }}>fully booked.</span>
+          </h2>
         </div>
-        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(32px,4vw,48px)",
-          fontWeight: 700, letterSpacing: "-2px", color: "white", marginBottom: "40px" }}>
-          {CASE_STUDY.industry} — <span style={{ color: A }}>before & after</span>
-        </h2>
-        <div className="case-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
-          <div style={{ padding: "28px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "12px" }}>
-            <div style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", marginBottom: "16px" }}>BEFORE</div>
-            {CASE_STUDY.before.map((item) => (
-              <div key={item} style={{ color: "#888", fontSize: "14px", padding: "8px 0" }}>✕ {item}</div>
-            ))}
+
+        <div className="case-visual" style={{
+          display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "32px", alignItems: "center",
+          background: "white", borderRadius: "24px", padding: "48px 40px",
+          boxShadow: "0 24px 80px rgba(0,0,0,.08)",
+        }}>
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: "11px", letterSpacing: "2px", color: "#999", marginBottom: "16px" }}>BEFORE</div>
+            <img
+              src="https://images.unsplash.com/photo-1584824486509-048e875e8038?w=400&h=400&fit=crop&crop=face"
+              alt="Frustrated business owner before"
+              style={{ width: "160px", height: "160px", borderRadius: "50%", objectFit: "cover",
+                border: "4px solid #eee", filter: "grayscale(1) contrast(.9)", marginBottom: "20px" }}
+            />
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, textAlign: "left", maxWidth: "260px", marginInline: "auto" }}>
+              {["Website didn't work on mobile", "No clear way to book", "Invisible on Google"].map((t) => (
+                <li key={t} style={{ color: "#666", fontSize: "14px", padding: "8px 0", borderBottom: "1px solid #eee" }}>
+                  ✕ {t}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div style={{ padding: "28px", background: "rgba(155,124,255,.06)",
-            border: `1px solid rgba(155,124,255,.2)`, borderRadius: "12px" }}>
-            <div style={{ fontSize: "11px", color: A, letterSpacing: "2px", marginBottom: "16px" }}>GOONYA</div>
-            {CASE_STUDY.after.map((item) => (
-              <div key={item} style={{ color: "#ccc", fontSize: "14px", padding: "8px 0" }}>✓ {item}</div>
-            ))}
-          </div>
-          <div style={{ padding: "28px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "12px" }}>
-            <div style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", marginBottom: "16px" }}>RESULT</div>
-            {CASE_STUDY.results.map(({ label, value }) => (
-              <div key={label} style={{ marginBottom: "16px" }}>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "32px", fontWeight: 700,
-                  color: "white" }}>{value}</div>
-                <div style={{ fontSize: "13px", color: "#555" }}>{label}</div>
-              </div>
-            ))}
+
+          <div style={{ fontSize: "32px", color: A, fontWeight: 700 }}>→</div>
+
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "16px" }}>AFTER GOONYA</div>
+            <img
+              src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face"
+              alt="Happy business owner after Goonya"
+              style={{ width: "160px", height: "160px", borderRadius: "50%", objectFit: "cover",
+                border: `4px solid ${A}`, boxShadow: `0 0 30px rgba(155,124,255,.25)`, marginBottom: "20px" }}
+            />
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, textAlign: "left", maxWidth: "260px", marginInline: "auto" }}>
+              {["+68% more enquiries", "3× online bookings", "Google visibility up 45%"].map((t) => (
+                <li key={t} style={{ color: "#333", fontSize: "14px", padding: "8px 0", borderBottom: "1px solid #eee" }}>
+                  ✓ {t}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-        <Link to="/our-work" style={{ display: "inline-flex", marginTop: "32px", color: A,
-          fontSize: "14px", fontWeight: 600, textDecoration: "none" }}>See more work →</Link>
+
+        <div style={{ textAlign: "center", marginTop: "32px" }}>
+          <Link to="/our-work" style={{ color: A, fontWeight: 600, textDecoration: "none" }}>See more work →</Link>
+        </div>
       </div>
-      <style>{`@media(max-width:768px){ .case-grid{ grid-template-columns:1fr !important; } }`}</style>
+      <style>{`
+        @media(max-width:768px){
+          .case-visual{ grid-template-columns:1fr !important; padding:32px 24px !important; }
+          .case-visual > div:nth-child(2){ transform:rotate(90deg); margin:0 auto; }
+        }
+      `}</style>
     </div>
   );
 }
