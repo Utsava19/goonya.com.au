@@ -60,11 +60,28 @@ export default function OurWork() {
           {CASE_STUDIES.map((study, i) => (
             <article key={study.slug} className="ow-card" style={{
               display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "1px",
-              background: L, border: `1px solid ${L}`, marginBottom: "24px",
+              background: L, border: `1px solid ${study.featured ? "rgba(155,124,255,.35)" : L}`,
+              marginBottom: "24px",
               borderRadius: "16px", overflow: "hidden",
               opacity: 0, transform: "translateY(32px)",
               transition: `opacity .7s ease ${i * 0.1}s, transform .7s ease ${i * 0.1}s`,
+              position: "relative",
             }}>
+              {study.featured && (
+                <div style={{ position: "absolute", top: "16px", left: "16px", zIndex: 2,
+                  background: A, color: "white", fontSize: "10px", fontWeight: 700,
+                  letterSpacing: "1.5px", padding: "5px 12px", borderRadius: "100px" }}>
+                  FEATURED · PLUMBING
+                </div>
+              )}
+              {study.websiteTransform && (
+                <div style={{ position: "absolute", top: "16px", right: "16px", zIndex: 2,
+                  background: "rgba(0,0,0,.7)", color: "#ccc", fontSize: "10px",
+                  letterSpacing: "1px", padding: "5px 12px", borderRadius: "100px",
+                  border: "1px solid rgba(255,255,255,.15)" }}>
+                  Website before & after
+                </div>
+              )}
               <div style={{ minHeight: "320px", background: "#111",
                 backgroundImage: `url(${study.cover})`, backgroundSize: "cover", backgroundPosition: "center" }} />
 
@@ -87,7 +104,7 @@ export default function OurWork() {
                   <div style={{ fontSize: "10px", letterSpacing: "1.5px", color: "#555", marginBottom: "10px" }}>
                     THE PROBLEM
                   </div>
-                  {study.beforePoints.slice(0, 2).map((p) => (
+                  {study.beforePoints.slice(0, 3).map((p) => (
                     <div key={p} style={{ fontSize: "13px", color: "#888", padding: "4px 0" }}>✕ {p}</div>
                   ))}
                 </div>

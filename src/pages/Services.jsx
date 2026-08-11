@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { SERVICE_SLUGS } from "../data/siteContent";
 
 /* ── AI NODES ANIMATION ── */
@@ -202,26 +202,6 @@ function AdminAnim() {
 export default function Services() {
   const A = "#9b7cff";
   const L = "rgba(255,255,255,.08)";
-  const location = useLocation();
-
-  useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace("#", "");
-      const scrollToTarget = () => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-          return true;
-        }
-        return false;
-      };
-      const attempts = [120, 400, 800];
-      const timers = attempts.map((delay) =>
-        setTimeout(() => scrollToTarget(), delay)
-      );
-      return () => timers.forEach(clearTimeout);
-    }
-  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     document.querySelectorAll(".sv-fi").forEach((el,i)=>{
@@ -314,7 +294,61 @@ export default function Services() {
           </h1>
           <p className="sv-fi" style={{maxWidth:"520px",marginTop:"28px",color:"#666",fontSize:"17px",lineHeight:1.75}}>
             Six services. One goal — make your business run faster, smarter and more profitably.
+            Here's what each one actually means for you.
           </p>
+        </div>
+      </section>
+
+      {/* OVERVIEW — plain English */}
+      <section className="page-container" style={{ paddingBottom: "64px" }}>
+        <div style={{ marginBottom: "32px" }}>
+          <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "14px" }}>
+            AT A GLANCE
+          </div>
+          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(28px,3.5vw,44px)",
+            fontWeight: 700, letterSpacing: "-2px", color: "white", margin: 0 }}>
+            What we do — <span style={{ color: A }}>in plain English</span>
+          </h2>
+        </div>
+        <div className="sv-overview-grid" style={{
+          display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px",
+        }}>
+          {[
+            { title: "AI Automation", slug: "ai-automation", accent: "#9b7cff",
+              plain: "Repetitive tasks handled automatically — follow-ups, scheduling, reporting.",
+              forWho: "Businesses drowning in admin" },
+            { title: "Website Design", slug: "website-design", accent: "#00d2be",
+              plain: "Fast, mobile-first sites built to turn visitors into enquiries.",
+              forWho: "Businesses with outdated or broken sites" },
+            { title: "Digital Marketing", slug: "digital-marketing", accent: "#ff64b4",
+              plain: "Google, Meta and TikTok campaigns that bring in real leads.",
+              forWho: "Businesses invisible online" },
+            { title: "Digital Systems", slug: "digital-systems", accent: "#64b4ff",
+              plain: "CRM, bookings, invoicing and tools connected into one system.",
+              forWho: "Businesses juggling too many apps" },
+            { title: "Social Media", slug: "social-media", accent: "#e879f9",
+              plain: "Consistent posts, reels and content so you stay visible daily.",
+              forWho: "Businesses with dead social accounts" },
+            { title: "Admin & Operations", slug: "admin-operations", accent: "#4ade80",
+              plain: "Inbox, data entry, scheduling and back-office work off your plate.",
+              forWho: "Owners doing everything themselves" },
+          ].map(({ title, slug, accent, plain, forWho }) => (
+            <Link key={slug} to={`/services#${slug}`} style={{
+              padding: "28px 24px", background: "#08060f",
+              border: `1px solid ${L}`, borderRadius: "14px",
+              textDecoration: "none", transition: "border-color .2s, transform .2s",
+            }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${accent}55`; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = L; e.currentTarget.style.transform = "none"; }}
+            >
+              <div style={{ width: "28px", height: "3px", background: accent, borderRadius: "2px", marginBottom: "16px" }} />
+              <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "18px",
+                margin: "0 0 10px" }}>{title}</h3>
+              <p style={{ color: "#777", fontSize: "14px", lineHeight: 1.65, margin: "0 0 14px" }}>{plain}</p>
+              <div style={{ fontSize: "12px", color: accent }}>Best for: {forWho}</div>
+              <div style={{ fontSize: "12px", color: "#555", marginTop: "16px" }}>Learn more →</div>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -435,6 +469,7 @@ export default function Services() {
 
         /* show pills on mobile */
         @media(max-width:850px){
+          .sv-overview-grid { grid-template-columns:1fr !important; }
           .sv-pills { display:flex !important; }
           .sv-pills::-webkit-scrollbar { display:none; }
         }

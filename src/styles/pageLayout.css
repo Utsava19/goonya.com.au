@@ -14,3 +14,7 @@
     padding: 72px 0;
   }
 }
+
+[id] {
+  scroll-margin-top: 100px;
+}

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { PACKAGES, BUILD_ITEMS } from "../data/siteContent";
 import GrowthScoreCheck from "../components/GrowthScoreCheck";
 import "./Packages.css";
@@ -426,17 +425,8 @@ function Runner() {
 }
 
 export default function Packages() {
-  const location = useLocation();
   const [openPlan, setOpenPlan] = useState(1);
   const [selected, setSelected] = useState([]);
-
-  useEffect(() => {
-    if (location.hash === "#plans") {
-      setTimeout(() => {
-        document.getElementById("plans")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 150);
-    }
-  }, [location.hash, location.pathname]);
 
   const toggleSelection = (id) => {
     setSelected((current) =>

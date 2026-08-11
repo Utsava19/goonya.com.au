@@ -8,29 +8,39 @@ export const CASE_STUDIES = [
     summary:
       "A local plumber losing jobs to competitors on Google — we rebuilt their web presence and automated quote follow-ups.",
     problem:
-      "Mark was running a solid plumbing business but his old website was slow, didn't work properly on phones, and barely showed up on Google. Quote requests went to a generic email he checked once a day. Weekend enquiries were going cold before he even saw them.",
+      "Mark was running a solid plumbing business but his old website looked like it was built in 2012. It was slow, broken on phones, and had no clear way to request a quote. His Google Business Profile was half-filled out with wrong hours. Quote requests went to a generic email he checked once a day — so weekend and evening enquiries were going cold before he even saw them. Competitors with cleaner sites were winning the jobs he should have been getting.",
+    challenge:
+      "Mark didn't need a fancy rebrand. He needed people in Dandenong to find him on Google, trust what they saw, and request a quote without playing phone tag.",
     beforePoints: [
       "Outdated site that didn't work on mobile",
       "Invisible on Google Maps for local searches",
       "No clear way to request a quote online",
       "Enquiries sitting in inbox for hours",
+      "Weekend leads going to competitors",
     ],
     solution: [
-      "Built a fast, mobile-first website focused on quote requests",
-      "Fully optimised Google Business Profile for Dandenong searches",
-      "Added click-to-call and instant quote forms on every page",
-      "Set up SMS auto-reply so leads get a response within minutes",
+      "Built a fast, mobile-first website focused on quote requests and emergency calls",
+      "Fully optimised Google Business Profile for Dandenong and surrounding suburbs",
+      "Added click-to-call and instant quote forms on every service page",
+      "Set up SMS auto-reply so leads get a response within minutes, 24/7",
+      "Local SEO targeting blocked drains, hot water and emergency plumbing searches",
     ],
     afterPoints: [
       "Professional site that loads fast on any phone",
       "Showing in top Google Maps results locally",
       "Quote form on every service page",
       "Automated SMS follow-up on every enquiry",
+      "Mark responds to hot leads before competitors do",
     ],
     results: [
       { label: "Quote requests", value: "+74%" },
       { label: "Google Maps calls", value: "+52%" },
       { label: "Avg. response time", value: "< 5 min" },
+    ],
+    timeline: [
+      { week: "Week 1", detail: "Audit, competitor research, quote form strategy" },
+      { week: "Week 2–3", detail: "New website build, service pages, mobile testing" },
+      { week: "Week 4", detail: "Google Business optimisation, local SEO, SMS automation live" },
     ],
     quote:
       "We used to rely on word of mouth. Now the phone actually rings from Google — and we don't miss leads on weekends anymore.",
@@ -41,6 +51,8 @@ export const CASE_STUDIES = [
       "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=80",
     beforeMood: "😤",
     afterMood: "😊",
+    websiteTransform: true,
+    featured: true,
   },
   {
     slug: "bloom-cafe",
@@ -130,7 +142,7 @@ export const CASE_STUDIES = [
   },
 ];
 
-export const FEATURED_CASE = CASE_STUDIES[1];
+export const FEATURED_CASE = CASE_STUDIES.find((c) => c.featured) ?? CASE_STUDIES[0];
 
 export function getCaseStudy(slug) {
   return CASE_STUDIES.find((c) => c.slug === slug);

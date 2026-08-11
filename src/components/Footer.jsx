@@ -78,7 +78,7 @@ export default function Footer() {
 
         <div>
           <div style={headingStyle}>RESOURCES</div>
-          <a href="/#growth-check" style={linkStyle}>Business Growth Check</a>
+          <Link to="/#growth-check" style={linkStyle}>Business Growth Check</Link>
           <Link to="/packages#plans" style={linkStyle}>View Packages</Link>
           <Link to="/our-work" style={linkStyle}>Case Studies</Link>
           <Link to="/contact" style={linkStyle}>Book a Strategy Call</Link>

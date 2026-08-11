@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import BeforeAfter from "../components/BeforeAfter";
+import WebsiteMockupPair from "../components/WebsiteMockupPair";
 import { getCaseStudy } from "../data/caseStudies";
 
 export default function CaseStudy() {
@@ -47,7 +48,15 @@ export default function CaseStudy() {
             <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px", marginBottom: "16px" }}>
               The problem
             </h2>
-            <p style={{ color: "#888", fontSize: "16px", lineHeight: 1.75 }}>{study.problem}</p>
+            <p style={{ color: "#888", fontSize: "16px", lineHeight: 1.75, marginBottom: "20px" }}>{study.problem}</p>
+            {study.challenge && (
+              <p style={{ color: "#aaa", fontSize: "15px", lineHeight: 1.7, padding: "20px",
+                background: "rgba(155,124,255,.06)", borderRadius: "12px",
+                border: `1px solid rgba(155,124,255,.15)` }}>
+                <strong style={{ color: "white" }}>What they really needed: </strong>
+                {study.challenge}
+              </p>
+            )}
           </div>
           <div style={{ padding: "28px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "16px" }}>
             <div style={{ fontSize: "11px", letterSpacing: "2px", color: "#666", marginBottom: "16px" }}>WHAT WASN'T WORKING</div>
@@ -58,6 +67,21 @@ export default function CaseStudy() {
             ))}
           </div>
         </div>
+
+        {study.websiteTransform && (
+          <div style={{ marginBottom: "64px" }}>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px",
+              marginBottom: "12px", textAlign: "center" }}>
+              The website transformation
+            </h2>
+            <p style={{ color: "#666", fontSize: "15px", textAlign: "center", maxWidth: "640px",
+              margin: "0 auto 32px", lineHeight: 1.65 }}>
+              Their old site looked untrustworthy and didn&apos;t work on phones.
+              Here&apos;s what customers saw before vs what they see now.
+            </p>
+            <WebsiteMockupPair client={study.client} industry={study.industry} />
+          </div>
+        )}
 
         <div style={{ marginBottom: "64px", padding: "40px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "20px" }}>
           <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px", marginBottom: "24px" }}>
@@ -73,6 +97,23 @@ export default function CaseStudy() {
             ))}
           </div>
         </div>
+
+        {study.timeline && (
+          <div style={{ marginBottom: "64px" }}>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px", marginBottom: "24px" }}>
+              How we rolled it out
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+              {study.timeline.map(({ week, detail }) => (
+                <div key={week} style={{ padding: "24px", background: "#08060f",
+                  border: `1px solid ${L}`, borderRadius: "12px" }}>
+                  <div style={{ color: A, fontSize: "12px", letterSpacing: "1.5px", marginBottom: "10px" }}>{week}</div>
+                  <p style={{ color: "#aaa", fontSize: "14px", lineHeight: 1.6, margin: 0 }}>{detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div style={{ marginBottom: "64px" }}>
           <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px",
