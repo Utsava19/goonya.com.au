@@ -1,9 +1,9 @@
 :root {
-  --run-speed: 0.55s;
+  --run-speed: 0.7s;
 }
 
 /* =========================================================
-   RUNNER LAYER — sits behind everything, never blocks clicks
+   RUNNER LAYER — always behind all content
 ========================================================= */
 .runner-layer {
   position: fixed;
@@ -12,32 +12,30 @@
   height: 100%;
   overflow: hidden;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
 }
 
 .runner {
   position: absolute;
   left: 0;
   top: 0;
-  width: clamp(120px, 14vw, 220px);
+  width: clamp(100px, 12vw, 180px);
   transform-origin: center center;
   will-change: transform;
-  isolation: isolate;
   filter:
-    drop-shadow(0 0 25px rgba(155, 124, 255, 0.32))
-    drop-shadow(0 25px 40px rgba(0, 0, 0, 0.75));
+    drop-shadow(0 0 18px rgba(155, 124, 255, 0.28))
+    drop-shadow(0 12px 24px rgba(0, 0, 0, 0.5));
 }
 
 /* =========================================================
    PERSON
 ========================================================= */
 .runner-svg {
-  position: relative;
   display: block;
   width: 100%;
   height: auto;
   overflow: visible;
-  animation: runner-bob var(--run-speed, 0.55s) ease-in-out infinite;
+  animation: runner-bob var(--run-speed, 0.7s) ease-in-out infinite;
 }
 
 .runner-skin        { fill: #c98f6d; }
@@ -53,29 +51,25 @@
   fill: none;
 }
 
-/* =========================================================
-   RUNNING MOTION
-========================================================= */
+/* Vertical bob only — no rotation = no shake */
 @keyframes runner-bob {
-  0%   { transform: translateY(0)    rotate(0deg);  }
-  25%  { transform: translateY(-4px) rotate(-1deg); }
-  50%  { transform: translateY(-8px) rotate(1deg);  }
-  75%  { transform: translateY(-4px) rotate(-1deg); }
-  100% { transform: translateY(0)    rotate(0deg);  }
+  0%   { transform: translateY(0px);  }
+  50%  { transform: translateY(-6px); }
+  100% { transform: translateY(0px);  }
 }
 
 /* =========================================================
-   GROUND SHADOW
+   SHADOW
 ========================================================= */
 .runner-shadow {
   position: absolute;
-  width: 65%;
-  height: 22px;
-  left: 17%;
-  bottom: 1%;
+  width: 60%;
+  height: 16px;
+  left: 20%;
+  bottom: 2%;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.8);
-  filter: blur(14px);
+  background: rgba(0, 0, 0, 0.6);
+  filter: blur(10px);
 }
 
 /* =========================================================
@@ -85,25 +79,25 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: clamp(120px, 14vw, 220px);
+  width: clamp(100px, 12vw, 180px);
   pointer-events: none;
 }
 
 .runner-trail {
   position: absolute;
-  width: 220%;
-  height: 45%;
-  left: -190%;
-  top: 28%;
+  width: 200%;
+  height: 40%;
+  left: -180%;
+  top: 30%;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(155, 124, 255, 0.04) 25%,
-    rgba(155, 124, 255, 0.25) 50%,
+    rgba(155, 124, 255, 0.03) 25%,
+    rgba(155, 124, 255, 0.18) 50%,
     transparent 100%
   );
-  filter: blur(20px);
-  opacity: 0.9;
+  filter: blur(16px);
+  opacity: 0.8;
 }
 
 /* =========================================================
@@ -113,7 +107,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: clamp(120px, 14vw, 220px);
+  width: clamp(100px, 12vw, 180px);
   pointer-events: none;
 }
 
@@ -123,29 +117,547 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(155, 124, 255, 0.8),
+    rgba(155, 124, 255, 0.7),
     transparent
   );
   transform-origin: right center;
-  animation: speed-line var(--run-speed, 0.55s) linear infinite;
+  animation: speed-line var(--run-speed, 0.7s) linear infinite;
 }
 
 .line-one   { width: 50%; left: -40%; top: 40%; }
-.line-two   { width: 38%; left: -30%; top: 48%; animation-delay: 0.06s; }
-.line-three { width: 27%; left: -22%; top: 56%; animation-delay: 0.12s; }
+.line-two   { width: 38%; left: -30%; top: 48%; animation-delay: 0.07s; }
+.line-three { width: 27%; left: -22%; top: 56%; animation-delay: 0.14s; }
 
 @keyframes speed-line {
-  0%   { opacity: 0; transform: translateX(35px); }
+  0%   { opacity: 0; transform: translateX(30px); }
   30%  { opacity: 1; }
-  100% { opacity: 0; transform: translateX(-40px); }
+  100% { opacity: 0; transform: translateX(-35px); }
 }
 
 /* =========================================================
-   PAGE CONTENT — must wrap all your text/content
+   PAGE CONTENT
 ========================================================= */
 .growth-page {
   position: relative;
   z-index: 1;
+}
+
+.section-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 100px 40px;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #9b7cff;
+  margin-bottom: 16px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+.growth-hero {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.growth-hero h1 {
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 24px;
+}
+
+.growth-hero h1 span {
+  color: #9b7cff;
+}
+
+.hero-copy {
+  font-size: 1.15rem;
+  max-width: 520px;
+  opacity: 0.75;
+  margin-bottom: 32px;
+}
+
+.hero-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.hero-services span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  border: 1px solid rgba(155, 124, 255, 0.35);
+  padding: 6px 14px;
+  border-radius: 2px;
+  color: #9b7cff;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #9b7cff;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 14px 28px;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.primary-button:hover {
+  background: #7c5ce0;
+}
+
+/* =========================================================
+   PROBLEM
+========================================================= */
+.problem-section h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 48px;
+}
+
+.problem-section h2 span {
+  color: #9b7cff;
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  margin-bottom: 56px;
+}
+
+.problem-grid article {
+  border-top: 2px solid rgba(155, 124, 255, 0.3);
+  padding-top: 24px;
+}
+
+.problem-number {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: rgba(155, 124, 255, 0.2);
+  margin-bottom: 12px;
+}
+
+.problem-grid h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.problem-grid p {
+  font-size: 0.92rem;
+  opacity: 0.65;
+  line-height: 1.6;
+}
+
+.solution-line {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.solution-line span {
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #9b7cff;
+}
+
+.solution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  text-align: center;
+}
+
+.solution-grid strong {
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  border: 1px solid rgba(155, 124, 255, 0.25);
+  padding: 14px;
+  border-radius: 3px;
+}
+
+/* =========================================================
+   PLANS
+========================================================= */
+.plans-section h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 16px;
+}
+
+.plans-section h2 span {
+  color: #9b7cff;
+}
+
+.speed-hint {
+  font-size: 0.8rem;
+  opacity: 0.5;
+  margin-bottom: 48px;
+  font-style: italic;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.plan-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 32px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.plan-card.featured {
+  border-color: #9b7cff;
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #9b7cff;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.plan-index {
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(155, 124, 255, 0.15);
+  margin-bottom: 8px;
+}
+
+.plan-card h3 {
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.plan-price {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin-bottom: 16px;
+}
+
+.plan-price small {
+  font-size: 0.85rem;
+  font-weight: 400;
+  opacity: 0.5;
+  margin-left: 4px;
+}
+
+.plan-top p {
+  font-size: 0.88rem;
+  opacity: 0.65;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.plan-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 10px 16px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+
+.plan-toggle:hover {
+  border-color: #9b7cff;
+}
+
+.feature-list {
+  margin-bottom: 24px;
+}
+
+.feature-list div {
+  display: flex;
+  gap: 10px;
+  font-size: 0.85rem;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  opacity: 0.8;
+}
+
+.feature-list div span {
+  color: #9b7cff;
+  font-weight: 700;
+}
+
+.plan-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: rgba(155, 124, 255, 0.1);
+  border: 1px solid rgba(155, 124, 255, 0.3);
+  color: #9b7cff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 14px 20px;
+  border-radius: 3px;
+  text-decoration: none;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.plan-button:hover {
+  background: rgba(155, 124, 255, 0.2);
+}
+
+/* =========================================================
+   BUILD YOUR OWN
+========================================================= */
+.build-section h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 16px;
+}
+
+.build-section h2 span {
+  color: #9b7cff;
+}
+
+.section-intro {
+  font-size: 1rem;
+  opacity: 0.65;
+  max-width: 520px;
+  margin-bottom: 48px;
+  line-height: 1.6;
+}
+
+.builder {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 40px;
+  align-items: start;
+}
+
+.builder-group {
+  margin-bottom: 32px;
+}
+
+.builder-group h3 {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #9b7cff;
+  margin-bottom: 12px;
+}
+
+.builder-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.builder-items button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: inherit;
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.builder-items button:hover {
+  border-color: #9b7cff;
+}
+
+.builder-items button.selected {
+  border-color: #9b7cff;
+  background: rgba(155, 124, 255, 0.12);
+  color: #9b7cff;
+}
+
+.builder-summary {
+  position: sticky;
+  top: 100px;
+  border: 1px solid rgba(155, 124, 255, 0.3);
+  border-radius: 6px;
+  padding: 28px;
+}
+
+.summary-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #9b7cff;
+  margin-bottom: 12px;
+}
+
+.custom-price {
+  font-size: 2.4rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.custom-price small {
+  font-size: 0.85rem;
+  font-weight: 400;
+  opacity: 0.5;
+  margin-left: 4px;
+}
+
+.builder-summary p {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   GROWTH SCORE
+========================================================= */
+.score-section h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 16px;
+}
+
+.score-section h2 span {
+  color: #9b7cff;
+}
+
+.score-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 600px;
+  margin-top: 32px;
+}
+
+.score-form input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 14px 16px;
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.score-form input:focus {
+  border-color: #9b7cff;
+}
+
+.score-form button {
+  grid-column: 1 / -1;
+}
+
+.score-preview {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.score-number {
+  font-size: 5rem;
+  font-weight: 900;
+  color: #9b7cff;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #9b7cff;
+  margin-bottom: 8px;
+}
+
+.score-preview h3 {
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.score-preview p {
+  font-size: 0.88rem;
+  opacity: 0.6;
+}
+
+/* =========================================================
+   FINAL CTA
+========================================================= */
+.final-section {
+  text-align: center;
+  padding-bottom: 160px;
+}
+
+.final-runner-line {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.final-runner-line span {
+  display: block;
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, #9b7cff);
+}
+
+.final-section h2 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+.final-section h2 span {
+  color: #9b7cff;
+}
+
+.final-section p {
+  font-size: 1rem;
+  opacity: 0.65;
+  max-width: 480px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
 }
 
 /* =========================================================
@@ -159,12 +671,33 @@
 /* =========================================================
    MOBILE
 ========================================================= */
-@media (max-width: 700px) {
-  .runner {
-    width: 100px;
+@media (max-width: 768px) {
+  .section-shell {
+    padding: 72px 24px;
   }
+
+  .builder {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-summary {
+    position: static;
+  }
+
+  .score-form {
+    grid-template-columns: 1fr;
+  }
+
+  .solution-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .runner {
+    width: 80px;
+  }
+
   .runner-speed-lines,
   .runner-trail-wrap {
-    width: 100px;
+    width: 80px;
   }
 }
