@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import "./Packages.css";
 function Runner() {
   const runnerRef = useRef(null);
@@ -7,9 +8,11 @@ function Runner() {
   useEffect(() => {
     const updateRunner = () => {
       const runner = runnerRef.current;
+
       if (!runner) return;
 
       const scrollTop = window.scrollY;
+
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
 
@@ -18,40 +21,40 @@ function Runner() {
           ? Math.min(Math.max(scrollTop / maxScroll, 0), 1)
           : 0;
 
-      const direction = scrollTop >= lastScroll.current ? 1 : -1;
+      const direction =
+        scrollTop >= lastScroll.current ? 1 : -1;
+
       lastScroll.current = scrollTop;
 
       /*
-        BIG WAVE PATH
-
-        The runner travels:
-        top-left
-             ↓
-        top-right
-             ↓
-        middle-left
-             ↓
-        middle-right
-             ↓
-        bottom-left
-
-        The sine curves create the sweeping movement.
-      */
+       * LARGE SIDE-TO-SIDE WAVE
+       *
+       * The runner travels across the screen:
+       *
+       * LEFT → RIGHT
+       * RIGHT → LEFT
+       * LEFT → RIGHT
+       * RIGHT → LEFT
+       *
+       * while slowly moving down the page.
+       */
 
       const waveX =
         Math.sin(progress * Math.PI * 4) * 38;
 
       const x = 50 + waveX;
 
-      const y =
-        12 +
-        progress * 76;
+      const y = 12 + progress * 76;
 
       /*
-        Make the runner lean into the direction
-        of the curve.
-      */
-      const nextProgress = Math.min(progress + 0.01, 1);
+       * Work out which direction
+       * the wave is travelling.
+       */
+
+      const nextProgress = Math.min(
+        progress + 0.01,
+        1
+      );
 
       const nextX =
         50 +
@@ -61,14 +64,16 @@ function Runner() {
         Math.atan2(
           nextX - x,
           0.01
-        ) * (180 / Math.PI);
+        ) *
+        (180 / Math.PI);
 
       /*
-        Runner gets slightly larger
-        as the page progresses.
-      */
+       * Make the runner slightly
+       * larger further down the page.
+       */
+
       const scale =
-        0.85 + progress * 0.35;
+        0.9 + progress * 0.25;
 
       runner.style.transform = `
         translate3d(
@@ -76,16 +81,17 @@ function Runner() {
           calc(${y}vh - 50%),
           0
         )
-        rotate(${angle * 0.12}deg)
+        rotate(${angle * 0.08}deg)
         scale(${scale})
         scaleX(${direction})
       `;
 
       /*
-        Speed increases as we move
-        through the page.
-      */
-      const speed = 0.42 - progress * 0.16;
+       * Running animation gets faster.
+       */
+
+      const speed =
+        0.42 - progress * 0.15;
 
       runner.style.setProperty(
         "--run-speed",
@@ -107,9 +113,14 @@ function Runner() {
   }, []);
 
   return (
-    <div className="runner-layer" aria-hidden="true">
-      <div ref={runnerRef} className="runner">
-
+    <div
+      className="runner-layer"
+      aria-hidden="true"
+    >
+      <div
+        ref={runnerRef}
+        className="runner"
+      >
         <div className="runner-shadow" />
 
         <div className="runner-trail" />
@@ -120,6 +131,7 @@ function Runner() {
           xmlns="http://www.w3.org/2000/svg"
         >
           {/* HEAD */}
+
           <circle
             cx="124"
             cy="42"
@@ -128,6 +140,7 @@ function Runner() {
           />
 
           {/* HAIR */}
+
           <path
             d="
               M101 39
@@ -140,6 +153,7 @@ function Runner() {
           />
 
           {/* NECK */}
+
           <path
             d="
               M114 61
@@ -150,7 +164,8 @@ function Runner() {
             className="runner-skin"
           />
 
-          {/* BODY / SHIRT */}
+          {/* BODY */}
+
           <path
             d="
               M111 72
@@ -166,6 +181,7 @@ function Runner() {
           />
 
           {/* PURPLE SHIRT DETAIL */}
+
           <path
             d="
               M108 76
@@ -178,6 +194,7 @@ function Runner() {
           />
 
           {/* BACK ARM */}
+
           <path
             d="
               M86 90
@@ -192,7 +209,6 @@ function Runner() {
             className="runner-skin"
           />
 
-          {/* BACK ARM SHIRT */}
           <path
             d="
               M86 91
@@ -205,6 +221,7 @@ function Runner() {
           />
 
           {/* FRONT ARM */}
+
           <path
             d="
               M149 92
@@ -219,7 +236,6 @@ function Runner() {
             className="runner-skin"
           />
 
-          {/* FRONT ARM SHIRT */}
           <path
             d="
               M149 92
@@ -232,6 +248,7 @@ function Runner() {
           />
 
           {/* SHORTS */}
+
           <path
             d="
               M74 144
@@ -247,6 +264,7 @@ function Runner() {
           />
 
           {/* BACK THIGH */}
+
           <path
             d="
               M108 174
@@ -262,6 +280,7 @@ function Runner() {
           />
 
           {/* FRONT THIGH */}
+
           <path
             d="
               M129 181
@@ -277,6 +296,7 @@ function Runner() {
           />
 
           {/* BACK LOWER LEG */}
+
           <path
             d="
               M73 244
@@ -292,6 +312,7 @@ function Runner() {
           />
 
           {/* FRONT LOWER LEG */}
+
           <path
             d="
               M177 239
@@ -307,6 +328,7 @@ function Runner() {
           />
 
           {/* BACK SHOE */}
+
           <path
             d="
               M36 304
@@ -320,6 +342,7 @@ function Runner() {
           />
 
           {/* FRONT SHOE */}
+
           <path
             d="
               M198 294
@@ -332,7 +355,8 @@ function Runner() {
             className="runner-shoe"
           />
 
-          {/* SHOE PURPLE DETAILS */}
+          {/* SHOE DETAILS */}
+
           <path
             d="M15 325 L48 325"
             className="runner-shoe-detail"
@@ -345,10 +369,10 @@ function Runner() {
         </svg>
 
         {/* SPEED LINES */}
+
         <div className="runner-speed-line line-one" />
         <div className="runner-speed-line line-two" />
         <div className="runner-speed-line line-three" />
-
       </div>
     </div>
   );
