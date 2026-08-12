@@ -579,7 +579,63 @@
   font-size: 1.4rem;
   font-weight: 900;
   letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.plan-subtitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9b7cff;
   margin-bottom: 12px;
+}
+
+.plan-bonus {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+
+.plan-best-for {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  opacity: 0.75;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.plan-section {
+  margin-bottom: 18px;
+}
+
+.plan-section h4 {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9b7cff;
+  margin-bottom: 10px;
+}
+
+.plan-section > div {
+  display: flex;
+  gap: 8px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  opacity: 0.8;
+  padding: 5px 0;
+}
+
+.plan-section > div span {
+  color: #9b7cff;
+  flex-shrink: 0;
 }
 
 .plan-price {
@@ -907,6 +963,141 @@
 }
 
 /* =========================================================
+   WEBSITE PACKAGE
+========================================================= */
+.website-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(155, 124, 255, 0.04) 0%, transparent 100%);
+}
+
+.website-pricing {
+  margin: 20px 0 16px;
+}
+
+.website-price-main {
+  font-size: clamp(2.4rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.website-price-main small {
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0.55;
+  margin-left: 6px;
+}
+
+.website-price-compare {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  opacity: 0.65;
+}
+
+.website-price-compare strong {
+  color: #9b7cff;
+}
+
+.website-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.website-includes h3,
+.website-structure h3 {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9b7cff;
+  margin-bottom: 16px;
+}
+
+.website-include-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 4px 20px;
+}
+
+.website-include-list div {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  opacity: 0.82;
+  padding: 4px 0;
+}
+
+.website-include-list span {
+  color: #9b7cff;
+  flex-shrink: 0;
+}
+
+.website-structure {
+  padding: 28px;
+  border: 1px solid rgba(155, 124, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(155, 124, 255, 0.05);
+}
+
+.website-structure ol {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.website-note {
+  font-size: 0.82rem;
+  opacity: 0.55;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.website-scale-callout {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.18);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+}
+
+.website-cta {
+  width: 100%;
+  justify-content: center;
+}
+
+/* =========================================================
+   CUSTOM GOONYA
+========================================================= */
+.custom-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.custom-intro {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 12px 0 16px;
+  line-height: 1.6;
+}
+
+.custom-closing {
+  font-size: 0.95rem;
+  opacity: 0.65;
+  margin: 16px 0 28px;
+  line-height: 1.6;
+}
+
+/* =========================================================
    REDUCED MOTION
 ========================================================= */
 @media (prefers-reduced-motion: reduce) {
@@ -960,5 +1151,9 @@
 
   .runner-orbit {
     display: none;
+  }
+
+  .website-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -81,6 +81,7 @@ export default function Footer() {
           <div style={headingStyle}>RESOURCES</div>
           <Link to="/#growth-check" style={linkStyle}>Business Growth Check</Link>
           <Link to="/packages#plans" style={linkStyle}>View Packages</Link>
+          <Link to="/packages#website-package" style={linkStyle}>Website — $699</Link>
           <Link to="/our-work" style={linkStyle}>Case Studies</Link>
           <Link to="/contact" style={linkStyle}>Book a Strategy Call</Link>
         </div>

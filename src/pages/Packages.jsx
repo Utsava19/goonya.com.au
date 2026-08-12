@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { PACKAGES, BUILD_ITEMS } from "../data/siteContent";
+import { PACKAGES, BUILD_ITEMS, WEBSITE_PACKAGE, CUSTOM_PACKAGE } from "../data/siteContent";
 import GrowthScoreCheck from "../components/GrowthScoreCheck";
 import "./Packages.css";
 
@@ -451,8 +451,8 @@ export default function Packages() {
           <span>No guessing what we cost.</span>
         </h1>
         <p className="hero-copy">
-          Three packages built around one goal — more enquiries, bookings and sales.
-          Pick Launch, Growth or Scale based on where your business is today.
+          Three monthly packages — Launch, Growth and Scale — plus a standalone website build
+          and custom options. Pick what fits where your business is today.
         </p>
         <div className="hero-services">
           <span>WEBSITE</span>
@@ -534,16 +534,15 @@ export default function Packages() {
                 <div className="plan-top">
                   <div className="plan-index">0{index + 1}</div>
                   <h3>{plan.name}</h3>
+                  {plan.subtitle && (
+                    <div className="plan-subtitle">{plan.subtitle}</div>
+                  )}
                   <div className="plan-price">
-                    From {plan.price}
+                    {plan.price}
                     <small>{plan.period}</small>
                   </div>
-                  {plan.altPrice && (
-                    <div className="plan-alt-price">
-                      or {plan.altPrice}
-                      <small>{plan.altPeriod}</small>
-                      {plan.altNote && <span className="plan-alt-note">{plan.altNote}</span>}
-                    </div>
+                  {plan.bonus && (
+                    <div className="plan-bonus">{plan.bonus}</div>
                   )}
                   <p>{plan.tagline}</p>
                 </div>
@@ -556,10 +555,20 @@ export default function Packages() {
                 </button>
                 {isOpen && (
                   <div className="feature-list">
-                    {plan.features.map((feature) => (
-                      <div key={feature}>
-                        <span>+</span>
-                        {feature}
+                    {plan.bestFor && (
+                      <p className="plan-best-for">
+                        <strong>Best for:</strong> {plan.bestFor}
+                      </p>
+                    )}
+                    {plan.sections?.map((section) => (
+                      <div className="plan-section" key={section.title}>
+                        <h4>{section.title}</h4>
+                        {section.items.map((item) => (
+                          <div key={item}>
+                            <span>+</span>
+                            {item}
+                          </div>
+                        ))}
                       </div>
                     ))}
                   </div>
@@ -572,6 +581,63 @@ export default function Packages() {
             );
           })}
         </div>
+      </section>
+
+      {/* STANDALONE WEBSITE */}
+      <section id="website-package" className="website-section section-shell">
+        <div className="eyebrow">🚀 {WEBSITE_PACKAGE.headline.toUpperCase()}</div>
+        <h2>
+          {WEBSITE_PACKAGE.name}
+          <span> that turns visitors into enquiries.</span>
+        </h2>
+        <div className="website-pricing">
+          <div className="website-price-main">
+            {WEBSITE_PACKAGE.price}
+            <small>{WEBSITE_PACKAGE.period}</small>
+          </div>
+          <div className="website-price-compare">
+            Normally {WEBSITE_PACKAGE.compareAt} — <strong>currently {WEBSITE_PACKAGE.price}</strong>
+          </div>
+        </div>
+        <p className="section-intro">{WEBSITE_PACKAGE.tagline}</p>
+
+        <div className="website-grid">
+          <div className="website-includes">
+            <h3>What's included</h3>
+            <div className="website-include-list">
+              {WEBSITE_PACKAGE.includes.map((item) => (
+                <div key={item}><span>+</span>{item}</div>
+              ))}
+            </div>
+          </div>
+          <aside className="website-structure">
+            <h3>Suggested 9-page structure</h3>
+            <ol>
+              {WEBSITE_PACKAGE.pageStructure.map((page) => (
+                <li key={page}>{page}</li>
+              ))}
+            </ol>
+            <p className="website-note">{WEBSITE_PACKAGE.note}</p>
+            <div className="website-scale-callout">
+              {WEBSITE_PACKAGE.scaleNote}
+            </div>
+            <a href="/contact" className="primary-button website-cta">
+              {WEBSITE_PACKAGE.cta}
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      {/* CUSTOM GOONYA */}
+      <section id="custom-goonya" className="custom-section section-shell">
+        <div className="eyebrow">CUSTOM</div>
+        <h2>{CUSTOM_PACKAGE.title}</h2>
+        <p className="custom-intro">{CUSTOM_PACKAGE.intro}</p>
+        <p className="section-intro">{CUSTOM_PACKAGE.body}</p>
+        <p className="custom-closing">{CUSTOM_PACKAGE.closing}</p>
+        <a href="/contact" className="primary-button">
+          {CUSTOM_PACKAGE.cta}
+        </a>
       </section>
 
       {/* BUILD YOUR OWN */}

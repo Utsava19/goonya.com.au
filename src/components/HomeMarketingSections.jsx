@@ -79,18 +79,24 @@ export function PackagePreview() {
                 </div>
               )}
               <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "22px", color: "white",
-                marginBottom: "8px" }}>{pkg.name}</h3>
+                marginBottom: "4px" }}>{pkg.name}</h3>
+              {pkg.subtitle && (
+                <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: A, fontWeight: 700,
+                  marginBottom: "10px", textTransform: "uppercase" }}>
+                  {pkg.subtitle}
+                </div>
+              )}
               <div style={{ fontSize: "32px", fontWeight: 700, color: "white", marginBottom: "4px" }}>
-                From {pkg.price}<small style={{ fontSize: "14px", color: "#666" }}>{pkg.period}</small>
+                {pkg.price}<small style={{ fontSize: "14px", color: "#666" }}>{pkg.period}</small>
               </div>
-              {pkg.altPrice && (
-                <div style={{ fontSize: "14px", color: "#888", marginBottom: "12px" }}>
-                  or {pkg.altPrice}<span style={{ color: "#666" }}>{pkg.altPeriod}</span>
+              {pkg.bonus && (
+                <div style={{ fontSize: "12px", color: "#4ade80", marginBottom: "12px", lineHeight: 1.5 }}>
+                  {pkg.bonus}
                 </div>
               )}
               <p style={{ color: "#555", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>{pkg.tagline}</p>
               <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px" }}>
-                {pkg.features.slice(0, 5).map((f) => (
+                {(pkg.highlights ?? pkg.features).slice(0, 5).map((f) => (
                   <li key={f} style={{ color: "#888", fontSize: "13px", padding: "6px 0",
                     borderBottom: `1px solid ${L}` }}>+ {f}</li>
                 ))}
@@ -102,7 +108,8 @@ export function PackagePreview() {
           ))}
         </div>
         <p style={{ color: "#666", fontSize: "14px", marginTop: "20px", textAlign: "center" }}>
-          Not sure which fits? <strong style={{ color: "#aaa" }}>Growth</strong> is also available as a $499 one-off setup.
+          Need a website only? <strong style={{ color: "#aaa" }}>Goonya Business Website</strong> from $699 one-off.
+          Scale includes a 5-page build.
         </p>
         <div style={{ textAlign: "center", marginTop: "28px" }}>
           <Link to="/packages#plans" style={{ display: "inline-flex", padding: "16px 32px", background: "white",
