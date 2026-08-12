@@ -345,6 +345,7 @@
 ========================================================= */
 .growth-page {
   position: relative;
+  overflow-x: clip;
 }
 
 .section-shell {
@@ -522,8 +523,9 @@
 
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: 24px;
+  align-items: start;
 }
 
 .packages-growth-check {
@@ -548,6 +550,14 @@
   padding: 32px;
   position: relative;
   transition: border-color 0.2s;
+  min-width: 0;
+  width: 100%;
+}
+
+.plan-card.expanded {
+  grid-column: 1 / -1;
+  max-width: 920px;
+  margin-inline: auto;
 }
 
 .plan-card.featured {
@@ -600,6 +610,7 @@
   border-radius: 8px;
   padding: 10px 12px;
   margin-bottom: 14px;
+  overflow-wrap: anywhere;
 }
 
 .plan-best-for {
@@ -609,10 +620,12 @@
   margin-bottom: 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-wrap: anywhere;
 }
 
 .plan-section {
   margin-bottom: 18px;
+  min-width: 0;
 }
 
 .plan-section h4 {
@@ -622,20 +635,34 @@
   text-transform: uppercase;
   color: #9b7cff;
   margin-bottom: 10px;
+  line-height: 1.4;
 }
 
 .plan-section > div {
   display: flex;
   gap: 8px;
+  align-items: flex-start;
   font-size: 0.82rem;
   line-height: 1.45;
   opacity: 0.8;
-  padding: 5px 0;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
-.plan-section > div span {
+.plan-section > div > span:first-child {
   color: #9b7cff;
   flex-shrink: 0;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.plan-item-text {
+  flex: 1;
+  min-width: 0;
+  font-weight: 400;
+  color: inherit;
 }
 
 .plan-price {
@@ -678,6 +705,7 @@
   opacity: 0.65;
   line-height: 1.6;
   margin-bottom: 24px;
+  overflow-wrap: anywhere;
 }
 
 .plan-toggle {
@@ -704,20 +732,7 @@
 
 .feature-list {
   margin-bottom: 24px;
-}
-
-.feature-list div {
-  display: flex;
-  gap: 10px;
-  font-size: 0.85rem;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  opacity: 0.8;
-}
-
-.feature-list div span {
-  color: #9b7cff;
-  font-weight: 700;
+  min-width: 0;
 }
 
 .plan-button {
@@ -1002,6 +1017,12 @@
   grid-template-columns: 1.2fr 0.8fr;
   gap: 32px;
   margin-top: 32px;
+  min-width: 0;
+}
+
+.website-section h2 {
+  overflow-wrap: anywhere;
+  line-height: 1.15;
 }
 
 .website-includes h3,
@@ -1023,15 +1044,23 @@
 .website-include-list div {
   display: flex;
   gap: 8px;
+  align-items: flex-start;
   font-size: 0.85rem;
   line-height: 1.45;
   opacity: 0.82;
   padding: 4px 0;
+  min-width: 0;
 }
 
-.website-include-list span {
+.website-include-list span:first-child {
   color: #9b7cff;
   flex-shrink: 0;
+}
+
+.website-item-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .website-structure {
@@ -1039,6 +1068,8 @@
   border: 1px solid rgba(155, 124, 255, 0.2);
   border-radius: 12px;
   background: rgba(155, 124, 255, 0.05);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .website-structure ol {

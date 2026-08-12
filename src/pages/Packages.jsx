@@ -566,7 +566,7 @@ export default function Packages() {
                         {section.items.map((item) => (
                           <div key={item}>
                             <span>+</span>
-                            {item}
+                            <span className="plan-item-text">{item}</span>
                           </div>
                         ))}
                       </div>
@@ -606,7 +606,7 @@ export default function Packages() {
             <h3>What's included</h3>
             <div className="website-include-list">
               {WEBSITE_PACKAGE.includes.map((item) => (
-                <div key={item}><span>+</span>{item}</div>
+                <div key={item}><span>+</span><span className="website-item-text">{item}</span></div>
               ))}
             </div>
           </div>
