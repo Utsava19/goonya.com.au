@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { INDUSTRIES } from "../data/siteContent";
 import { formatGrowthReportEmail, sendFormEmail } from "../utils/formSubmit";
 import { SITE } from "../data/siteMeta";
@@ -253,11 +254,30 @@ export default function GrowthScoreCheck({
                     </div>
 
                     <div className="growth-audit-locked-cta">
+                      <div className="growth-audit-locked-badge">FULL AUDIT READY</div>
+                      <h4 className="growth-audit-locked-title">
+                        See what you're missing —<br />and how to get more enquiries
+                      </h4>
+                      <p className="growth-audit-locked-copy">
+                        {result.problems?.length > 0 ? (
+                          <>
+                            Your full audit found <strong>{result.problems.length} problem{result.problems.length === 1 ? "" : "s"}</strong> holding{" "}
+                            <strong>{result.business}</strong> back. Call for a free review — or email if you prefer.
+                          </>
+                        ) : (
+                          <>
+                            Your full audit for <strong>{result.business}</strong> is ready. Call for a free walkthrough — or email if you prefer.
+                          </>
+                        )}
+                      </p>
                       <a href={`tel:${SITE.phoneTel}`} className="growth-call-cta growth-call-bounce">
                         <span className="growth-call-icon" aria-hidden="true">📞</span>
                         Call now
                         <span className="growth-call-phone">{SITE.phone}</span>
                       </a>
+                      <Link to="/contact" className="growth-contact-link">
+                        Prefer email? Send an enquiry →
+                      </Link>
                     </div>
                   </div>
                 </>
@@ -350,7 +370,43 @@ export default function GrowthScoreCheck({
           justify-content: center;
           text-align: center;
           padding: 32px 24px;
-          background: rgba(8, 6, 15, 0.72);
+          background: linear-gradient(
+            180deg,
+            rgba(8, 6, 15, 0.6) 0%,
+            rgba(8, 6, 15, 0.82) 50%,
+            rgba(8, 6, 15, 0.88) 100%
+          );
+        }
+        .growth-audit-locked-badge {
+          display: inline-block;
+          font-size: 10px;
+          letter-spacing: 2px;
+          font-weight: 700;
+          color: #fff;
+          background: rgba(155,124,255,.25);
+          border: 1px solid rgba(155,124,255,.45);
+          padding: 6px 14px;
+          border-radius: 100px;
+          margin-bottom: 14px;
+        }
+        .growth-audit-locked-title {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(20px, 2.8vw, 28px);
+          font-weight: 700;
+          color: #fff;
+          line-height: 1.25;
+          margin: 0 0 10px;
+          letter-spacing: -0.5px;
+        }
+        .growth-audit-locked-copy {
+          color: #bbb;
+          font-size: 14px;
+          line-height: 1.65;
+          margin: 0 0 22px;
+          max-width: 360px;
+        }
+        .growth-audit-locked-copy strong {
+          color: #fff;
         }
         .growth-call-cta {
           display: inline-flex;
@@ -365,6 +421,7 @@ export default function GrowthScoreCheck({
           font-size: clamp(22px, 4vw, 28px);
           letter-spacing: 0.02em;
           text-decoration: none;
+          margin-bottom: 14px;
           border: 3px solid rgba(255,255,255,.35);
           box-shadow: 0 12px 40px rgba(155,124,255,.55);
         }
@@ -390,6 +447,16 @@ export default function GrowthScoreCheck({
             transform: translateY(-14px) scale(1.06);
             box-shadow: 0 24px 56px rgba(155,124,255,.75);
           }
+        }
+        .growth-contact-link {
+          color: rgba(255,255,255,.55);
+          font-size: 13px;
+          font-weight: 500;
+          text-decoration: none;
+          transition: color .2s;
+        }
+        .growth-contact-link:hover {
+          color: #9b7cff;
         }
         @media (max-width: 768px) {
           .growth-audit-locked-wrap,
