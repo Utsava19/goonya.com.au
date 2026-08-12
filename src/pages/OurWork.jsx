@@ -69,21 +69,21 @@ export default function OurWork() {
               position: "relative",
             }}>
               {study.featured && (
-                <div style={{ position: "absolute", top: "16px", left: "16px", zIndex: 2,
+                <div className="ow-card-badge" style={{ position: "absolute", top: "16px", left: "16px", zIndex: 2,
                   background: A, color: "white", fontSize: "10px", fontWeight: 700,
                   letterSpacing: "1.5px", padding: "5px 12px", borderRadius: "100px" }}>
                   FEATURED
                 </div>
               )}
               {study.websiteTransform && (
-                <div style={{ position: "absolute", top: "16px", right: "16px", zIndex: 2,
+                <div className="ow-card-badge" style={{ position: "absolute", top: "16px", right: "16px", zIndex: 2,
                   background: "rgba(0,0,0,.7)", color: "#ccc", fontSize: "10px",
                   letterSpacing: "1px", padding: "5px 12px", borderRadius: "100px",
                   border: "1px solid rgba(255,255,255,.15)" }}>
                   Website before & after
                 </div>
               )}
-              <div style={{ minHeight: "320px", background: "#111",
+              <div className="ow-card-cover" style={{ minHeight: "320px", background: "#111",
                 backgroundImage: `url(${study.cover})`, backgroundSize: "cover", backgroundPosition: "center" }} />
 
               <div style={{ padding: "40px 36px", background: "#ffffff", display: "flex", flexDirection: "column",
@@ -154,7 +154,7 @@ export default function OurWork() {
       <style>{`
         @media(max-width:850px){
           .ow-card { grid-template-columns:1fr !important; }
-          .ow-card > div:first-child { min-height:220px !important; }
+          .ow-card-cover { min-height:220px !important; }
           .ow-card > div:last-child { border-left:none !important; border-top:1px solid rgba(20,17,24,.08) !important; }
         }
       `}</style>
