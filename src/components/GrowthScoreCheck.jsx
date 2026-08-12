@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { INDUSTRIES } from "../data/siteContent";
 import { formatGrowthReportEmail, sendFormEmail } from "../utils/formSubmit";
 import { SITE } from "../data/siteMeta";
@@ -16,16 +15,6 @@ const levelColor = {
   warn: "#fbbf24",
   bad: "#ff6b6b",
 };
-
-function problemTeaser(score, problemCount) {
-  if (problemCount > 0) {
-    return `We found ${problemCount} problem${problemCount === 1 ? "" : "s"} that could be costing you enquiries — your full audit is ready.`;
-  }
-  if (score >= 75) {
-    return "Your score is okay, but there are still gaps that could be holding you back.";
-  }
-  return "There are problems with your online presence that could be costing you customers.";
-}
 
 export default function GrowthScoreCheck({
   id = "growth-check",
@@ -192,29 +181,21 @@ export default function GrowthScoreCheck({
 
               {result && !loading && (
                 <>
-                  <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "8px" }}>
-                    YOUR GOONYA GROWTH SCORE
+                  <div className="growth-score-header">
+                    <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "8px" }}>
+                      YOUR GOONYA GROWTH SCORE
+                    </div>
+                    <div style={{
+                      fontFamily: "'Space Grotesk',sans-serif",
+                      fontSize: "clamp(56px, 9vw, 80px)",
+                      fontWeight: 700,
+                      color: A,
+                      lineHeight: 1,
+                    }}>
+                      {result.score}
+                      <span style={{ fontSize: "0.35em", color: "#666", fontWeight: 600, marginLeft: "4px" }}>/100</span>
+                    </div>
                   </div>
-                  <div style={{
-                    fontFamily: "'Space Grotesk',sans-serif",
-                    fontSize: "clamp(64px, 10vw, 96px)",
-                    fontWeight: 700,
-                    color: A,
-                    lineHeight: 1,
-                    marginBottom: "12px",
-                  }}>
-                    {result.score}
-                    <span style={{ fontSize: "0.35em", color: "#666", fontWeight: 600, marginLeft: "4px" }}>/100</span>
-                  </div>
-                  <p style={{
-                    color: result.problems?.length ? "#ffb4b4" : "#aaa",
-                    fontSize: "16px",
-                    lineHeight: 1.65,
-                    marginBottom: "28px",
-                    maxWidth: "420px",
-                  }}>
-                    {problemTeaser(result.score, result.problems?.length ?? 0)}
-                  </p>
 
                   <div className="growth-audit-locked-wrap">
                     <div className="growth-audit-locked-blur" aria-hidden="true">
@@ -264,22 +245,11 @@ export default function GrowthScoreCheck({
                     </div>
 
                     <div className="growth-audit-locked-cta">
-                      <div className="growth-audit-locked-badge">FULL REPORT READY</div>
-                      <h4 className="growth-audit-locked-title">
-                        See exactly what to fix —<br />and how to get more enquiries
-                      </h4>
-                      <p className="growth-audit-locked-copy">
-                        Call now and we'll walk you through your complete audit for{" "}
-                        <strong>{result.business}</strong>.
-                      </p>
                       <a href={`tel:${SITE.phoneTel}`} className="growth-call-cta growth-call-bounce">
                         <span className="growth-call-icon" aria-hidden="true">📞</span>
                         Call now
                         <span className="growth-call-phone">{SITE.phone}</span>
                       </a>
-                      <Link to="/contact" className="growth-contact-link">
-                        Prefer email? Send an enquiry →
-                      </Link>
                     </div>
                   </div>
                 </>
@@ -313,22 +283,26 @@ export default function GrowthScoreCheck({
           padding: 48px 0 56px !important;
           margin-bottom: 0;
         }
+        .growth-score-header {
+          margin-bottom: 20px;
+        }
         .growth-audit-locked-wrap {
           position: relative;
           border-radius: 18px;
           overflow: hidden;
           border: 1px solid rgba(155,124,255,.28);
-          min-height: 420px;
+          min-height: 480px;
           background: rgba(0,0,0,.2);
+          margin-top: 4px;
         }
         .growth-audit-locked-blur {
-          filter: blur(9px);
+          filter: blur(14px);
           user-select: none;
           pointer-events: none;
           padding: 32px 28px 48px;
-          min-height: 420px;
-          opacity: 0.7;
-          transform: scale(1.02);
+          min-height: 480px;
+          opacity: 0.45;
+          transform: scale(1.03);
         }
         .growth-audit-locked-cta {
           position: absolute;
@@ -339,102 +313,58 @@ export default function GrowthScoreCheck({
           justify-content: center;
           text-align: center;
           padding: 32px 24px;
-          background: linear-gradient(
-            180deg,
-            rgba(8, 6, 15, 0.55) 0%,
-            rgba(8, 6, 15, 0.88) 45%,
-            rgba(8, 6, 15, 0.92) 100%
-          );
-        }
-        .growth-audit-locked-badge {
-          display: inline-block;
-          font-size: 10px;
-          letter-spacing: 2px;
-          font-weight: 700;
-          color: #fff;
-          background: rgba(155,124,255,.25);
-          border: 1px solid rgba(155,124,255,.45);
-          padding: 6px 14px;
-          border-radius: 100px;
-          margin-bottom: 16px;
-        }
-        .growth-audit-locked-title {
-          font-family: 'Space Grotesk', sans-serif;
-          font-size: clamp(22px, 3vw, 30px);
-          font-weight: 700;
-          color: #fff;
-          line-height: 1.25;
-          margin: 0 0 12px;
-          letter-spacing: -0.5px;
-        }
-        .growth-audit-locked-copy {
-          color: #bbb;
-          font-size: 15px;
-          line-height: 1.65;
-          margin: 0 0 24px;
-          max-width: 340px;
-        }
-        .growth-audit-locked-copy strong {
-          color: #fff;
+          background: rgba(8, 6, 15, 0.72);
         }
         .growth-call-cta {
           display: inline-flex;
           flex-direction: column;
           align-items: center;
-          gap: 4px;
-          padding: 18px 40px 16px;
-          background: linear-gradient(135deg, #b79cff 0%, #9b7cff 55%, #7c5cbf 100%);
+          gap: 6px;
+          padding: 24px 56px 20px;
+          background: linear-gradient(135deg, #c4a8ff 0%, #9b7cff 50%, #6d4db8 100%);
           color: #fff;
           border-radius: 100px;
           font-weight: 800;
-          font-size: 18px;
+          font-size: clamp(22px, 4vw, 28px);
           letter-spacing: 0.02em;
           text-decoration: none;
-          margin-bottom: 14px;
-          border: 2px solid rgba(255,255,255,.25);
-          box-shadow: 0 8px 32px rgba(155,124,255,.45);
+          border: 3px solid rgba(255,255,255,.35);
+          box-shadow: 0 12px 40px rgba(155,124,255,.55);
         }
         .growth-call-bounce {
-          animation: growth-call-bounce 1.25s ease-in-out infinite;
+          animation: growth-call-bounce 0.65s ease-in-out infinite;
         }
         .growth-call-icon {
-          font-size: 22px;
+          font-size: 32px;
           line-height: 1;
         }
         .growth-call-phone {
-          font-size: 13px;
+          font-size: 15px;
           font-weight: 600;
-          opacity: 0.92;
-          letter-spacing: 0.04em;
+          opacity: 0.95;
+          letter-spacing: 0.06em;
         }
         @keyframes growth-call-bounce {
           0%, 100% {
             transform: translateY(0) scale(1);
-            box-shadow: 0 8px 32px rgba(155,124,255,.45);
+            box-shadow: 0 12px 40px rgba(155,124,255,.55);
           }
           50% {
-            transform: translateY(-8px) scale(1.04);
-            box-shadow: 0 16px 48px rgba(155,124,255,.65);
+            transform: translateY(-14px) scale(1.06);
+            box-shadow: 0 24px 56px rgba(155,124,255,.75);
           }
-        }
-        .growth-contact-link {
-          color: rgba(255,255,255,.55);
-          font-size: 13px;
-          font-weight: 500;
-          text-decoration: none;
-          transition: color .2s;
-        }
-        .growth-contact-link:hover {
-          color: #9b7cff;
         }
         @media (max-width: 768px) {
           .growth-audit-locked-wrap,
           .growth-audit-locked-blur {
-            min-height: 360px;
+            min-height: 380px;
           }
           .growth-call-cta {
-            padding: 16px 32px 14px;
-            font-size: 16px;
+            padding: 20px 40px 18px;
+            font-size: 20px;
+          }
+          .growth-call-icon {
+            font-size: 26px;
           }
         }
       `}</style>
