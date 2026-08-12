@@ -425,8 +425,17 @@ function Runner() {
 }
 
 export default function Packages() {
-  const [openPlan, setOpenPlan] = useState(1);
+  const [openPlans, setOpenPlans] = useState(() => new Set());
   const [selected, setSelected] = useState([]);
+
+  const togglePlan = (index) => {
+    setOpenPlans((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
 
   const toggleSelection = (id) => {
     setSelected((current) =>
@@ -521,11 +530,11 @@ export default function Packages() {
         </p>
         <div className="plans-grid">
           {plans.map((plan, index) => {
-            const isOpen = openPlan === index;
+            const isOpen = openPlans.has(index);
             return (
               <article
                 id={`plan-${index}`}
-                className={`plan-card ${plan.popular ? "featured" : ""} ${isOpen ? "expanded" : ""}`}
+                className={`plan-card ${plan.popular ? "featured" : ""}`}
                 key={plan.name}
               >
                 {plan.popular && (
@@ -547,13 +556,15 @@ export default function Packages() {
                   <p>{plan.tagline}</p>
                 </div>
                 <button
+                  type="button"
                   className="plan-toggle"
-                  onClick={() => setOpenPlan(isOpen ? -1 : index)}
+                  onClick={() => togglePlan(index)}
+                  aria-expanded={isOpen}
                 >
-                  {isOpen ? "HIDE DETAILS" : "SEE WHAT'S INCLUDED"}
-                  <span>{isOpen ? "−" : "+"}</span>
+                  {isOpen ? "Hide details" : "See what's included"}
+                  <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
                 </button>
-                {isOpen && (
+                <div className={`plan-details ${isOpen ? "is-open" : ""}`}>
                   <div className="feature-list">
                     {plan.bestFor && (
                       <p className="plan-best-for">
@@ -572,7 +583,7 @@ export default function Packages() {
                       </div>
                     ))}
                   </div>
-                )}
+                </div>
                 <a href="/contact" className="plan-button">
                   {plan.cta}
                   <span>→</span>

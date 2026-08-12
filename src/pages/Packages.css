@@ -523,9 +523,15 @@
 
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  grid-template-columns: 1fr;
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
+}
+
+@media (min-width: 960px) {
+  .plans-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .packages-growth-check {
@@ -552,12 +558,46 @@
   transition: border-color 0.2s;
   min-width: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.plan-card.expanded {
-  grid-column: 1 / -1;
-  max-width: 920px;
-  margin-inline: auto;
+.plan-top {
+  flex: 0 0 auto;
+}
+
+.plan-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+  min-width: 0;
+}
+
+.plan-details.is-open {
+  grid-template-rows: 1fr;
+}
+
+.plan-details .feature-list {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.plan-details.is-open .feature-list {
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 124, 255, 0.4) transparent;
+}
+
+.plan-details.is-open .feature-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.plan-details.is-open .feature-list::-webkit-scrollbar-thumb {
+  background: rgba(155, 124, 255, 0.35);
+  border-radius: 4px;
 }
 
 .plan-card.featured {
@@ -722,8 +762,9 @@
   padding: 10px 16px;
   border-radius: 3px;
   cursor: pointer;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   transition: border-color 0.2s;
+  flex-shrink: 0;
 }
 
 .plan-toggle:hover {
@@ -731,8 +772,12 @@
 }
 
 .feature-list {
-  margin-bottom: 24px;
+  margin-bottom: 0;
   min-width: 0;
+}
+
+.plan-details.is-open .feature-list {
+  margin-bottom: 12px;
 }
 
 .plan-button {
@@ -749,7 +794,7 @@
   padding: 14px 20px;
   border-radius: 3px;
   text-decoration: none;
-  margin-top: 8px;
+  margin-top: auto;
   transition: background 0.2s;
 }
 
