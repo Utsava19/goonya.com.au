@@ -197,6 +197,26 @@ export default function GrowthScoreCheck({
                     </div>
                   </div>
 
+                  <div className="growth-breakdown-visible">
+                    <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#666", marginBottom: "12px" }}>
+                      SCORE BREAKDOWN
+                    </div>
+                    <div className="growth-breakdown-grid">
+                      {result.breakdown.map((b) => (
+                        <div key={b.label} className="growth-breakdown-card">
+                          <div className="growth-breakdown-score">{b.score}</div>
+                          <div className="growth-breakdown-label">{b.label}</div>
+                        </div>
+                      ))}
+                      {result.pageSpeedSeo != null && (
+                        <div className="growth-breakdown-card">
+                          <div className="growth-breakdown-score">{result.pageSpeedSeo}</div>
+                          <div className="growth-breakdown-label">Google mobile SEO</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="growth-audit-locked-wrap">
                     <div className="growth-audit-locked-blur" aria-hidden="true">
                       <div style={{ fontSize: "12px", letterSpacing: "1.5px", color: "#666", marginBottom: "16px" }}>
@@ -215,18 +235,6 @@ export default function GrowthScoreCheck({
                           ))}
                         </div>
                       )}
-
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "24px" }}
-                        className="breakdown-grid">
-                        {result.breakdown.map((b) => (
-                          <div key={b.label} style={{
-                            padding: "16px", background: "rgba(0,0,0,.25)", borderRadius: "10px", textAlign: "center",
-                          }}>
-                            <div style={{ fontSize: "26px", fontWeight: 700, color: "white" }}>{b.score}</div>
-                            <div style={{ fontSize: "10px", color: "#666", letterSpacing: "1px" }}>{b.label}</div>
-                          </div>
-                        ))}
-                      </div>
 
                       {result.findings.map((f, i) => (
                         <div key={i} style={{
@@ -276,7 +284,7 @@ export default function GrowthScoreCheck({
         }
         @media (max-width: 768px) {
           .growth-form-grid { grid-template-columns: 1fr !important; }
-          .breakdown-grid { grid-template-columns: 1fr !important; }
+          .growth-breakdown-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
         .packages-growth-check {
           background: #070707;
@@ -285,6 +293,35 @@ export default function GrowthScoreCheck({
         }
         .growth-score-header {
           margin-bottom: 20px;
+        }
+        .growth-breakdown-visible {
+          margin-bottom: 24px;
+        }
+        .growth-breakdown-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 12px;
+        }
+        .growth-breakdown-card {
+          padding: 16px 12px;
+          background: rgba(155,124,255,.08);
+          border: 1px solid rgba(155,124,255,.2);
+          border-radius: 12px;
+          text-align: center;
+        }
+        .growth-breakdown-score {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 28px;
+          font-weight: 700;
+          color: #fff;
+          line-height: 1;
+          margin-bottom: 6px;
+        }
+        .growth-breakdown-label {
+          font-size: 10px;
+          color: #888;
+          letter-spacing: 0.8px;
+          line-height: 1.35;
         }
         .growth-audit-locked-wrap {
           position: relative;
