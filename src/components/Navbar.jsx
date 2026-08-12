@@ -47,14 +47,17 @@ export default function Navbar() {
     }
   }, [open]);
 
+  const isHome = location.pathname === "/";
+  const lightNav = false;
+
   return (
     <>
       <nav style={{
         position:"fixed", top:0, left:0, width:"100%",
         height: scrolled ? "68px" : "80px",
         zIndex:9999,
-        background: scrolled ? "rgba(5,4,16,.95)" : "rgba(7,7,7,.7)",
-        borderBottom:`1px solid ${scrolled ? "rgba(255,255,255,.09)" : "rgba(255,255,255,.04)"}`,
+        background: lightNav ? "rgba(247,246,251,.92)" : (scrolled ? "rgba(5,4,16,.95)" : "rgba(12,10,20,.88)"),
+        borderBottom:`1px solid ${lightNav ? "rgba(20,17,24,.08)" : (scrolled ? "rgba(255,255,255,.09)" : "rgba(255,255,255,.04)")}`,
         backdropFilter:"blur(24px)",
         WebkitBackdropFilter:"blur(24px)",
         transition:"height .3s ease, background .3s ease, border-color .3s ease",
@@ -105,7 +108,9 @@ export default function Navbar() {
                 style={{
                   textDecoration:"none", fontSize:"13px", fontWeight:500,
                   letterSpacing:".3px",
-                  color: isActive ? "white" : isHovered ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.4)",
+                  color: lightNav
+                    ? (isActive ? "#141118" : isHovered ? "#141118" : "#7a7588")
+                    : (isActive ? "white" : isHovered ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.4)"),
                   position:"relative", padding:"6px 0",
                   transition:"color .2s ease",
                   display:"inline-block",

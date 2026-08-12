@@ -27,10 +27,12 @@ function BrowserFrame({ label, url, captionColor, children, screenClass }) {
   );
 }
 
-function BadSite({ before, headerColor = "#003399" }) {
+function BadSite({ before, coverImage }) {
+  const imageSrc = before.image || coverImage;
+
   return (
     <div className="wm-bad-site">
-      <div className="wm-bad-header" style={{ color: headerColor }}>{before.header}</div>
+      <div className="wm-bad-header" style={{ color: before.headerColor ?? "#003399" }}>{before.header}</div>
       {before.sub && <div className="wm-bad-sub">{before.sub}</div>}
       <div className="wm-bad-nav">
         {(before.nav ?? ["Home", "About", "Contact"]).map((item) => (
@@ -38,7 +40,21 @@ function BadSite({ before, headerColor = "#003399" }) {
         ))}
       </div>
       <div className="wm-bad-hero">
-        <div className="wm-bad-box">{before.imageLabel ?? "[ stock photo ]"}</div>
+        <div className="wm-bad-box">
+          {imageSrc ? (
+            <img
+              src={imageSrc}
+              alt=""
+              className="wm-bad-photo"
+              loading="lazy"
+            />
+          ) : (
+            <div className="wm-bad-photo-fallback">
+              <span className="wm-bad-photo-icon" aria-hidden="true">🖼</span>
+              <span>{before.imageLabel ?? "Broken image"}</span>
+            </div>
+          )}
+        </div>
         <p>{before.body}</p>
         <div className="wm-bad-btn">{before.btn ?? "CLICK HERE"}</div>
       </div>
@@ -118,7 +134,7 @@ function GoodSite({ mockup }) {
   );
 }
 
-export default function WebsiteMockupPair({ mockup, industry = "Business" }) {
+export default function WebsiteMockupPair({ mockup, industry = "Business", coverImage }) {
   if (!mockup) return null;
 
   const { slug, brand, before, afterNote } = mockup;
@@ -132,7 +148,7 @@ export default function WebsiteMockupPair({ mockup, industry = "Business" }) {
         captionColor="#888"
         screenClass="wm-screen-bad"
       >
-        <BadSite before={before} headerColor={before.headerColor} />
+        <BadSite before={before} coverImage={coverImage} />
       </BrowserFrame>
 
       <div className="wm-divider" style={{ color: dividerColor }} aria-hidden="true">→</div>
@@ -204,9 +220,34 @@ export default function WebsiteMockupPair({ mockup, industry = "Business" }) {
         }
         .wm-bad-hero { text-align: center; }
         .wm-bad-box {
-          height: 70px; background: #ccc; border: 2px dashed #999;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 10px; color: #666; margin-bottom: 8px;
+          height: 88px;
+          background: #d4d4d4;
+          border: 2px dashed #888;
+          overflow: hidden;
+          margin-bottom: 8px;
+        }
+        .wm-bad-photo {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          filter: grayscale(0.85) contrast(0.85) saturate(0.5);
+          opacity: 0.75;
+        }
+        .wm-bad-photo-fallback {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          font-size: 10px;
+          color: #555;
+          background: linear-gradient(135deg, #cfcfcf, #e8e8e8);
+        }
+        .wm-bad-photo-icon {
+          font-size: 22px;
+          line-height: 1;
         }
         .wm-bad-hero p { font-size: 11px; margin: 0 0 8px; }
         .wm-bad-btn {

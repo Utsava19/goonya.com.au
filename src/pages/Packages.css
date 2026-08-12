@@ -12,7 +12,7 @@
   height: 100%;
   overflow: hidden;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
 .runner-ambient {
@@ -346,6 +346,25 @@
 .growth-page {
   position: relative;
   overflow-x: clip;
+  background: #0c0a14;
+  color: #f5f5f5;
+  isolation: isolate;
+}
+
+.growth-hero {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: transparent;
+}
+
+.problem-section,
+.plans-section,
+.score-section,
+.final-section,
+.website-section {
+  background: transparent;
 }
 
 .section-shell {
@@ -353,8 +372,9 @@
   margin: 0 auto;
   padding: 100px max(5vw, calc((100vw - min(1400px, 90vw)) / 2));
   position: relative;
-  z-index: 3;
+  z-index: 2;
   box-sizing: border-box;
+  background: transparent;
 }
 
 .eyebrow {
@@ -363,16 +383,6 @@
   letter-spacing: 0.18em;
   color: #9b7cff;
   margin-bottom: 16px;
-}
-
-/* =========================================================
-   HERO
-========================================================= */
-.growth-hero {
-  min-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .growth-hero h1 {
@@ -536,7 +546,7 @@
 }
 
 .packages-growth-check {
-  background: #070707;
+  background: transparent;
   position: relative;
   z-index: 2;
   padding-top: 100px !important;
@@ -544,16 +554,19 @@
 }
 
 .plan-card {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 16px;
   padding: 32px;
   position: relative;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
   min-width: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
-  background: #08060f;
+  background: rgba(10, 8, 18, 0.62);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
 }
 
 .plan-top {
@@ -938,7 +951,7 @@
 ========================================================= */
 .website-section {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(155, 124, 255, 0.04) 0%, transparent 100%);
+  background: transparent;
 }
 
 .website-pricing {
@@ -1064,24 +1077,42 @@
 ========================================================= */
 .custom-section {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  text-align: center;
+}
+
+.custom-section-inner {
   max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.custom-section-inner h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 16px;
 }
 
 .custom-intro {
   font-size: 1.15rem;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 12px 0 16px;
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0 auto 16px;
+  line-height: 1.65;
+  max-width: 640px;
+}
+
+.custom-body {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0 auto 16px;
+  line-height: 1.7;
+  max-width: 640px;
 }
 
 .custom-closing {
   font-size: 0.95rem;
-  opacity: 0.65;
-  margin: 16px 0 28px;
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.58);
+  margin: 0 auto 28px;
+  line-height: 1.65;
+  max-width: 640px;
 }
 
 /* =========================================================

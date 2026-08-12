@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 const NAV_OFFSET = 96;
 
-function scrollToHash(hash) {
+function scrollToHash(hash, behavior = "smooth") {
   const id = hash.replace("#", "");
   if (!id) return false;
 
@@ -11,7 +11,7 @@ function scrollToHash(hash) {
   if (!el) return false;
 
   const top = el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
-  window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
+  window.scrollTo({ top: Math.max(top, 0), behavior });
   return true;
 }
 
@@ -20,10 +20,22 @@ export default function ScrollToTop() {
 
   useEffect(() => {
     if (hash) {
-      const tryScroll = () => scrollToHash(hash);
+      let cancelled = false;
+      let attempts = 0;
+
+      const tryScroll = () => {
+        if (cancelled) return;
+        const found = scrollToHash(hash, attempts === 0 ? "smooth" : "instant");
+        attempts += 1;
+        if (!found && attempts < 3) {
+          setTimeout(tryScroll, 250);
+        }
+      };
+
       tryScroll();
-      const timers = [50, 150, 350, 700].map((delay) => setTimeout(tryScroll, delay));
-      return () => timers.forEach(clearTimeout);
+      return () => {
+        cancelled = true;
+      };
     }
 
     window.scrollTo(0, 0);

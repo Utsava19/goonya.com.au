@@ -72,6 +72,7 @@ export default function Footer() {
 
         <div>
           <div style={headingStyle}>RESOURCES</div>
+          <Link to="/faq" style={linkStyle}>FAQ</Link>
           <Link to="/#growth-check" style={linkStyle}>Business Growth Check</Link>
           <Link to="/packages#plans" style={linkStyle}>View Packages</Link>
           <Link to="/packages#website-package" style={linkStyle}>Website — $699</Link>
@@ -95,6 +96,7 @@ export default function Footer() {
         flexWrap: "wrap", gap: "16px" }}>
         <span style={{ fontSize: "12px", color: "#3a3a3a" }}>© 2026 Goonya. All rights reserved.</span>
         <div style={{ display: "flex", gap: "24px" }}>
+          <Link to="/faq" style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>FAQ</Link>
           <Link to="/privacy" style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>Privacy Policy</Link>
           <Link to="/terms" style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>Terms & Conditions</Link>
         </div>

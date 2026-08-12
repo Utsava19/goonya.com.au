@@ -5,48 +5,99 @@ import { SERVICE_SLUGS } from "../data/siteContent";
 /* ── AI NODES ANIMATION ── */
 function AIAnim() {
   const ref = useRef(null);
+  const wrapRef = useRef(null);
+
   useEffect(() => {
     const cv = ref.current;
-    if (!cv) return;
+    const wrap = wrapRef.current;
+    if (!cv || !wrap) return;
+
     const ctx = cv.getContext("2d");
-    let W, H, raf;
-    const resize = () => { W = cv.width = cv.offsetWidth||300; H = cv.height = cv.offsetHeight||200; };
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(cv.parentElement||cv);
-    const nodes = Array.from({length:14},()=>({
-      x:Math.random()*100,y:Math.random()*100,
-      vx:(Math.random()-.5)*.04,vy:(Math.random()-.5)*.04,
-      pulse:Math.random()*Math.PI*2,
-    }));
-    const draw = () => {
-      ctx.clearRect(0,0,W,H);
-      nodes.forEach(n=>{
-        n.x+=n.vx; n.y+=n.vy;
-        if(n.x<0||n.x>100)n.vx*=-1;
-        if(n.y<0||n.y>100)n.vy*=-1;
-        n.pulse+=.04;
-      });
-      for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
-        const ax=nodes[i].x/100*W,ay=nodes[i].y/100*H;
-        const bx=nodes[j].x/100*W,by=nodes[j].y/100*H;
-        const d=Math.hypot(ax-bx,ay-by);
-        if(d<90){
-          ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);
-          ctx.strokeStyle=`rgba(155,124,255,${(1-d/90)*.45})`;ctx.lineWidth=.9;ctx.stroke();
-        }
-      }
-      nodes.forEach(n=>{
-        const x=n.x/100*W,y=n.y/100*H,g=(Math.sin(n.pulse)+1)/2;
-        ctx.beginPath();ctx.arc(x,y,2+g*2,0,Math.PI*2);
-        ctx.fillStyle=`rgba(155,124,255,${.5+g*.5})`;ctx.fill();
-      });
-      raf=requestAnimationFrame(draw);
+    let W = 0;
+    let H = 0;
+    let raf;
+
+    const resize = () => {
+      const w = wrap.clientWidth;
+      const h = Math.max(wrap.clientHeight, 260);
+      if (w < 1 || h < 1) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(h * dpr);
+      cv.style.width = `${w}px`;
+      cv.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      W = w;
+      H = h;
     };
+
+    resize();
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(wrap);
+
+    const nodes = Array.from({ length: 14 }, () => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      vx: (Math.random() - 0.5) * 0.04,
+      vy: (Math.random() - 0.5) * 0.04,
+      pulse: Math.random() * Math.PI * 2,
+    }));
+
+    const draw = () => {
+      if (W > 0 && H > 0) {
+        ctx.clearRect(0, 0, W, H);
+        nodes.forEach((n) => {
+          n.x += n.vx;
+          n.y += n.vy;
+          if (n.x < 0 || n.x > 100) n.vx *= -1;
+          if (n.y < 0 || n.y > 100) n.vy *= -1;
+          n.pulse += 0.04;
+        });
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const ax = (nodes[i].x / 100) * W;
+            const ay = (nodes[i].y / 100) * H;
+            const bx = (nodes[j].x / 100) * W;
+            const by = (nodes[j].y / 100) * H;
+            const d = Math.hypot(ax - bx, ay - by);
+            if (d < 90) {
+              ctx.beginPath();
+              ctx.moveTo(ax, ay);
+              ctx.lineTo(bx, by);
+              ctx.strokeStyle = `rgba(155,124,255,${(1 - d / 90) * 0.45})`;
+              ctx.lineWidth = 0.9;
+              ctx.stroke();
+            }
+          }
+        }
+        nodes.forEach((n) => {
+          const x = (n.x / 100) * W;
+          const y = (n.y / 100) * H;
+          const g = (Math.sin(n.pulse) + 1) / 2;
+          ctx.beginPath();
+          ctx.arc(x, y, 2 + g * 2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(155,124,255,${0.5 + g * 0.5})`;
+          ctx.fill();
+        });
+      }
+      raf = requestAnimationFrame(draw);
+    };
+
     draw();
-    return ()=>{ cancelAnimationFrame(raf); ro.disconnect(); };
-  },[]);
-  return <canvas ref={ref} style={{width:"100%",height:"100%",display:"block"}}/>;
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+  }, []);
+
+  return (
+    <div ref={wrapRef} className="sv-anim-stage">
+      <canvas ref={ref} aria-hidden="true" />
+    </div>
+  );
 }
 
 /* ── WEBSITE BUILDER ANIMATION ── */
@@ -174,6 +225,136 @@ function SocialAnim() {
   );
 }
 
+const SEO_SEARCH_QUERIES = ["plumber noble park", "cafe near me", "dentist cheltenham"];
+const CONTENT_REEL_TYPES = [
+  { platform: "Instagram", color: "#e1306c", label: "Reel · 0:15" },
+  { platform: "TikTok", color: "#69c9d0", label: "Trend edit · 0:22" },
+  { platform: "Facebook", color: "#1877f2", label: "Promo clip · 0:30" },
+  { platform: "Animation", color: "#9b7cff", label: "Brand explainer" },
+];
+
+/* ── SEO ANIMATION ── */
+function SeoAnim() {
+  const [qi, setQi] = useState(0);
+  const [typed, setTyped] = useState(0);
+  const [pulse, setPulse] = useState(true);
+
+  useEffect(() => {
+    const q = SEO_SEARCH_QUERIES[qi];
+    if (typed < q.length) {
+      const t = setTimeout(() => setTyped((n) => n + 1), 55);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => {
+      setTyped(0);
+      setQi((i) => (i + 1) % SEO_SEARCH_QUERIES.length);
+    }, 1600);
+    return () => clearTimeout(t);
+  }, [qi, typed]);
+
+  useEffect(() => {
+    const iv = setInterval(() => setPulse((p) => !p), 1200);
+    return () => clearInterval(iv);
+  }, []);
+
+  const query = SEO_SEARCH_QUERIES[qi].slice(0, typed);
+
+  return (
+    <div style={{ padding: "20px", height: "100%", display: "flex", flexDirection: "column", gap: "12px", justifyContent: "center" }}>
+      <div style={{
+        padding: "12px 16px", borderRadius: "100px",
+        background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.08)",
+        fontSize: "13px", color: "#aaa", minHeight: "42px",
+      }}>
+        {query}
+        <span style={{ opacity: typed % 2 === 0 ? 1 : 0, color: "#9b7cff" }}>|</span>
+      </div>
+      {[
+        { rank: 1, name: "Your business", meta: "★★★★★ · Maps · Book online", hot: true },
+        { rank: 2, name: "Competitor site", meta: "★★★ · Outdated listing", hot: false },
+        { rank: 3, name: "Another result", meta: "★★★★ · Slow mobile site", hot: false },
+      ].map(({ rank, name, meta, hot }) => (
+        <div key={rank} style={{
+          display: "flex", gap: "12px", padding: "12px 14px", borderRadius: "10px",
+          background: hot && pulse ? "rgba(155,124,255,.14)" : "rgba(255,255,255,.03)",
+          border: hot ? "1px solid rgba(155,124,255,.35)" : "1px solid rgba(255,255,255,.05)",
+          transition: "background .4s ease, box-shadow .4s ease",
+          boxShadow: hot && pulse ? "0 0 24px rgba(155,124,255,.12)" : "none",
+        }}>
+          <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, color: hot ? "#9b7cff" : "#555", minWidth: 18 }}>
+            {rank}
+          </span>
+          <div>
+            <div style={{ fontSize: "13px", color: hot ? "#fff" : "#888", fontWeight: 600 }}>{name}</div>
+            <div style={{ fontSize: "11px", color: "#666", marginTop: 2 }}>{meta}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── CONTENT CREATION ANIMATION ── */
+function ContentCreationAnim() {
+  const [active, setActive] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const iv = setInterval(() => setActive((a) => (a + 1) % CONTENT_REEL_TYPES.length), 1400);
+    return () => clearInterval(iv);
+  }, []);
+
+  useEffect(() => {
+    setProgress(0);
+    const iv = setInterval(() => setProgress((p) => (p >= 100 ? 0 : p + 4)), 50);
+    return () => clearInterval(iv);
+  }, [active]);
+
+  const current = CONTENT_REEL_TYPES[active];
+
+  return (
+    <div style={{ padding: "18px", height: "100%", display: "flex", flexDirection: "column", gap: "12px", justifyContent: "center" }}>
+      <div style={{
+        position: "relative", borderRadius: "14px", overflow: "hidden",
+        aspectRatio: "9/14", maxHeight: "220px", margin: "0 auto", width: "min(100%, 140px)",
+        border: `1px solid ${current.color}55`, boxShadow: `0 0 24px ${current.color}22`,
+        background: "linear-gradient(160deg, rgba(255,255,255,.08), rgba(0,0,0,.4))",
+      }}>
+        <div style={{
+          position: "absolute", inset: 0,
+          background: `linear-gradient(180deg, transparent 40%, ${current.color}33 100%)`,
+        }} />
+        <div style={{ position: "absolute", top: 10, left: 10, fontSize: "9px", letterSpacing: "1px", color: current.color }}>
+          {current.platform.toUpperCase()}
+        </div>
+        <div style={{
+          position: "absolute", bottom: 12, left: 10, right: 10,
+          fontSize: "10px", color: "#fff", fontWeight: 600,
+        }}>
+          {current.label}
+        </div>
+        <div style={{
+          position: "absolute", bottom: 0, left: 0, height: 3,
+          width: `${progress}%`, background: current.color,
+          transition: "width .05s linear",
+        }} />
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", gap: 6 }}>
+        {CONTENT_REEL_TYPES.map(({ platform, color }, i) => (
+          <span key={platform} style={{
+            width: i === active ? 18 : 7, height: 7, borderRadius: 4,
+            background: i === active ? color : "rgba(255,255,255,.15)",
+            transition: "all .3s ease",
+          }} />
+        ))}
+      </div>
+      <div style={{ fontSize: "11px", color: "#666", textAlign: "center", letterSpacing: "1px" }}>
+        RENDERING BRAND CONTENT…
+      </div>
+    </div>
+  );
+}
+
 /* ── ADMIN ANIMATION ── */
 function AdminAnim() {
   const tasks = ["Email replied","Report filed","Meeting booked","Data updated","Invoice sent"];
@@ -244,6 +425,20 @@ export default function Services() {
       Anim: WebAnim,
     },
     {
+      title:"SEO & Local Search", slug: SERVICE_SLUGS["SEO & Local Search"], short:"Show up when locals search.",
+      accent:"#fbbf24", color:"rgba(251,191,36,.18)",
+      desc:"We optimise your Google Business Profile, local keywords, on-page SEO and schema so you rank when people search for your services nearby. Not generic SEO slides — real fixes that bring calls, directions and quote requests.",
+      features:["Google Business Profile setup","Local suburb & service SEO","On-page titles & meta tags","Schema & structured data","Google Maps visibility","Monthly ranking reports"],
+      Anim: SeoAnim,
+    },
+    {
+      title:"Content Creation", slug: SERVICE_SLUGS["Content Creation"], short:"Content that stops the scroll.",
+      accent:"#f97316", color:"rgba(249,115,22,.18)",
+      desc:"Facebook posts, Instagram Reels, TikTok edits, Stories and animated promo videos — all planned, filmed or designed, edited and delivered ready to publish. We match your brand, not a template.",
+      features:["Instagram Reels & Stories","Facebook posts & ad creatives","TikTok short-form video","Animated promo videos","Brand graphics & captions","Monthly content batches"],
+      Anim: ContentCreationAnim,
+    },
+    {
       title:"Digital Marketing", slug: SERVICE_SLUGS["Digital Marketing"], short:"Get discovered. Get chosen.",
       accent:"#ff64b4", color:"rgba(255,100,180,.2)",
       desc:"From Facebook and Instagram to TikTok and Google — we run data-driven campaigns that reach the right people at the right time. We handle the content, targeting, budget and reporting. You watch the leads come in.",
@@ -274,12 +469,11 @@ export default function Services() {
   ];
 
   return (
-    <div style={{background:"#070707",overflowX:"hidden"}}>
+    <div className="page-wrap section-dark-deep">
 
       {/* HERO */}
-      <section style={{minHeight:"55vh",display:"flex",alignItems:"center",
-        background:"radial-gradient(ellipse 60% 70% at 50% 40%, rgba(155,124,255,.1) 0%, transparent 70%)"}}>
-        <div style={{width:"min(1400px,90vw)",margin:"0 auto",padding:"130px 0 80px"}} className="page-container">
+      <section className="page-hero-dark" style={{minHeight:"55vh",display:"flex",alignItems:"center"}}>
+        <div className="page-container" style={{padding:"130px 0 80px"}}>
           <div className="sv-fi" style={{fontSize:"11px",letterSpacing:"2.5px",color:"#3a3a3a",
             marginBottom:"28px",display:"flex",alignItems:"center",gap:"10px"}}>
             <span style={{width:"20px",height:"1px",background:A}}/>SERVICES
@@ -293,20 +487,21 @@ export default function Services() {
               DIGITAL ENGINE.</span>
           </h1>
           <p className="sv-fi" style={{maxWidth:"520px",marginTop:"28px",color:"#666",fontSize:"17px",lineHeight:1.75}}>
-            Six services. One goal — make your business run faster, smarter and more profitably.
-            Here's what each one actually means for you.
+            Websites, SEO, content, ads and automation — one team helping your business
+            get found, get chosen and grow without the big agency bill.
           </p>
         </div>
       </section>
 
       {/* OVERVIEW — plain English */}
-      <section className="page-container" style={{ paddingBottom: "64px" }}>
+      <section className="section-fade-to-surface page-section">
+      <div className="page-container" style={{ paddingBottom: "64px" }}>
         <div style={{ marginBottom: "32px" }}>
-          <div style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a", marginBottom: "14px" }}>
+          <div className="eyebrow-light" style={{ marginBottom: "14px" }}>
             AT A GLANCE
           </div>
           <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(28px,3.5vw,44px)",
-            fontWeight: 700, letterSpacing: "-2px", color: "white", margin: 0 }}>
+            fontWeight: 700, letterSpacing: "-2px", color: "#141118", margin: 0 }}>
             What we do — <span style={{ color: A }}>in plain English</span>
           </h2>
         </div>
@@ -320,6 +515,12 @@ export default function Services() {
             { title: "Website Design", slug: "website-design", accent: "#00d2be",
               plain: "Fast, mobile-first sites built to turn visitors into enquiries.",
               forWho: "Businesses with outdated or broken sites" },
+            { title: "SEO & Local Search", slug: "seo-local", accent: "#fbbf24",
+              plain: "Google Business, local SEO and rankings so nearby customers find you first.",
+              forWho: "Businesses invisible on Google Maps" },
+            { title: "Content Creation", slug: "content-creation", accent: "#f97316",
+              plain: "Reels, posts, animated video and brand graphics for every platform.",
+              forWho: "Businesses with nothing worth posting" },
             { title: "Digital Marketing", slug: "digital-marketing", accent: "#ff64b4",
               plain: "Google, Meta and TikTok campaigns that bring in real leads.",
               forWho: "Businesses invisible online" },
@@ -334,36 +535,40 @@ export default function Services() {
               forWho: "Owners doing everything themselves" },
           ].map(({ title, slug, accent, plain, forWho }) => (
             <Link key={slug} to={`/services#${slug}`} style={{
-              padding: "28px 24px", background: "#08060f",
-              border: `1px solid ${L}`, borderRadius: "14px",
-              textDecoration: "none", transition: "border-color .2s, transform .2s",
+              padding: "28px 24px", background: "#ffffff",
+              border: "1px solid rgba(20,17,24,.08)", borderRadius: "14px",
+              textDecoration: "none", transition: "border-color .2s, transform .2s, box-shadow .2s",
+              boxShadow: "0 12px 40px rgba(20,17,24,.04)",
             }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${accent}55`; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = L; e.currentTarget.style.transform = "none"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${accent}55`; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 20px 50px rgba(20,17,24,.08)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(20,17,24,.08)"; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(20,17,24,.04)"; }}
             >
               <div style={{ width: "28px", height: "3px", background: accent, borderRadius: "2px", marginBottom: "16px" }} />
-              <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "18px",
+              <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#141118", fontSize: "18px",
                 margin: "0 0 10px" }}>{title}</h3>
-              <p style={{ color: "#777", fontSize: "14px", lineHeight: 1.65, margin: "0 0 14px" }}>{plain}</p>
+              <p style={{ color: "#5c5868", fontSize: "14px", lineHeight: 1.65, margin: "0 0 14px" }}>{plain}</p>
               <div style={{ fontSize: "12px", color: accent }}>Best for: {forWho}</div>
-              <div style={{ fontSize: "12px", color: "#555", marginTop: "16px" }}>Learn more →</div>
+              <div style={{ fontSize: "12px", color: "#8a8499", marginTop: "16px" }}>Learn more →</div>
             </Link>
           ))}
         </div>
+      </div>
       </section>
 
       {/* MOBILE ANIMATED PILLS — visible on mobile only */}
-      <div className="sv-pills" style={{
+      <div className="sv-pills section-surface-alt" style={{
         display:"none",
         overflowX:"auto", WebkitOverflowScrolling:"touch",
         padding:"16px 20px 20px",
         gap:"10px",
-        borderBottom:`1px solid ${L}`,
+        borderBottom:"1px solid rgba(20,17,24,.08)",
         scrollbarWidth:"none",
       }}>
         {[
           {l:"AI Automation", c:"#9b7cff", slug:"ai-automation"},
           {l:"Websites",      c:"#00d2be", slug:"website-design"},
+          {l:"SEO",           c:"#fbbf24", slug:"seo-local"},
+          {l:"Content",       c:"#f97316", slug:"content-creation"},
           {l:"Marketing",     c:"#ff64b4", slug:"digital-marketing"},
           {l:"Systems",       c:"#64b4ff", slug:"digital-systems"},
           {l:"Social Media",  c:"#e879f9", slug:"social-media"},
@@ -380,6 +585,7 @@ export default function Services() {
       </div>
 
       {/* SERVICES */}
+      <section className="section-dark page-section">
       <div className="page-container" style={{margin:"0 auto 130px"}}>
         {services.map(({title,slug,short,color,accent,desc,features,Anim},i)=>(
           <div key={title} id={slug} className="sv-rv sv-card" style={{
@@ -434,16 +640,18 @@ export default function Services() {
                 <span style={{fontSize:"11px",color:"#555",letterSpacing:"1.5px"}}>{title.toUpperCase()}</span>
               </div>
               {/* animation content */}
-              <div style={{position:"relative",zIndex:1,flex:1,minHeight:"260px"}}>
+              <div className="sv-anim-stage-wrap">
                 <Anim/>
               </div>
             </div>
           </div>
         ))}
       </div>
+      </section>
 
       {/* CTA */}
-      <div style={{width:"min(1400px,90vw)",margin:"0 auto",padding:"100px 0 140px",
+      <section className="section-dark-deep page-section">
+      <div className="page-container" style={{padding:"100px 0 140px",
         textAlign:"center",borderTop:`1px solid ${L}`}}>
         <h2 style={{fontFamily:"'Space Grotesk',sans-serif",
           fontSize:"clamp(40px,6vw,90px)",fontWeight:700,letterSpacing:"-4px",
@@ -460,11 +668,29 @@ export default function Services() {
           Talk to us
         </Link>
       </div>
+      </section>
 
       <style>{`
         @keyframes pillIn {
           from { opacity:0; transform:translateY(10px) scale(.95); }
           to   { opacity:1; transform:translateY(0) scale(1); }
+        }
+
+        .sv-anim-stage-wrap {
+          position: relative;
+          z-index: 1;
+          flex: 1;
+          min-height: 260px;
+        }
+        .sv-anim-stage {
+          position: absolute;
+          inset: 0;
+          min-height: 260px;
+        }
+        .sv-anim-stage canvas {
+          display: block;
+          width: 100%;
+          height: 100%;
         }
 
         /* show pills on mobile */

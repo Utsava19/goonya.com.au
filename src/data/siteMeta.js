@@ -101,6 +101,11 @@ export const PAGE_SEO = {
     title: "Terms & Conditions | Goonya",
     description: "Read the Goonya terms and conditions.",
   },
+  "/faq": {
+    title: "FAQ | Goonya — Websites, Marketing & Automation",
+    description:
+      "Answers to common questions about Goonya packages, pricing, websites, SEO, social media, AI automation and how to get started.",
+  },
 };
 
 export function localBusinessJsonLd() {

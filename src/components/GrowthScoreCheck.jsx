@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { INDUSTRIES } from "../data/siteContent";
 import { formatGrowthReportEmail, sendFormEmail } from "../utils/formSubmit";
@@ -20,8 +20,12 @@ const levelColor = {
 export default function GrowthScoreCheck({
   id = "growth-check",
   compact = false,
+  embedded = false,
+  urgent = false,
   onPackagesPage = false,
 }) {
+  const wrapRef = useRef(null);
+  const [urgentActive, setUrgentActive] = useState(urgent);
   const [form, setForm] = useState({
     business: "",
     website: "",
@@ -39,6 +43,20 @@ export default function GrowthScoreCheck({
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
+  }
+
+  function pauseUrgent() {
+    if (urgent) setUrgentActive(false);
+  }
+
+  function resumeUrgent(e) {
+    if (!urgent) return;
+    requestAnimationFrame(() => {
+      const next = e?.relatedTarget;
+      if (!wrapRef.current?.contains(next) && !wrapRef.current?.contains(document.activeElement)) {
+        setUrgentActive(true);
+      }
+    });
   }
 
   async function handleSubmit(e) {
@@ -82,18 +100,32 @@ export default function GrowthScoreCheck({
 
   return (
     <section
+      ref={wrapRef}
       id={id}
-      className={onPackagesPage ? "packages-growth-check" : ""}
+      className={[
+        onPackagesPage ? "packages-growth-check" : "",
+        embedded ? "growth-check-embedded" : "",
+        urgent ? "growth-check-urgent-host" : "",
+        urgent && urgentActive ? "growth-check-urgent-active" : "",
+      ].filter(Boolean).join(" ")}
+      onFocusCapture={pauseUrgent}
+      onBlurCapture={resumeUrgent}
       style={{
-        padding: compact ? "0" : "80px 0",
-        borderTop: compact || onPackagesPage ? "none" : `1px solid ${L}`,
-        borderBottom: compact || onPackagesPage ? "none" : `1px solid ${L}`,
+        padding: compact || embedded ? "0" : "80px 0",
+        borderTop: compact || embedded || onPackagesPage ? "none" : `1px solid ${L}`,
+        borderBottom: compact || embedded || onPackagesPage ? "none" : `1px solid ${L}`,
         position: "relative",
         zIndex: onPackagesPage ? 25 : 1,
       }}
     >
-      <div className="page-container">
-        {!compact && (
+      <div className={embedded ? "" : "page-container"}>
+        <div
+          className={[
+            urgent ? "growth-check-urgent-inner" : "",
+            urgent && urgentActive ? "growth-check-urgent-active" : "",
+          ].filter(Boolean).join(" ")}
+        >
+        {!compact && !embedded && (
           <div style={{ marginBottom: "40px" }}>
             <div style={eyebrowStyle}>
               <span style={{ width: "20px", height: "1px", background: A }} />
@@ -105,6 +137,27 @@ export default function GrowthScoreCheck({
             <p style={{ color: "#666", fontSize: "16px", maxWidth: "560px", lineHeight: 1.7 }}>
               Enter your website and we scan it live — SEO, mobile, Google signals, local presence
               and conversion issues. Every business gets a different score.
+            </p>
+          </div>
+        )}
+
+        {embedded && (
+          <div className="growth-embedded-header">
+            <div style={{ fontSize: "11px", letterSpacing: "2px", color: "#fbbf24", marginBottom: "8px" }}>
+              FREE GROWTH CHECK · DON&apos;T WAIT
+            </div>
+            <h3 style={{
+              fontFamily: "'Space Grotesk',sans-serif",
+              fontSize: "clamp(22px, 2.5vw, 28px)",
+              fontWeight: 700,
+              color: "#fff",
+              marginBottom: "8px",
+              letterSpacing: "-1px",
+            }}>
+              Check your business growth
+            </h3>
+            <p style={{ color: "#888", fontSize: "14px", lineHeight: 1.6, marginBottom: "16px" }}>
+              Live scan of your website — SEO, mobile, Google signals and more.
             </p>
           </div>
         )}
@@ -152,12 +205,13 @@ export default function GrowthScoreCheck({
               </div>
             </div>
 
-            <button type="submit" disabled={loading} style={{
+            <button type="submit" disabled={loading} className={urgent && urgentActive ? "growth-urgent-submit" : ""} style={{
               ...submitStyle,
+              ...(urgent && urgentActive ? urgentSubmitStyle : {}),
               opacity: loading ? 0.7 : 1,
               cursor: loading ? "wait" : "pointer",
             }}>
-              {loading ? "Scanning your website…" : "Check My Business Growth →"}
+              {loading ? "Scanning your website…" : "Check My Growth Now →"}
             </button>
             {submitError && <p style={{ ...errorStyle, marginTop: "12px" }}>{submitError}</p>}
           </form>
@@ -192,7 +246,9 @@ export default function GrowthScoreCheck({
                       fontWeight: 700,
                       color: A,
                       lineHeight: 1,
-                    }}>
+                    }}
+                      className="growth-score-value"
+                    >
                       {result.score}
                       <span style={{ fontSize: "0.35em", color: "#666", fontWeight: 600, marginLeft: "4px" }}>/100</span>
                     </div>
@@ -285,6 +341,7 @@ export default function GrowthScoreCheck({
             </div>
           )}
         </div>
+        </div>
       </div>
 
       <style>{`
@@ -301,10 +358,48 @@ export default function GrowthScoreCheck({
           .growth-check-layout {
             grid-template-columns: 1fr 1fr;
           }
+          .growth-check-embedded .growth-check-layout {
+            grid-template-columns: 1fr;
+          }
         }
-        @media (max-width: 768px) {
-          .growth-form-grid { grid-template-columns: 1fr !important; }
-          .growth-breakdown-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        .growth-check-embedded .growth-embedded-header {
+          background: #08060f;
+          border: 1px solid rgba(251,191,36,.35);
+          border-radius: 16px 16px 0 0;
+          padding: 22px 22px 0;
+          margin-bottom: -1px;
+        }
+        .growth-check-embedded form {
+          border-radius: 0 0 16px 16px !important;
+          border-color: rgba(251,191,36,.25) !important;
+        }
+        .growth-check-urgent-inner {
+          will-change: transform;
+        }
+        .growth-check-urgent-inner.growth-check-urgent-active {
+          animation: growthUrgentBounce 0.45s ease-in-out infinite;
+        }
+        .growth-check-urgent-inner.growth-check-urgent-active .growth-embedded-header,
+        .growth-check-urgent-inner.growth-check-urgent-active form {
+          box-shadow: 0 0 0 1px rgba(251,191,36,.55), 0 0 48px rgba(251,191,36,.28);
+        }
+        @keyframes growthUrgentBounce {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+          }
+          50% {
+            transform: translateY(-12px) scale(1.03);
+          }
+        }
+        @keyframes growthUrgentBlink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.45; }
+        }
+        .growth-check-urgent-active .growth-embedded-header > div:first-child {
+          animation: growthUrgentBlink 0.35s ease-in-out infinite;
+        }
+        .growth-urgent-submit {
+          animation: growthUrgentBounce 0.45s ease-in-out infinite;
         }
         .packages-growth-check {
           background: #070707;
@@ -459,16 +554,67 @@ export default function GrowthScoreCheck({
           color: #9b7cff;
         }
         @media (max-width: 768px) {
+          .growth-form-grid { grid-template-columns: 1fr !important; }
+          .growth-breakdown-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .growth-result-panel {
+            padding: 20px !important;
+            min-height: auto !important;
+          }
+          .growth-score-header {
+            margin-bottom: 14px;
+          }
+          .growth-score-value {
+            font-size: clamp(42px, 13vw, 52px) !important;
+          }
+          .growth-breakdown-visible {
+            margin-bottom: 16px;
+          }
+          .growth-breakdown-card {
+            padding: 12px 8px;
+          }
+          .growth-breakdown-score {
+            font-size: 22px;
+          }
+          .growth-breakdown-label {
+            font-size: 9px;
+          }
           .growth-audit-locked-wrap,
           .growth-audit-locked-blur {
-            min-height: 380px;
+            min-height: 280px;
+          }
+          .growth-audit-locked-blur {
+            padding: 24px 20px 32px;
+          }
+          .growth-audit-locked-cta {
+            padding: 18px 14px;
+          }
+          .growth-audit-locked-badge {
+            margin-bottom: 8px;
+            font-size: 9px;
+            padding: 5px 12px;
+          }
+          .growth-audit-locked-title {
+            font-size: 17px !important;
+            margin-bottom: 8px !important;
+          }
+          .growth-audit-locked-copy {
+            font-size: 13px;
+            margin-bottom: 14px !important;
+            max-width: 300px;
           }
           .growth-call-cta {
-            padding: 20px 40px 18px;
-            font-size: 20px;
+            padding: 14px 28px 12px;
+            font-size: 17px;
+            margin-bottom: 8px;
           }
           .growth-call-icon {
-            font-size: 26px;
+            font-size: 20px;
+          }
+          .growth-call-phone {
+            font-size: 12px;
+          }
+          .growth-contact-link {
+            font-size: 12px;
           }
         }
       `}</style>
@@ -537,4 +683,12 @@ const submitStyle = {
   cursor: "pointer",
   letterSpacing: "0.5px",
   opacity: 1,
+};
+
+const urgentSubmitStyle = {
+  background: "linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)",
+  color: "#141118",
+  boxShadow: "0 8px 32px rgba(245,158,11,.45)",
+  fontSize: "15px",
+  fontWeight: 800,
 };

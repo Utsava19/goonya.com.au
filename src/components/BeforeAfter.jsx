@@ -10,8 +10,14 @@ export default function BeforeAfter({ study, linkToDetail = true }) {
     <div className="before-after">
       <div className="before-after-card before-side">
         <span className="ba-label">Before</span>
-        <div className="ba-avatar ba-avatar-before" aria-hidden="true">
-          {study.beforeMood ?? "😤"}
+        <div className="ba-photo-wrap ba-photo-before">
+          {study.clientPhoto ? (
+            <>
+              <img src={study.clientPhoto} alt={`${study.quoteName} before`} className="ba-photo ba-photo-img" />
+            </>
+          ) : (
+            <span className="ba-photo-fallback">{study.client?.[0] ?? "?"}</span>
+          )}
         </div>
         <ul className="ba-list">
           {before.map((item) => (
@@ -24,8 +30,12 @@ export default function BeforeAfter({ study, linkToDetail = true }) {
 
       <div className="before-after-card after-side">
         <span className="ba-label ba-label-after">After Goonya</span>
-        <div className="ba-avatar ba-avatar-after" aria-hidden="true">
-          {study.afterMood ?? "😊"}
+        <div className="ba-photo-wrap ba-photo-after">
+          {study.clientPhoto ? (
+            <img src={study.clientPhoto} alt={study.quoteName} className="ba-photo" />
+          ) : (
+            <span className="ba-photo-fallback">{study.client?.[0] ?? "?"}</span>
+          )}
         </div>
         <ul className="ba-list ba-list-after">
           {after.map((item) => (
@@ -72,26 +82,42 @@ export default function BeforeAfter({ study, linkToDetail = true }) {
           text-transform: uppercase;
         }
         .ba-label-after { color: ${A}; }
-        .ba-avatar {
+        .ba-photo-wrap {
           width: 120px;
           height: 120px;
           border-radius: 50%;
+          overflow: hidden;
+          margin: 0 auto 20px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 52px;
-          margin: 0 auto 20px;
-          line-height: 1;
+          position: relative;
         }
-        .ba-avatar-before {
-          background: #f0f0f0;
-          border: 3px solid #ddd;
-          filter: grayscale(0.3);
+        .ba-photo {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
-        .ba-avatar-after {
-          background: rgba(155,124,255,.12);
+        .ba-photo-before {
+          border: 3px solid #bbb;
+        }
+        .ba-photo-before .ba-photo-img {
+          filter: grayscale(1) contrast(0.9) brightness(0.78) saturate(0.6);
+          transform: scale(1.08);
+        }
+        .ba-photo-after .ba-photo {
+          filter: none;
+        }
+        .ba-photo-after {
           border: 3px solid ${A};
           box-shadow: 0 0 32px rgba(155,124,255,.25);
+        }
+        .ba-photo-fallback {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 42px;
+          font-weight: 700;
+          color: #888;
         }
         .ba-list {
           list-style: none;

@@ -29,10 +29,9 @@ export default function OurWork() {
   }, []);
 
   return (
-    <div style={{ background: "#070707", overflowX: "hidden" }}>
-      <section style={{
+    <div className="page-wrap section-dark-deep">
+      <section className="page-hero-dark" style={{
         minHeight: "50vh", display: "flex", alignItems: "center",
-        background: "radial-gradient(ellipse 60% 60% at 50% 40%, rgba(155,124,255,.1) 0%, transparent 70%)",
       }}>
         <div className="page-container" style={{ padding: "130px 0 80px" }}>
           <div className="ow-fi" style={{ fontSize: "11px", letterSpacing: "2.5px", color: "#3a3a3a",
@@ -55,14 +54,16 @@ export default function OurWork() {
         </div>
       </section>
 
+      <section className="section-fade-to-surface page-section">
       <div className="page-container" style={{ paddingBottom: "100px" }}>
         <div className="ow-list">
           {CASE_STUDIES.map((study, i) => (
             <article key={study.slug} className="ow-card" style={{
-              display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "1px",
-              background: L, border: `1px solid ${study.featured ? "rgba(155,124,255,.35)" : L}`,
+              display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "0",
+              background: "#fff", border: `1px solid ${study.featured ? "rgba(155,124,255,.35)" : "rgba(20,17,24,.08)"}`,
               marginBottom: "24px",
               borderRadius: "16px", overflow: "hidden",
+              boxShadow: "0 16px 50px rgba(20,17,24,.06)",
               opacity: 0, transform: "translateY(32px)",
               transition: `opacity .7s ease ${i * 0.1}s, transform .7s ease ${i * 0.1}s`,
               position: "relative",
@@ -85,27 +86,28 @@ export default function OurWork() {
               <div style={{ minHeight: "320px", background: "#111",
                 backgroundImage: `url(${study.cover})`, backgroundSize: "cover", backgroundPosition: "center" }} />
 
-              <div style={{ padding: "40px 36px", background: "#08060f", display: "flex", flexDirection: "column" }}>
+              <div style={{ padding: "40px 36px", background: "#ffffff", display: "flex", flexDirection: "column",
+                borderLeft: `1px solid rgba(20,17,24,.08)` }}>
                 <div style={{ fontSize: "10px", letterSpacing: "2px", color: A, marginBottom: "12px" }}>
                   {study.industry.toUpperCase()} · {study.location}
                 </div>
-                <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "26px", color: "white",
+                <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "26px", color: "#141118",
                   fontWeight: 700, marginBottom: "8px" }}>
                   {study.client}
                 </h2>
                 <p style={{ color: A, fontSize: "15px", marginBottom: "16px", fontWeight: 600 }}>
                   {study.headline}
                 </p>
-                <p style={{ color: "#666", fontSize: "14px", lineHeight: 1.7, marginBottom: "20px", flex: 1 }}>
+                <p style={{ color: "#5c5868", fontSize: "14px", lineHeight: 1.7, marginBottom: "20px", flex: 1 }}>
                   {study.summary}
                 </p>
 
                 <div style={{ marginBottom: "20px" }}>
-                  <div style={{ fontSize: "10px", letterSpacing: "1.5px", color: "#555", marginBottom: "10px" }}>
+                  <div className="eyebrow-light" style={{ marginBottom: "10px" }}>
                     THE PROBLEM
                   </div>
                   {study.beforePoints.slice(0, 3).map((p) => (
-                    <div key={p} style={{ fontSize: "13px", color: "#888", padding: "4px 0" }}>✕ {p}</div>
+                    <div key={p} style={{ fontSize: "13px", color: "#5c5868", padding: "4px 0" }}>✕ {p}</div>
                   ))}
                 </div>
 
@@ -113,8 +115,8 @@ export default function OurWork() {
                   {study.results.map(({ label, value }) => (
                     <div key={label}>
                       <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "22px",
-                        fontWeight: 700, color: "white" }}>{value}</div>
-                      <div style={{ fontSize: "11px", color: "#555" }}>{label}</div>
+                        fontWeight: 700, color: A }}>{value}</div>
+                      <div style={{ fontSize: "11px", color: "#8a8499" }}>{label}</div>
                     </div>
                   ))}
                 </div>
@@ -122,7 +124,7 @@ export default function OurWork() {
                 <Link to={`/our-work/${study.slug}`} style={{
                   display: "inline-flex", alignSelf: "flex-start", padding: "12px 24px",
                   border: `1px solid rgba(155,124,255,.35)`, borderRadius: "100px",
-                  color: "white", fontSize: "13px", fontWeight: 600, textDecoration: "none",
+                  background: "#141118", color: "white", fontSize: "13px", fontWeight: 600, textDecoration: "none",
                 }}>
                   Read case study →
                 </Link>
@@ -131,7 +133,9 @@ export default function OurWork() {
           ))}
         </div>
       </div>
+      </section>
 
+      <section className="section-fade-to-dark page-section">
       <div className="page-container" style={{ padding: "80px 0 140px", textAlign: "center" }}>
         <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(36px,5vw,56px)",
           fontWeight: 700, letterSpacing: "-2px", color: "white", marginBottom: "16px" }}>
@@ -145,11 +149,13 @@ export default function OurWork() {
           Send an enquiry
         </Link>
       </div>
+      </section>
 
       <style>{`
         @media(max-width:850px){
           .ow-card { grid-template-columns:1fr !important; }
           .ow-card > div:first-child { min-height:220px !important; }
+          .ow-card > div:last-child { border-left:none !important; border-top:1px solid rgba(20,17,24,.08) !important; }
         }
       `}</style>
     </div>

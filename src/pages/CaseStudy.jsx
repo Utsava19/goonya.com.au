@@ -7,7 +7,7 @@ export default function CaseStudy() {
   const { slug } = useParams();
   const study = getCaseStudy(slug);
   const A = "#9b7cff";
-  const L = "rgba(255,255,255,.08)";
+  const LL = "rgba(20,17,24,.08)";
 
   if (!study) {
     return (
@@ -19,10 +19,10 @@ export default function CaseStudy() {
   }
 
   return (
-    <div style={{ background: "#070707", overflowX: "hidden" }}>
-      <section style={{
+    <div className="page-wrap section-dark-deep">
+      <section className="page-hero-dark" style={{
         minHeight: "50vh", display: "flex", alignItems: "flex-end",
-        background: `linear-gradient(to bottom, rgba(7,7,7,.4), #070707), url(${study.cover}) center/cover no-repeat`,
+        background: `linear-gradient(to bottom, rgba(12,10,20,.5), var(--bg)), url(${study.cover}) center/cover no-repeat`,
       }}>
         <div className="page-container" style={{ padding: "140px 0 48px", width: "100%" }}>
           <Link to="/our-work" style={{ color: "#666", fontSize: "13px", textDecoration: "none", marginBottom: "20px", display: "inline-block" }}>
@@ -41,27 +41,29 @@ export default function CaseStudy() {
         </div>
       </section>
 
-      <div className="page-container" style={{ paddingBottom: "120px" }}>
+      <section className="section-fade-to-surface page-section">
+      <div className="page-container">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", marginBottom: "64px" }}
           className="cs-problem-grid">
           <div>
-            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px", marginBottom: "16px" }}>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#141118", fontSize: "28px", marginBottom: "16px" }}>
               The problem
             </h2>
-            <p style={{ color: "#888", fontSize: "16px", lineHeight: 1.75, marginBottom: "20px" }}>{study.problem}</p>
+            <p style={{ color: "#5c5868", fontSize: "16px", lineHeight: 1.75, marginBottom: "20px" }}>{study.problem}</p>
             {study.challenge && (
-              <p style={{ color: "#aaa", fontSize: "15px", lineHeight: 1.7, padding: "20px",
-                background: "rgba(155,124,255,.06)", borderRadius: "12px",
-                border: `1px solid rgba(155,124,255,.15)` }}>
-                <strong style={{ color: "white" }}>What they really needed: </strong>
+              <p style={{ color: "#5c5868", fontSize: "15px", lineHeight: 1.7, padding: "20px",
+                background: "rgba(155,124,255,.08)", borderRadius: "12px",
+                border: "1px solid rgba(155,124,255,.18)" }}>
+                <strong style={{ color: "#141118" }}>What they really needed: </strong>
                 {study.challenge}
               </p>
             )}
           </div>
-          <div style={{ padding: "28px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "16px" }}>
-            <div style={{ fontSize: "11px", letterSpacing: "2px", color: "#666", marginBottom: "16px" }}>WHAT WASN'T WORKING</div>
+          <div style={{ padding: "28px", background: "#ffffff", border: `1px solid ${LL}`, borderRadius: "16px",
+            boxShadow: "0 12px 40px rgba(20,17,24,.04)" }}>
+            <div className="eyebrow-light" style={{ marginBottom: "16px" }}>WHAT WASN&apos;T WORKING</div>
             {study.beforePoints.map((p) => (
-              <div key={p} style={{ color: "#888", fontSize: "14px", padding: "10px 0", borderBottom: `1px solid ${L}` }}>
+              <div key={p} style={{ color: "#5c5868", fontSize: "14px", padding: "10px 0", borderBottom: `1px solid ${LL}` }}>
                 ✕ {p}
               </div>
             ))}
@@ -70,29 +72,35 @@ export default function CaseStudy() {
 
         {study.websiteTransform && (
           <div style={{ marginBottom: "64px" }}>
-            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px",
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#141118", fontSize: "28px",
               marginBottom: "12px", textAlign: "center" }}>
               The website transformation
             </h2>
-            <p style={{ color: "#666", fontSize: "15px", textAlign: "center", maxWidth: "640px",
+            <p style={{ color: "#5c5868", fontSize: "15px", textAlign: "center", maxWidth: "640px",
               margin: "0 auto 32px", lineHeight: 1.65 }}>
               Their old site looked untrustworthy and didn&apos;t work on phones.
               Here&apos;s what customers saw before vs what they see now.
             </p>
-            <WebsiteMockupPair mockup={study.websiteMockup} industry={study.industry} />
+            <WebsiteMockupPair mockup={study.websiteMockup} industry={study.industry} coverImage={study.cover} />
           </div>
         )}
 
-        <div style={{ marginBottom: "64px", padding: "40px", background: "#08060f", border: `1px solid ${L}`, borderRadius: "20px" }}>
-          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px", marginBottom: "24px" }}>
+        <div style={{ marginBottom: "64px", padding: "40px", background: "#ffffff",
+          border: `1px solid ${LL}`, borderRadius: "20px", boxShadow: "0 12px 40px rgba(20,17,24,.04)" }}>
+          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#141118", fontSize: "28px", marginBottom: "24px" }}>
             What we did
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px" }}>
             {study.solution.map((s, i) => (
               <div key={s} style={{ padding: "20px", background: "rgba(155,124,255,.06)", borderRadius: "12px",
-                border: `1px solid rgba(155,124,255,.15)` }}>
-                <div style={{ color: A, fontWeight: 700, marginBottom: "8px" }}>0{i + 1}</div>
-                <p style={{ color: "#ccc", fontSize: "14px", lineHeight: 1.6, margin: 0 }}>{s}</p>
+                border: "1px solid rgba(155,124,255,.15)" }}>
+                <div style={{
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  width: 36, height: 36, borderRadius: "10px", marginBottom: "12px",
+                  background: "rgba(155,124,255,.14)", border: "1px solid rgba(155,124,255,.28)",
+                  color: A, fontWeight: 700, fontSize: 13,
+                }}>0{i + 1}</div>
+                <p style={{ color: "#5c5868", fontSize: "14px", lineHeight: 1.6, margin: 0 }}>{s}</p>
               </div>
             ))}
           </div>
@@ -100,56 +108,71 @@ export default function CaseStudy() {
 
         {study.timeline && (
           <div style={{ marginBottom: "64px" }}>
-            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px", marginBottom: "24px" }}>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#141118", fontSize: "28px", marginBottom: "24px" }}>
               How we rolled it out
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
               {study.timeline.map(({ week, detail }) => (
-                <div key={week} style={{ padding: "24px", background: "#08060f",
-                  border: `1px solid ${L}`, borderRadius: "12px" }}>
+                <div key={week} style={{ padding: "24px", background: "#ffffff",
+                  border: `1px solid ${LL}`, borderRadius: "12px", boxShadow: "0 8px 30px rgba(20,17,24,.04)" }}>
                   <div style={{ color: A, fontSize: "12px", letterSpacing: "1.5px", marginBottom: "10px" }}>{week}</div>
-                  <p style={{ color: "#aaa", fontSize: "14px", lineHeight: 1.6, margin: 0 }}>{detail}</p>
+                  <p style={{ color: "#5c5868", fontSize: "14px", lineHeight: 1.6, margin: 0 }}>{detail}</p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
+      </div>
+      </section>
+
+      <section className="section-surface page-section">
+      <div className="page-container">
         <div style={{ marginBottom: "64px" }}>
-          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "white", fontSize: "28px",
+          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#141118", fontSize: "28px",
             marginBottom: "24px", textAlign: "center" }}>
             Before & after
           </h2>
           <BeforeAfter study={study} linkToDetail={false} />
         </div>
+      </div>
+      </section>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px", marginBottom: "64px" }}
+      <section className="section-surface-alt page-section">
+      <div className="page-container" style={{ paddingBottom: 48 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px", marginBottom: "48px" }}
           className="cs-results">
           {study.results.map(({ label, value }) => (
             <div key={label} style={{ textAlign: "center", padding: "32px 20px",
-              background: "#08060f", border: `1px solid ${L}`, borderRadius: "16px" }}>
+              background: "#ffffff", border: `1px solid ${LL}`, borderRadius: "16px",
+              boxShadow: "0 12px 40px rgba(20,17,24,.05)" }}>
               <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "40px", fontWeight: 700, color: A }}>
                 {value}
               </div>
-              <div style={{ fontSize: "13px", color: "#666", marginTop: "8px" }}>{label}</div>
+              <div style={{ fontSize: "13px", color: "#5c5868", marginTop: "8px" }}>{label}</div>
             </div>
           ))}
         </div>
 
         <blockquote style={{
-          margin: "0 0 48px", padding: "40px", background: "rgba(155,124,255,.06)",
-          border: `1px solid rgba(155,124,255,.2)`, borderRadius: "16px", textAlign: "center",
+          margin: 0, padding: "40px", background: "#ffffff",
+          border: `1px solid ${LL}`, borderRadius: "16px", textAlign: "center",
+          boxShadow: "0 12px 40px rgba(20,17,24,.05)",
         }}>
           <p style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(18px,2.5vw,24px)",
-            color: "white", lineHeight: 1.5, margin: "0 0 20px", fontStyle: "normal" }}>
+            color: "#141118", lineHeight: 1.5, margin: "0 0 20px", fontStyle: "normal" }}>
             "{study.quote}"
           </p>
-          <footer style={{ color: "#888", fontSize: "14px" }}>
+          <footer style={{ color: "#5c5868", fontSize: "14px" }}>
             — {study.quoteName}, {study.quoteRole}
           </footer>
         </blockquote>
+      </div>
+      </section>
 
-        <div style={{ textAlign: "center" }}>
+      <section className="section-dark page-section">
+      <div className="page-container" style={{ paddingBottom: "120px", textAlign: "center" }}>
+        <div>
           <Link to="/contact" style={{
             display: "inline-flex", padding: "16px 36px", background: "white", color: "black",
             borderRadius: "100px", fontWeight: 700, textDecoration: "none",
@@ -158,6 +181,7 @@ export default function CaseStudy() {
           </Link>
         </div>
       </div>
+      </section>
 
       <style>{`
         @media(max-width:768px){

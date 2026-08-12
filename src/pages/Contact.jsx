@@ -31,6 +31,8 @@ export default function Contact() {
       const serviceLabels = {
         ai: "AI Automation",
         website: "Website Design",
+        seo: "SEO & Local Search",
+        content: "Content Creation",
         marketing: "Digital Marketing",
         social: "Social Media",
         systems: "Digital Systems",
@@ -82,26 +84,25 @@ ${SITE.phone}`,
   };
 
   const A = "#9b7cff";
-  const L = "rgba(255,255,255,.08)";
+  const LL = "rgba(20,17,24,.08)";
 
   const input = {
     width:"100%", padding:"16px 18px",
-    background:"#0a0818", border:"1px solid rgba(255,255,255,.1)",
-    borderRadius:"8px", color:"white", fontSize:"15px",
+    background:"#ffffff", border:"1px solid rgba(20,17,24,.12)",
+    borderRadius:"8px", color:"#141118", fontSize:"15px",
     outline:"none", fontFamily:"'DM Sans',sans-serif",
-    transition:"border-color .2s ease",
+    transition:"border-color .2s ease, box-shadow .2s ease",
     boxSizing:"border-box",
   };
 
   const socials = SOCIAL_LINKS;
 
   return (
-    <div style={{ background:"#070707", overflowX:"hidden" }}>
+    <div className="page-wrap section-dark-deep">
 
       {/* HERO */}
-      <section style={{ minHeight:"50vh", display:"flex", alignItems:"center",
-        background:"radial-gradient(ellipse 60% 60% at 50% 40%, rgba(155,124,255,.1) 0%, transparent 70%)" }}>
-        <div style={{ width:"min(1400px,90vw)", margin:"0 auto", padding:"130px 0 70px" }}>
+      <section className="page-hero-dark" style={{ minHeight:"50vh", display:"flex", alignItems:"center" }}>
+        <div className="page-container" style={{ padding:"130px 0 70px" }}>
           <div className="ct-fi" style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a",
             marginBottom:"28px", display:"flex", alignItems:"center", gap:"10px" }}>
             <span style={{ width:"20px", height:"1px", background:A }}/>CONTACT
@@ -123,20 +124,21 @@ ${SITE.phone}`,
       </section>
 
       {/* FORM + INFO */}
-      <div style={{ width:"min(1400px,90vw)", margin:"0 auto 130px",
-        display:"grid", gridTemplateColumns:"1.4fr 1fr", gap:"1px",
-        background:L, border:`1px solid ${L}` }} className="ct-grid">
+      <section className="section-fade-to-surface page-section">
+      <div className="page-container" style={{ margin:"0 auto 130px",
+        display:"grid", gridTemplateColumns:"1.4fr 1fr", gap:"20px" }} className="ct-grid">
 
         {/* FORM */}
-        <div className="ct-fi" style={{ padding:"60px 56px", background:"#08060f" }}>
+        <div className="ct-fi" style={{ padding:"60px 56px", background:"#ffffff", borderRadius:"16px",
+          border:`1px solid ${LL}`, boxShadow:"0 24px 80px rgba(20,17,24,.06)" }}>
           {sent ? (
             <div style={{ textAlign:"center", padding:"80px 0" }}>
               <div style={{ fontSize:"52px", marginBottom:"24px" }}>✅</div>
               <h2 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"32px",
-                fontWeight:700, letterSpacing:"-1.5px", color:"white", marginBottom:"14px" }}>
+                fontWeight:700, letterSpacing:"-1.5px", color:"#141118", marginBottom:"14px" }}>
                 Message sent!
               </h2>
-              <p style={{ color:"#555", fontSize:"16px", lineHeight:1.7 }}>
+              <p style={{ color:"#5c5868", fontSize:"16px", lineHeight:1.7 }}>
                 Thanks for reaching out. A copy of your enquiry has been sent to {form.email}.
                 We'll be in touch within 24 hours.
               </p>
@@ -147,54 +149,56 @@ ${SITE.phone}`,
                 className="form-2col">
                 <div>
                   <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
-                    color:"#555", marginBottom:"8px" }}>YOUR NAME</label>
+                    color:"#8a8499", marginBottom:"8px" }}>YOUR NAME</label>
                   <input name="name" value={form.name} onChange={handle}
                     required style={input}
-                    onFocus={e=>e.target.style.borderColor=A}
-                    onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
+                    onFocus={e=>{ e.target.style.borderColor=A; e.target.style.boxShadow="0 0 0 3px rgba(155,124,255,.12)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(20,17,24,.12)"; e.target.style.boxShadow="none"; }}/>
                 </div>
                 <div>
                   <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
-                    color:"#555", marginBottom:"8px" }}>EMAIL ADDRESS</label>
+                    color:"#8a8499", marginBottom:"8px" }}>EMAIL ADDRESS</label>
                   <input name="email" type="email" value={form.email} onChange={handle}
                     required style={input}
-                    onFocus={e=>e.target.style.borderColor=A}
-                    onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
+                    onFocus={e=>{ e.target.style.borderColor=A; e.target.style.boxShadow="0 0 0 3px rgba(155,124,255,.12)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(20,17,24,.12)"; e.target.style.boxShadow="none"; }}/>
                 </div>
               </div>
               <div>
                 <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
-                  color:"#555", marginBottom:"8px" }}>BUSINESS NAME</label>
+                  color:"#8a8499", marginBottom:"8px" }}>BUSINESS NAME</label>
                 <input name="business" value={form.business} onChange={handle}
                   style={input}
-                  onFocus={e=>e.target.style.borderColor=A}
-                  onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
+                  onFocus={e=>{ e.target.style.borderColor=A; e.target.style.boxShadow="0 0 0 3px rgba(155,124,255,.12)"; }}
+                  onBlur={e=>{ e.target.style.borderColor="rgba(20,17,24,.12)"; e.target.style.boxShadow="none"; }}/>
               </div>
               <div>
                 <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
-                  color:"#555", marginBottom:"8px" }}>WHAT DO YOU NEED?</label>
+                  color:"#8a8499", marginBottom:"8px" }}>WHAT DO YOU NEED?</label>
                 <select name="service" value={form.service} onChange={handle} style={{
                   ...input, cursor:"pointer", appearance:"none",
                   backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239b7cff' stroke-width='1.5' fill='none'/%3E%3C/svg%3E")`,
                   backgroundRepeat:"no-repeat", backgroundPosition:"right 16px center",
                 }}>
-                  <option value="" style={{background:"#0a0818"}}>Select a service...</option>
-                  <option value="ai"        style={{background:"#0a0818"}}>AI Automation</option>
-                  <option value="website"   style={{background:"#0a0818"}}>Website Design</option>
-                  <option value="marketing" style={{background:"#0a0818"}}>Digital Marketing</option>
-                  <option value="social"    style={{background:"#0a0818"}}>Social Media</option>
-                  <option value="systems"   style={{background:"#0a0818"}}>Digital Systems</option>
-                  <option value="admin"     style={{background:"#0a0818"}}>Admin & Operations</option>
-                  <option value="all"       style={{background:"#0a0818"}}>Not sure — let's chat</option>
+                  <option value="">Select a service...</option>
+                  <option value="ai">AI Automation</option>
+                  <option value="website">Website Design</option>
+                  <option value="seo">SEO & Local Search</option>
+                  <option value="content">Content Creation</option>
+                  <option value="marketing">Digital Marketing</option>
+                  <option value="social">Social Media</option>
+                  <option value="systems">Digital Systems</option>
+                  <option value="admin">Admin & Operations</option>
+                  <option value="all">Not sure — let's chat</option>
                 </select>
               </div>
               <div>
                 <label style={{ display:"block", fontSize:"11px", letterSpacing:"1.5px",
-                  color:"#555", marginBottom:"8px" }}>YOUR MESSAGE</label>
+                  color:"#8a8499", marginBottom:"8px" }}>YOUR MESSAGE</label>
                 <textarea name="message" value={form.message} onChange={handle}
                   rows={5} style={{...input, resize:"vertical"}}
-                  onFocus={e=>e.target.style.borderColor=A}
-                  onBlur={e=>e.target.style.borderColor="rgba(255,255,255,.1)"}/>
+                  onFocus={e=>{ e.target.style.borderColor=A; e.target.style.boxShadow="0 0 0 3px rgba(155,124,255,.12)"; }}
+                  onBlur={e=>{ e.target.style.borderColor="rgba(20,17,24,.12)"; e.target.style.boxShadow="none"; }}/>
               </div>
               <button type="submit" disabled={sending} style={{
                 alignSelf:"flex-start", marginTop:"8px",
@@ -220,13 +224,13 @@ ${SITE.phone}`,
         </div>
 
         {/* INFO */}
-        <div className="ct-fi" style={{ padding:"60px 48px", background:"#050410",
+        <div className="ct-fi" style={{ padding:"60px 48px", background:"#ffffff", borderRadius:"16px",
+          border:`1px solid ${LL}`, boxShadow:"0 24px 80px rgba(20,17,24,.06)",
           display:"flex", flexDirection:"column", gap:"36px" }}>
 
           {/* what happens next */}
           <div>
-            <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a",
-              marginBottom:"20px", display:"flex", alignItems:"center", gap:"10px" }}>
+            <div className="eyebrow-light" style={{ marginBottom:"20px", display:"flex", alignItems:"center", gap:"10px" }}>
               <span style={{ width:"20px", height:"1px", background:A }}/>WHAT HAPPENS NEXT
             </div>
             {[
@@ -237,12 +241,12 @@ ${SITE.phone}`,
             ].map(({t,d},i) => (
               <div key={i} style={{ display:"flex", gap:"14px", marginBottom:"20px" }}>
                 <span style={{ width:"22px", height:"22px", borderRadius:"50%",
-                  background:"rgba(155,124,255,.12)", border:"1px solid rgba(155,124,255,.2)",
+                  background:"rgba(155,124,255,.12)", border:"1px solid rgba(155,124,255,.25)",
                   display:"flex", alignItems:"center", justifyContent:"center",
                   fontSize:"10px", color:A, flexShrink:0, fontWeight:700 }}>{i+1}</span>
                 <div>
-                  <div style={{ fontSize:"14px", color:"white", fontWeight:600, marginBottom:"3px" }}>{t}</div>
-                  <div style={{ fontSize:"13px", color:"#555", lineHeight:1.55 }}>{d}</div>
+                  <div style={{ fontSize:"14px", color:"#141118", fontWeight:600, marginBottom:"3px" }}>{t}</div>
+                  <div style={{ fontSize:"13px", color:"#5c5868", lineHeight:1.55 }}>{d}</div>
                 </div>
               </div>
             ))}
@@ -250,7 +254,7 @@ ${SITE.phone}`,
 
           {/* contact details */}
           <div style={{ padding:"24px", background:"rgba(155,124,255,.06)",
-            border:`1px solid rgba(155,124,255,.2)`, borderRadius:"12px" }}>
+            border:"1px solid rgba(155,124,255,.18)", borderRadius:"12px" }}>
             <div style={{ fontSize:"11px", letterSpacing:"2px", color:A, marginBottom:"16px" }}>
               GET IN TOUCH
             </div>
@@ -261,16 +265,16 @@ ${SITE.phone}`,
               { label:"Address", val:"75 Bowmore Rd, Noble Park VIC 3174", href:null },
             ].map(({label,val,href},i) => (
               <div key={i} style={{ marginBottom:"12px" }}>
-                <div style={{ fontSize:"10px", color:"#3a3a3a", letterSpacing:"1px", marginBottom:"2px" }}>{label}</div>
+                <div style={{ fontSize:"10px", color:"#8a8499", letterSpacing:"1px", marginBottom:"2px" }}>{label}</div>
                 {href ? (
-                  <a href={href} style={{ fontSize:"14px", color:"white", textDecoration:"none",
+                  <a href={href} style={{ fontSize:"14px", color:"#141118", textDecoration:"none",
                     transition:"color .2s" }}
                     onMouseEnter={e=>e.target.style.color=A}
-                    onMouseLeave={e=>e.target.style.color="white"}>
+                    onMouseLeave={e=>e.target.style.color="#141118"}>
                     {val}
                   </a>
                 ) : (
-                  <div style={{ fontSize:"13px", color:"#666" }}>{val}</div>
+                  <div style={{ fontSize:"13px", color:"#5c5868" }}>{val}</div>
                 )}
               </div>
             ))}
@@ -278,25 +282,26 @@ ${SITE.phone}`,
 
           {/* socials */}
           <div>
-            <div style={{ fontSize:"11px", letterSpacing:"2px", color:"#3a3a3a", marginBottom:"14px" }}>
+            <div className="eyebrow-light" style={{ marginBottom:"14px" }}>
               FOLLOW US
             </div>
-            <div style={{ display:"flex", gap:"12px" }}>
+            <div style={{ display:"flex", gap:"12px", flexWrap:"wrap" }}>
               {socials.map(({ name, href, label }) => (
                 <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} style={{
                   padding:"10px 18px", borderRadius:"100px",
-                  border:`1px solid rgba(255,255,255,.1)`,
-                  fontSize:"12px", color:"#666", textDecoration:"none",
-                  transition:"color .2s, border-color .2s",
+                  border:"1px solid rgba(20,17,24,.1)",
+                  fontSize:"12px", color:"#5c5868", textDecoration:"none",
+                  transition:"color .2s, border-color .2s, background .2s",
                 }}
-                  onMouseEnter={e=>{ e.currentTarget.style.color="white"; e.currentTarget.style.borderColor="rgba(255,255,255,.3)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.color="#666"; e.currentTarget.style.borderColor="rgba(255,255,255,.1)"; }}
+                  onMouseEnter={e=>{ e.currentTarget.style.color="#141118"; e.currentTarget.style.borderColor="rgba(155,124,255,.35)"; e.currentTarget.style.background="rgba(155,124,255,.06)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.color="#5c5868"; e.currentTarget.style.borderColor="rgba(20,17,24,.1)"; e.currentTarget.style.background="transparent"; }}
                 >{name}</a>
               ))}
             </div>
           </div>
         </div>
       </div>
+      </section>
 
       <style>{`
         @media(max-width:850px){

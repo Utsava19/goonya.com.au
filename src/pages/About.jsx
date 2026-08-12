@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import SiteStatsRow from "../components/SiteStatsRow";
 
 /* ── LIVE NETWORK BG ── */
 function LiveBg() {
@@ -84,36 +85,12 @@ function Typewriter({ words }) {
   );
 }
 
-/* ── COUNTER ── */
-function Counter({ to, suffix }) {
-  const [v, setV] = useState(0);
-  const ref = useRef(null);
-  const done = useRef(false);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !done.current) {
-        done.current = true;
-        const n = parseFloat(to), isF = String(to).includes(".");
-        const s = performance.now();
-        const tick = now => {
-          const p = Math.min((now - s) / 1800, 1);
-          const ease = 1 - Math.pow(1 - p, 3);
-          setV(isF ? (n * ease).toFixed(1) : Math.round(n * ease));
-          if (p < 1) requestAnimationFrame(tick); else setV(to);
-        };
-        requestAnimationFrame(tick);
-        obs.disconnect();
-      }
-    }, { threshold: .3 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [to]);
-  return <span ref={ref}>{v}{suffix}</span>;
-}
+/* ── COUNTER ── removed — use SiteStatsRow / StatCounter ── */
 
 export default function About() {
   const A = "#9b7cff";
   const L = "rgba(255,255,255,.08)";
+  const LL = "rgba(20,17,24,.08)";
 
   useEffect(() => {
     // hero entrance
@@ -143,10 +120,10 @@ export default function About() {
   }, []);
 
   return (
-    <div style={{ background:"#070707", overflowX:"hidden" }}>
+    <div className="page-wrap section-dark-deep">
 
       {/* ══ HERO ══ */}
-      <section style={{ minHeight:"100vh", display:"flex", alignItems:"center",
+      <section className="page-hero-dark" style={{ minHeight:"100vh", display:"flex", alignItems:"center",
         position:"relative", overflow:"hidden" }}>
         <LiveBg />
         <div style={{ position:"absolute", inset:0, zIndex:1, pointerEvents:"none",
@@ -185,32 +162,22 @@ export default function About() {
         </div>
       </section>
 
-      {/* ══ STATS ══ */}
-      <div style={{ width:"min(1400px,90vw)", margin:"0 auto", borderBottom:`1px solid ${L}` }}>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)" }} className="ab-sg">
-          {[
-            {to:"40",  s:"+", l:"Projects Delivered"},
-            {to:"3",   s:"+", l:"Years Experience"},
-            {to:"98",  s:"%", l:"Client Satisfaction"},
-            {to:"120", s:"h", l:"Hours Saved / Client"},
-          ].map(({to,s,l},i) => (
-            <div key={l} className="ar" style={{ padding:"60px 40px",
-              borderRight:i<3?`1px solid ${L}`:"none" }}>
-              <div style={{ fontFamily:"'Space Grotesk',sans-serif",
-                fontSize:"clamp(44px,4vw,68px)", fontWeight:700,
-                letterSpacing:"-3px", color:"white" }}>
-                <Counter to={to} suffix={s} />
-              </div>
-              <p style={{ marginTop:"8px", fontSize:"12px", letterSpacing:"1px", color:"#3a3a3a" }}>{l}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <SiteStatsRow
+        className="stats-bridge-dark"
+        items={[
+          { value: 40, suffix: "+", label: "Projects Delivered" },
+          { value: 3, suffix: "+", label: "Years Experience" },
+          { value: 98, suffix: "%", label: "Client Satisfaction" },
+          { value: 120, suffix: "h", label: "Hours Saved / Client" },
+        ]}
+      />
 
       {/* ══ PHOTO + ABOUT TEXT ══ */}
-      <div style={{ width:"min(1400px,90vw)", margin:"80px auto 0",
+      <section className="section-fade-to-surface-after-stats page-section">
+      <div style={{ width:"min(1400px,90vw)", margin:"0 auto",
         display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
-        background:L, border:`1px solid ${L}` }} className="ab-tg">
+        background:LL, border:`1px solid ${LL}`, borderRadius:"16px", overflow:"hidden",
+        boxShadow:"0 24px 80px rgba(20,17,24,.06)" }} className="ab-tg">
         {/* photo */}
         <div className="ar" style={{ position:"relative", minHeight:"480px", overflow:"hidden" }}>
           <img
@@ -236,23 +203,22 @@ export default function About() {
           </div>
         </div>
         {/* text */}
-        <div className="ar" style={{ padding:"70px 60px", background:"#08060f" }}>
-          <div style={{ fontSize:"11px", letterSpacing:"2.5px", color:"#3a3a3a", marginBottom:"22px",
-            display:"flex", alignItems:"center", gap:"10px" }}>
+        <div className="ar" style={{ padding:"70px 60px", background:"#ffffff" }}>
+          <div className="eyebrow-light" style={{ marginBottom:"22px", display:"flex", alignItems:"center", gap:"10px" }}>
             <span style={{ width:"20px", height:"1px", background:A }}/>WHO WE ARE
           </div>
           <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
             fontSize:"clamp(28px,3.5vw,48px)", fontWeight:700, letterSpacing:"-2px",
-            color:"white", marginBottom:"22px", lineHeight:1.05 }}>
+            color:"#141118", marginBottom:"22px", lineHeight:1.05 }}>
             A small team that<span style={{color:A}}> punches above its weight.</span>
           </h2>
-          <p style={{ color:"#666", fontSize:"16px", lineHeight:1.8, marginBottom:"18px" }}>
+          <p style={{ color:"#5c5868", fontSize:"16px", lineHeight:1.8, marginBottom:"18px" }}>
             We're a tight-knit team of designers, developers and digital strategists
             based in Noble Park, Melbourne. We started Goonya because we saw too many
             good businesses being left behind — not because they weren't good enough,
             but because they didn't have the right digital systems in place.
           </p>
-          <p style={{ color:"#555", fontSize:"16px", lineHeight:1.8, marginBottom:"32px" }}>
+          <p style={{ color:"#5c5868", fontSize:"16px", lineHeight:1.8, marginBottom:"32px" }}>
             We work with tradies, hospitality businesses, healthcare providers,
             retailers and service businesses across Australia — building the websites,
             automation tools and marketing systems that help them grow.
@@ -267,27 +233,29 @@ export default function About() {
           </div>
         </div>
       </div>
+      </section>
 
       {/* ══ VALUES — colourful cards ══ */}
-      <div style={{ padding:"100px 0" }}>
-        <div style={{ width:"min(1400px,90vw)", margin:"0 auto" }}>
-          <div className="ar" style={{ fontSize:"11px", letterSpacing:"2.5px",
-            color:"#3a3a3a", marginBottom:"48px", display:"flex", alignItems:"center", gap:"10px" }}>
+      <section className="section-surface-alt page-section">
+      <div style={{ width:"min(1400px,90vw)", margin:"0 auto" }}>
+          <div className="ar eyebrow-light" style={{ marginBottom:"48px", display:"flex", alignItems:"center", gap:"10px" }}>
             <span style={{ width:"20px", height:"1px", background:A }}/>WHAT WE STAND FOR
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)",
-            gap:"1px", background:L, border:`1px solid ${L}` }} className="ab-vg">
+            gap:"16px" }} className="ab-vg">
             {[
               { title:"Speed over perfection",    desc:"We move fast, test quickly and improve continuously. Done beats perfect every time.",           accent:"#9b7cff", glow:"rgba(155,124,255,.2)" },
               { title:"Built for business owners", desc:"We're not an agency that disappears after launch. We're your long-term digital partner.",       accent:"#4ade80", glow:"rgba(74,222,128,.15)" },
               { title:"Results you can measure",  desc:"Every system we build is tied to a real outcome — more leads, more time, more revenue.",        accent:"#f97316", glow:"rgba(249,115,22,.15)" },
               { title:"No jargon, no bullshit",   desc:"We explain everything in plain language and only recommend what you actually need.",             accent:"#e879f9", glow:"rgba(232,121,249,.15)" },
             ].map(({title,desc,accent,glow},i) => (
-              <div key={title} className="ar" style={{ padding:"44px 40px", background:"#08060f",
-                position:"relative", overflow:"hidden",
-                transition:"background .3s ease" }}
-                onMouseEnter={e=>e.currentTarget.style.background="#0d0b18"}
-                onMouseLeave={e=>e.currentTarget.style.background="#08060f"}>
+              <div key={title} className="ar" style={{ padding:"44px 40px", background:"#ffffff",
+                position:"relative", overflow:"hidden", borderRadius:"14px",
+                border:"1px solid rgba(20,17,24,.06)",
+                boxShadow:"0 12px 40px rgba(20,17,24,.04)",
+                transition:"transform .25s ease, box-shadow .25s ease" }}
+                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 20px 50px rgba(20,17,24,.08)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.transform="none"; e.currentTarget.style.boxShadow="0 12px 40px rgba(20,17,24,.04)"; }}>
                 <div style={{ position:"absolute", top:"-30px", right:"-30px",
                   width:"150px", height:"150px", borderRadius:"50%",
                   background:`radial-gradient(circle,${glow},transparent 70%)`,
@@ -298,19 +266,21 @@ export default function About() {
                   background:accent, marginBottom:"20px",
                   boxShadow:`0 0 8px ${accent}` }}/>
                 <h3 style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"20px",
-                  fontWeight:700, color:"white", marginBottom:"10px",
+                  fontWeight:700, color:"#141118", marginBottom:"10px",
                   letterSpacing:"-.5px" }}>{title}</h3>
-                <p style={{ fontSize:"14px", color:"#555", lineHeight:1.65 }}>{desc}</p>
+                <p style={{ fontSize:"14px", color:"#5c5868", lineHeight:1.65 }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ══ LIVE ACTIVITY ══ */}
-      <div style={{ width:"min(1400px,90vw)", margin:"0 auto 130px",
+      <section className="section-surface page-section">
+      <div style={{ width:"min(1400px,90vw)", margin:"0 auto",
         display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
-        background:L, border:`1px solid ${L}` }} className="ab-ag">
+        background:LL, border:`1px solid ${LL}`, borderRadius:"16px", overflow:"hidden",
+        boxShadow:"0 24px 80px rgba(20,17,24,.06)" }} className="ab-ag">
         {/* left — second photo */}
         <div className="ar" style={{ position:"relative", minHeight:"420px", overflow:"hidden" }}>
           <img
@@ -331,10 +301,9 @@ export default function About() {
           </div>
         </div>
         {/* right — live feed */}
-        <div className="ar" style={{ padding:"56px 52px", background:"#050410",
+        <div className="ar" style={{ padding:"56px 52px", background:"#ffffff",
           display:"flex", flexDirection:"column", justifyContent:"center" }}>
-          <div style={{ fontSize:"11px", letterSpacing:"2px", color:"#3a3a3a",
-            marginBottom:"24px", display:"flex", alignItems:"center", gap:"10px" }}>
+          <div className="eyebrow-light" style={{ marginBottom:"24px", display:"flex", alignItems:"center", gap:"10px" }}>
             <span style={{ width:"20px", height:"1px", background:A }}/>LIVE ACTIVITY
           </div>
           {[
@@ -345,25 +314,26 @@ export default function About() {
             { t:"New enquiry received",   sub:"Contact form · 2 mins ago",        c:"#38bdf8" },
           ].map(({t,sub,c},i) => (
             <div key={i} style={{ display:"flex", alignItems:"center", gap:"12px",
-              padding:"13px 16px", background:"rgba(255,255,255,.03)",
+              padding:"13px 16px", background:"rgba(20,17,24,.03)",
               borderRadius:"10px", marginBottom:"8px",
-              border:"1px solid rgba(255,255,255,.05)",
+              border:"1px solid rgba(20,17,24,.06)",
               animation:`slideIn .5s ease ${i*.12+.1}s both` }}>
               <span style={{ width:"8px", height:"8px", borderRadius:"50%",
                 background:c, boxShadow:`0 0 8px ${c}`, flexShrink:0,
                 animation:`dotPulse ${1.2+i*.2}s ease infinite` }}/>
               <div style={{ flex:1 }}>
-                <div style={{ fontSize:"13px", color:"white", fontWeight:500 }}>{t}</div>
-                <div style={{ fontSize:"11px", color:"#444", marginTop:"2px" }}>{sub}</div>
+                <div style={{ fontSize:"13px", color:"#141118", fontWeight:500 }}>{t}</div>
+                <div style={{ fontSize:"11px", color:"#8a8499", marginTop:"2px" }}>{sub}</div>
               </div>
             </div>
           ))}
         </div>
       </div>
+      </section>
 
-      {/* ══ CTA ══ */}
-      <div className="ar" style={{ width:"min(1400px,90vw)", margin:"0 auto",
-        padding:"100px 0 140px", textAlign:"center", borderTop:`1px solid ${L}` }}>
+      <section className="section-fade-to-dark page-section">
+      <div className="ar page-container" style={{
+        padding:"100px 0 140px", textAlign:"center" }}>
         <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",
           fontSize:"clamp(42px,6vw,96px)", fontWeight:700, letterSpacing:"-4px",
           lineHeight:.9, color:"white", margin:"0 0 48px" }}>
@@ -376,6 +346,7 @@ export default function About() {
           Start a project
         </Link>
       </div>
+      </section>
 
       <style>{`
         @keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0} }
@@ -384,11 +355,6 @@ export default function About() {
         @keyframes dotPulse { 0%,100%{opacity:.5} 50%{opacity:1} }
 
         @media(max-width:850px){
-          .ab-sg  { grid-template-columns:repeat(2,1fr) !important; }
-          .ab-sg > div:nth-child(2){ border-right:none !important; }
-          .ab-sg > div:nth-child(1),
-          .ab-sg > div:nth-child(2){ border-bottom:1px solid rgba(255,255,255,.08) !important; }
-          .ab-sg > div { padding:36px 20px !important; }
           .ab-tg  { grid-template-columns:1fr !important; margin:40px auto 0 !important; }
           .ab-vg  { grid-template-columns:1fr !important; }
           .ab-ag  { grid-template-columns:1fr !important; margin:0 auto 80px !important; }

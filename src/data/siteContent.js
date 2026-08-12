@@ -374,6 +374,8 @@ export const GROWTH_SYSTEM = [
 export const SERVICE_SLUGS = {
   "AI Automation": "ai-automation",
   "Website Design": "website-design",
+  "SEO & Local Search": "seo-local",
+  "Content Creation": "content-creation",
   "Digital Marketing": "digital-marketing",
   "Digital Systems": "digital-systems",
   "Social Media": "social-media",

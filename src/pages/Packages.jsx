@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { PACKAGES, WEBSITE_PACKAGE, CUSTOM_PACKAGE } from "../data/siteContent";
-import GrowthScoreCheck from "../components/GrowthScoreCheck";
 import "./Packages.css";
 
 const plans = PACKAGES;
@@ -630,17 +629,17 @@ export default function Packages() {
 
       {/* CUSTOM GOONYA */}
       <section id="custom-goonya" className="custom-section section-shell">
-        <div className="eyebrow">CUSTOM</div>
-        <h2>{CUSTOM_PACKAGE.title}</h2>
-        <p className="custom-intro">{CUSTOM_PACKAGE.intro}</p>
-        <p className="section-intro">{CUSTOM_PACKAGE.body}</p>
-        <p className="custom-closing">{CUSTOM_PACKAGE.closing}</p>
-        <a href="/contact" className="primary-button">
-          {CUSTOM_PACKAGE.cta}
-        </a>
+        <div className="custom-section-inner">
+          <div className="eyebrow">CUSTOM</div>
+          <h2>{CUSTOM_PACKAGE.title}</h2>
+          <p className="custom-intro">{CUSTOM_PACKAGE.intro}</p>
+          <p className="custom-body">{CUSTOM_PACKAGE.body}</p>
+          <p className="custom-closing">{CUSTOM_PACKAGE.closing}</p>
+          <a href="/contact" className="primary-button">
+            {CUSTOM_PACKAGE.cta}
+          </a>
+        </div>
       </section>
-
-      <GrowthScoreCheck id="growth-check" onPackagesPage />
 
       {/* FINAL CTA */}
       <section className="final-section section-shell">
