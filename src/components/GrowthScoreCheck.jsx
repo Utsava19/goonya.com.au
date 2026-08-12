@@ -45,7 +45,7 @@ export default function GrowthScoreCheck({
   }
 
   function resumeUrgent(e) {
-    if (!urgent) return;
+    if (!urgent || loading || result) return;
     requestAnimationFrame(() => {
       const next = e?.relatedTarget;
       if (!wrapRef.current?.contains(next) && !wrapRef.current?.contains(document.activeElement)) {
@@ -66,6 +66,7 @@ export default function GrowthScoreCheck({
     setLoading(true);
     setResult(null);
     setSubmitError("");
+    setUrgentActive(false);
     try {
       const audit = await runGrowthAudit(form);
       setResult(audit);
@@ -97,6 +98,7 @@ export default function GrowthScoreCheck({
   const showSuccess = Boolean(result && !loading);
   const showLoading = Boolean(loading && !result);
   const showForm = !showSuccess && !showLoading;
+  const resultOpen = embedded && (showSuccess || showLoading);
 
   return (
     <section
@@ -105,8 +107,9 @@ export default function GrowthScoreCheck({
       className={[
         onPackagesPage ? "packages-growth-check" : "",
         embedded ? "growth-check-embedded" : "",
+        resultOpen ? "growth-check-result-open" : "",
         urgent ? "growth-check-urgent-host" : "",
-        urgent && urgentActive ? "growth-check-urgent-active" : "",
+        urgent && urgentActive && !resultOpen ? "growth-check-urgent-active" : "",
       ].filter(Boolean).join(" ")}
       onFocusCapture={pauseUrgent}
       onBlurCapture={resumeUrgent}
@@ -122,7 +125,7 @@ export default function GrowthScoreCheck({
         <div
           className={[
             urgent ? "growth-check-urgent-inner" : "",
-            urgent && urgentActive ? "growth-check-urgent-active" : "",
+            urgent && urgentActive && !resultOpen ? "growth-check-urgent-active" : "",
           ].filter(Boolean).join(" ")}
         >
         {!compact && !embedded && (
@@ -284,15 +287,11 @@ export default function GrowthScoreCheck({
           animation: growthPanelIn 0.25s ease-out;
         }
         .growth-success-panel {
-          animation: growthSuccessPop 0.4s cubic-bezier(.2,.9,.3,1);
+          animation: growthPanelIn 0.35s ease-out;
         }
         @keyframes growthPanelIn {
           from { opacity: 0; transform: translateY(6px); }
           to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes growthSuccessPop {
-          from { opacity: 0; transform: scale(0.96); }
-          to { opacity: 1; transform: scale(1); }
         }
         .growth-success-badge {
           display: inline-block;
@@ -437,8 +436,39 @@ export default function GrowthScoreCheck({
         }
         @media (max-width: 768px) {
           .growth-form-grid { grid-template-columns: 1fr !important; }
+          .growth-check-embedded.growth-check-result-open {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+            background: rgba(5, 4, 14, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            overflow-y: auto;
+          }
+          .growth-check-embedded.growth-check-result-open > div {
+            width: 100%;
+            max-width: 420px;
+            margin: auto;
+          }
+          .growth-check-embedded.growth-check-result-open .growth-check-urgent-inner {
+            animation: none !important;
+            transform: none !important;
+            will-change: auto;
+          }
+          .growth-check-embedded.growth-check-result-open .growth-check-layout {
+            width: 100%;
+          }
+          .growth-check-embedded form input,
+          .growth-check-embedded form select {
+            font-size: 16px !important;
+          }
           .growth-state-panel {
             padding: 22px 20px !important;
+            width: 100%;
           }
           .growth-success-score {
             font-size: clamp(40px, 12vw, 52px) !important;
@@ -447,11 +477,24 @@ export default function GrowthScoreCheck({
             padding: 14px 28px 12px;
             font-size: 18px;
           }
+          .growth-call-bounce {
+            animation: growth-call-bounce-mobile 0.65s ease-in-out infinite;
+          }
           .growth-call-icon {
             font-size: 22px;
           }
           .growth-call-phone {
             font-size: 12px;
+          }
+        }
+        @keyframes growth-call-bounce-mobile {
+          0%, 100% {
+            transform: translateY(0);
+            box-shadow: 0 12px 40px rgba(155,124,255,.45), 0 0 24px rgba(255,107,107,.25);
+          }
+          50% {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 44px rgba(155,124,255,.55), 0 0 28px rgba(255,107,107,.3);
           }
         }
       `}</style>
