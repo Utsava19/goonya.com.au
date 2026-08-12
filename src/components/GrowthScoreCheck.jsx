@@ -5,8 +5,6 @@ import { formatGrowthReportEmail, sendFormEmail } from "../utils/formSubmit";
 import { SITE } from "../data/siteMeta";
 import {
   runGrowthAudit,
-  scoreHeadline,
-  scoreLabel,
   validateGrowthForm,
 } from "../utils/growthScore";
 
@@ -18,6 +16,16 @@ const levelColor = {
   warn: "#fbbf24",
   bad: "#ff6b6b",
 };
+
+function problemTeaser(score, problemCount) {
+  if (problemCount > 0) {
+    return `We found ${problemCount} problem${problemCount === 1 ? "" : "s"} that could be costing you enquiries — your full audit is ready.`;
+  }
+  if (score >= 75) {
+    return "Your score is okay, but there are still gaps that could be holding you back.";
+  }
+  return "There are problems with your online presence that could be costing you customers.";
+}
 
 export default function GrowthScoreCheck({
   id = "growth-check",
@@ -170,7 +178,7 @@ export default function GrowthScoreCheck({
               border: `1px solid rgba(155,124,255,.25)`,
               borderRadius: "16px",
               padding: "36px",
-              minHeight: "200px",
+              minHeight: result ? "520px" : "200px",
             }}>
               {loading && (
                 <div style={{ color: "#888", fontSize: "15px", lineHeight: 1.7 }}>
@@ -182,77 +190,67 @@ export default function GrowthScoreCheck({
                 </div>
               )}
 
-              {result && !loading && (() => {
-                const previewCount = Math.max(2, Math.ceil(result.findings.length / 2));
-                const previewFindings = result.findings.slice(0, previewCount);
-                const lockedFindings = result.findings.slice(previewCount);
-
-                return (
+              {result && !loading && (
                 <>
                   <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "8px" }}>
                     YOUR GOONYA GROWTH SCORE
                   </div>
                   <div style={{
                     fontFamily: "'Space Grotesk',sans-serif",
-                    fontSize: "clamp(56px, 8vw, 80px)",
+                    fontSize: "clamp(64px, 10vw, 96px)",
                     fontWeight: 700,
                     color: A,
                     lineHeight: 1,
-                    marginBottom: "16px",
+                    marginBottom: "12px",
                   }}>
                     {result.score}
+                    <span style={{ fontSize: "0.35em", color: "#666", fontWeight: 600, marginLeft: "4px" }}>/100</span>
                   </div>
-                  <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "20px", color: "white", marginBottom: "10px" }}>
-                    {scoreHeadline(result.score)}
-                  </h3>
-                  <p style={{ color: "#666", fontSize: "14px", lineHeight: 1.65, marginBottom: "12px" }}>
-                    {scoreLabel(result.score)} Analysis for <strong style={{ color: "#aaa" }}>{result.business}</strong>.
-                    {result.scanned
-                      ? ` Live scan of ${result.finalUrl || form.website}.`
-                      : " Full scan limited — site unreachable."}
-                    {result.pageSpeedSeo != null && (
-                      <> Google mobile SEO: <strong style={{ color: "#ccc" }}>{result.pageSpeedSeo}/100</strong>.</>
-                    )}
+                  <p style={{
+                    color: result.problems?.length ? "#ffb4b4" : "#aaa",
+                    fontSize: "16px",
+                    lineHeight: 1.65,
+                    marginBottom: "28px",
+                    maxWidth: "420px",
+                  }}>
+                    {problemTeaser(result.score, result.problems?.length ?? 0)}
                   </p>
 
-                  {result.problems?.length > 0 && (
-                    <div style={{
-                      marginBottom: "20px", padding: "16px",
-                      background: "rgba(255,100,100,.06)", border: "1px solid rgba(255,100,100,.2)",
-                      borderRadius: "12px",
-                    }}>
-                      <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#ff6b6b", marginBottom: "10px" }}>
-                        TOP PROBLEMS FOUND
+                  <div className="growth-audit-locked-wrap">
+                    <div className="growth-audit-locked-blur" aria-hidden="true">
+                      <div style={{ fontSize: "12px", letterSpacing: "1.5px", color: "#666", marginBottom: "16px" }}>
+                        FULL WEBSITE AUDIT — LOCKED
                       </div>
-                      {result.problems.map((p, i) => (
-                        <div key={i} style={{ fontSize: "13px", color: "#ccc", lineHeight: 1.55, marginBottom: "8px" }}>
-                          ✕ <strong>{p.area}:</strong> {p.text}
+
+                      {result.problems?.length > 0 && (
+                        <div style={{ marginBottom: "20px" }}>
+                          <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#ff6b6b", marginBottom: "12px" }}>
+                            TOP PROBLEMS FOUND
+                          </div>
+                          {result.problems.map((p, i) => (
+                            <div key={i} style={{ fontSize: "14px", color: "#ccc", lineHeight: 1.55, marginBottom: "10px" }}>
+                              ✕ <strong>{p.area}:</strong> {p.text}
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      )}
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "20px" }}
-                    className="breakdown-grid">
-                    {result.breakdown.map((b) => (
-                      <div key={b.label} style={{
-                        padding: "12px", background: "rgba(0,0,0,.25)", borderRadius: "10px", textAlign: "center",
-                      }}>
-                        <div style={{ fontSize: "22px", fontWeight: 700, color: "white" }}>{b.score}</div>
-                        <div style={{ fontSize: "10px", color: "#666", letterSpacing: "1px" }}>{b.label}</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "24px" }}
+                        className="breakdown-grid">
+                        {result.breakdown.map((b) => (
+                          <div key={b.label} style={{
+                            padding: "16px", background: "rgba(0,0,0,.25)", borderRadius: "10px", textAlign: "center",
+                          }}>
+                            <div style={{ fontSize: "26px", fontWeight: 700, color: "white" }}>{b.score}</div>
+                            <div style={{ fontSize: "10px", color: "#666", letterSpacing: "1px" }}>{b.label}</div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
 
-                  {previewFindings.length > 0 && (
-                    <div style={{ marginBottom: lockedFindings.length > 0 ? "16px" : "24px" }}>
-                      <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#666", marginBottom: "10px" }}>
-                        AUDIT PREVIEW
-                      </div>
-                      {previewFindings.map((f, i) => (
+                      {result.findings.map((f, i) => (
                         <div key={i} style={{
-                          display: "flex", gap: "10px", padding: "10px 0",
-                          borderBottom: `1px solid ${L}`, fontSize: "13px", lineHeight: 1.5,
+                          display: "flex", gap: "10px", padding: "12px 0",
+                          borderBottom: `1px solid ${L}`, fontSize: "14px", lineHeight: 1.5,
                         }}>
                           <span style={{ color: levelColor[f.level], flexShrink: 0, fontWeight: 700 }}>
                             {f.level === "good" ? "✓" : f.level === "warn" ? "!" : "✕"}
@@ -264,55 +262,28 @@ export default function GrowthScoreCheck({
                         </div>
                       ))}
                     </div>
-                  )}
 
-                  {lockedFindings.length > 0 && (
-                    <div className="growth-audit-locked-wrap" style={{ marginBottom: "24px" }}>
-                      <div className="growth-audit-locked-blur" aria-hidden="true">
-                        <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#666", marginBottom: "10px" }}>
-                          FULL DETAILED AUDIT
-                        </div>
-                        {lockedFindings.map((f, i) => (
-                          <div key={i} style={{
-                            display: "flex", gap: "10px", padding: "10px 0",
-                            borderBottom: `1px solid ${L}`, fontSize: "13px", lineHeight: 1.5,
-                          }}>
-                            <span style={{ color: levelColor[f.level], flexShrink: 0, fontWeight: 700 }}>!</span>
-                            <span>
-                              <strong style={{ color: "#ccc" }}>{f.area}:</strong>{" "}
-                              <span style={{ color: "#777" }}>{f.text}</span>
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="growth-audit-locked-cta">
-                        <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "8px" }}>
-                          FULL REPORT AVAILABLE
-                        </div>
-                        <p style={{ color: "#ccc", fontSize: "14px", lineHeight: 1.6, margin: "0 0 16px" }}>
-                          Call us for the complete website audit and a plan to fix what's costing you enquiries.
-                        </p>
-                        <a href={`tel:${SITE.phoneTel}`} className="growth-call-cta">
-                          Call us now — {SITE.phone}
-                        </a>
-                        <Link to="/contact" className="growth-contact-link">
-                          Or send an enquiry →
-                        </Link>
-                      </div>
+                    <div className="growth-audit-locked-cta">
+                      <div className="growth-audit-locked-badge">FULL REPORT READY</div>
+                      <h4 className="growth-audit-locked-title">
+                        See exactly what to fix —<br />and how to get more enquiries
+                      </h4>
+                      <p className="growth-audit-locked-copy">
+                        Call now and we'll walk you through your complete audit for{" "}
+                        <strong>{result.business}</strong>.
+                      </p>
+                      <a href={`tel:${SITE.phoneTel}`} className="growth-call-cta growth-call-bounce">
+                        <span className="growth-call-icon" aria-hidden="true">📞</span>
+                        Call now
+                        <span className="growth-call-phone">{SITE.phone}</span>
+                      </a>
+                      <Link to="/contact" className="growth-contact-link">
+                        Prefer email? Send an enquiry →
+                      </Link>
                     </div>
-                  )}
-
-                  {lockedFindings.length === 0 && (
-                    <Link to="/contact" style={{
-                      display: "inline-flex", padding: "14px 28px", background: "white",
-                      color: "black", borderRadius: "100px", fontWeight: 700, fontSize: "14px", textDecoration: "none",
-                    }}>
-                      Book a Strategy Call →
-                    </Link>
-                  )}
+                  </div>
                 </>
-                );
-              })()}
+              )}
             </div>
           )}
         </div>
@@ -344,18 +315,20 @@ export default function GrowthScoreCheck({
         }
         .growth-audit-locked-wrap {
           position: relative;
-          border-radius: 14px;
+          border-radius: 18px;
           overflow: hidden;
-          border: 1px solid rgba(155,124,255,.2);
+          border: 1px solid rgba(155,124,255,.28);
+          min-height: 420px;
+          background: rgba(0,0,0,.2);
         }
         .growth-audit-locked-blur {
-          filter: blur(7px);
+          filter: blur(9px);
           user-select: none;
           pointer-events: none;
-          padding: 20px;
-          max-height: 220px;
-          overflow: hidden;
-          opacity: 0.55;
+          padding: 32px 28px 48px;
+          min-height: 420px;
+          opacity: 0.7;
+          transform: scale(1.02);
         }
         .growth-audit-locked-cta {
           position: absolute;
@@ -365,26 +338,104 @@ export default function GrowthScoreCheck({
           align-items: center;
           justify-content: center;
           text-align: center;
-          padding: 24px;
-          background: rgba(8, 6, 15, 0.72);
-          backdrop-filter: blur(2px);
+          padding: 32px 24px;
+          background: linear-gradient(
+            180deg,
+            rgba(8, 6, 15, 0.55) 0%,
+            rgba(8, 6, 15, 0.88) 45%,
+            rgba(8, 6, 15, 0.92) 100%
+          );
+        }
+        .growth-audit-locked-badge {
+          display: inline-block;
+          font-size: 10px;
+          letter-spacing: 2px;
+          font-weight: 700;
+          color: #fff;
+          background: rgba(155,124,255,.25);
+          border: 1px solid rgba(155,124,255,.45);
+          padding: 6px 14px;
+          border-radius: 100px;
+          margin-bottom: 16px;
+        }
+        .growth-audit-locked-title {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(22px, 3vw, 30px);
+          font-weight: 700;
+          color: #fff;
+          line-height: 1.25;
+          margin: 0 0 12px;
+          letter-spacing: -0.5px;
+        }
+        .growth-audit-locked-copy {
+          color: #bbb;
+          font-size: 15px;
+          line-height: 1.65;
+          margin: 0 0 24px;
+          max-width: 340px;
+        }
+        .growth-audit-locked-copy strong {
+          color: #fff;
         }
         .growth-call-cta {
           display: inline-flex;
-          padding: 14px 28px;
-          background: #9b7cff;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+          padding: 18px 40px 16px;
+          background: linear-gradient(135deg, #b79cff 0%, #9b7cff 55%, #7c5cbf 100%);
           color: #fff;
           border-radius: 100px;
-          font-weight: 700;
-          font-size: 14px;
+          font-weight: 800;
+          font-size: 18px;
+          letter-spacing: 0.02em;
           text-decoration: none;
-          margin-bottom: 12px;
+          margin-bottom: 14px;
+          border: 2px solid rgba(255,255,255,.25);
+          box-shadow: 0 8px 32px rgba(155,124,255,.45);
         }
-        .growth-contact-link {
-          color: #9b7cff;
+        .growth-call-bounce {
+          animation: growth-call-bounce 1.25s ease-in-out infinite;
+        }
+        .growth-call-icon {
+          font-size: 22px;
+          line-height: 1;
+        }
+        .growth-call-phone {
           font-size: 13px;
           font-weight: 600;
+          opacity: 0.92;
+          letter-spacing: 0.04em;
+        }
+        @keyframes growth-call-bounce {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+            box-shadow: 0 8px 32px rgba(155,124,255,.45);
+          }
+          50% {
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: 0 16px 48px rgba(155,124,255,.65);
+          }
+        }
+        .growth-contact-link {
+          color: rgba(255,255,255,.55);
+          font-size: 13px;
+          font-weight: 500;
           text-decoration: none;
+          transition: color .2s;
+        }
+        .growth-contact-link:hover {
+          color: #9b7cff;
+        }
+        @media (max-width: 768px) {
+          .growth-audit-locked-wrap,
+          .growth-audit-locked-blur {
+            min-height: 360px;
+          }
+          .growth-call-cta {
+            padding: 16px 32px 14px;
+            font-size: 16px;
+          }
         }
       `}</style>
     </section>
