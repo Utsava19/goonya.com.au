@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { INDUSTRIES } from "../data/siteContent";
+import { formatGrowthReportEmail, sendFormEmail } from "../utils/formSubmit";
+import { SITE } from "../data/siteMeta";
 import {
   runGrowthAudit,
   scoreHeadline,
@@ -57,6 +59,21 @@ export default function GrowthScoreCheck({
       const audit = await runGrowthAudit(form);
       setResult(audit);
       setErrors({});
+
+      sendFormEmail({
+        subject: `Growth audit: ${form.business.trim()} — score ${audit.score}/100`,
+        fields: {
+          business: form.business.trim(),
+          website: form.website.trim(),
+          suburb: form.suburb.trim(),
+          industry: form.industry.trim(),
+          score: `${audit.score}/100`,
+          scanned_url: audit.finalUrl || form.website.trim(),
+          full_report: formatGrowthReportEmail(form, audit),
+        },
+      }).catch(() => {
+        /* report email is best-effort — results still show on screen */
+      });
     } catch (err) {
       setSubmitError(err.message || "Could not complete the growth check.");
       setResult(null);
@@ -165,7 +182,12 @@ export default function GrowthScoreCheck({
                 </div>
               )}
 
-              {result && !loading && (
+              {result && !loading && (() => {
+                const previewCount = Math.max(2, Math.ceil(result.findings.length / 2));
+                const previewFindings = result.findings.slice(0, previewCount);
+                const lockedFindings = result.findings.slice(previewCount);
+
+                return (
                 <>
                   <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "8px" }}>
                     YOUR GOONYA GROWTH SCORE
@@ -222,34 +244,75 @@ export default function GrowthScoreCheck({
                     ))}
                   </div>
 
-                  <div style={{ marginBottom: "24px" }}>
-                    <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#666", marginBottom: "10px" }}>
-                      FULL AUDIT
-                    </div>
-                    {result.findings.slice(0, 8).map((f, i) => (
-                      <div key={i} style={{
-                        display: "flex", gap: "10px", padding: "10px 0",
-                        borderBottom: `1px solid ${L}`, fontSize: "13px", lineHeight: 1.5,
-                      }}>
-                        <span style={{ color: levelColor[f.level], flexShrink: 0, fontWeight: 700 }}>
-                          {f.level === "good" ? "✓" : f.level === "warn" ? "!" : "✕"}
-                        </span>
-                        <span>
-                          <strong style={{ color: "#ccc" }}>{f.area}:</strong>{" "}
-                          <span style={{ color: "#777" }}>{f.text}</span>
-                        </span>
+                  {previewFindings.length > 0 && (
+                    <div style={{ marginBottom: lockedFindings.length > 0 ? "16px" : "24px" }}>
+                      <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#666", marginBottom: "10px" }}>
+                        AUDIT PREVIEW
                       </div>
-                    ))}
-                  </div>
+                      {previewFindings.map((f, i) => (
+                        <div key={i} style={{
+                          display: "flex", gap: "10px", padding: "10px 0",
+                          borderBottom: `1px solid ${L}`, fontSize: "13px", lineHeight: 1.5,
+                        }}>
+                          <span style={{ color: levelColor[f.level], flexShrink: 0, fontWeight: 700 }}>
+                            {f.level === "good" ? "✓" : f.level === "warn" ? "!" : "✕"}
+                          </span>
+                          <span>
+                            <strong style={{ color: "#ccc" }}>{f.area}:</strong>{" "}
+                            <span style={{ color: "#777" }}>{f.text}</span>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-                  <Link to="/contact" style={{
-                    display: "inline-flex", padding: "14px 28px", background: "white",
-                    color: "black", borderRadius: "100px", fontWeight: 700, fontSize: "14px", textDecoration: "none",
-                  }}>
-                    Book a Strategy Call →
-                  </Link>
+                  {lockedFindings.length > 0 && (
+                    <div className="growth-audit-locked-wrap" style={{ marginBottom: "24px" }}>
+                      <div className="growth-audit-locked-blur" aria-hidden="true">
+                        <div style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#666", marginBottom: "10px" }}>
+                          FULL DETAILED AUDIT
+                        </div>
+                        {lockedFindings.map((f, i) => (
+                          <div key={i} style={{
+                            display: "flex", gap: "10px", padding: "10px 0",
+                            borderBottom: `1px solid ${L}`, fontSize: "13px", lineHeight: 1.5,
+                          }}>
+                            <span style={{ color: levelColor[f.level], flexShrink: 0, fontWeight: 700 }}>!</span>
+                            <span>
+                              <strong style={{ color: "#ccc" }}>{f.area}:</strong>{" "}
+                              <span style={{ color: "#777" }}>{f.text}</span>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="growth-audit-locked-cta">
+                        <div style={{ fontSize: "11px", letterSpacing: "2px", color: A, marginBottom: "8px" }}>
+                          FULL REPORT AVAILABLE
+                        </div>
+                        <p style={{ color: "#ccc", fontSize: "14px", lineHeight: 1.6, margin: "0 0 16px" }}>
+                          Call us for the complete website audit and a plan to fix what's costing you enquiries.
+                        </p>
+                        <a href={`tel:${SITE.phoneTel}`} className="growth-call-cta">
+                          Call us now — {SITE.phone}
+                        </a>
+                        <Link to="/contact" className="growth-contact-link">
+                          Or send an enquiry →
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
+                  {lockedFindings.length === 0 && (
+                    <Link to="/contact" style={{
+                      display: "inline-flex", padding: "14px 28px", background: "white",
+                      color: "black", borderRadius: "100px", fontWeight: 700, fontSize: "14px", textDecoration: "none",
+                    }}>
+                      Book a Strategy Call →
+                    </Link>
+                  )}
                 </>
-              )}
+                );
+              })()}
             </div>
           )}
         </div>
@@ -278,6 +341,50 @@ export default function GrowthScoreCheck({
           background: #070707;
           padding: 48px 0 56px !important;
           margin-bottom: 0;
+        }
+        .growth-audit-locked-wrap {
+          position: relative;
+          border-radius: 14px;
+          overflow: hidden;
+          border: 1px solid rgba(155,124,255,.2);
+        }
+        .growth-audit-locked-blur {
+          filter: blur(7px);
+          user-select: none;
+          pointer-events: none;
+          padding: 20px;
+          max-height: 220px;
+          overflow: hidden;
+          opacity: 0.55;
+        }
+        .growth-audit-locked-cta {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 24px;
+          background: rgba(8, 6, 15, 0.72);
+          backdrop-filter: blur(2px);
+        }
+        .growth-call-cta {
+          display: inline-flex;
+          padding: 14px 28px;
+          background: #9b7cff;
+          color: #fff;
+          border-radius: 100px;
+          font-weight: 700;
+          font-size: 14px;
+          text-decoration: none;
+          margin-bottom: 12px;
+        }
+        .growth-contact-link {
+          color: #9b7cff;
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
         }
       `}</style>
     </section>

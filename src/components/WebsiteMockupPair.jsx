@@ -1,4 +1,7 @@
 function hexToRgb(hex) {
+  if (typeof hex !== "string") {
+    return { r: 155, g: 124, b: 255 };
+  }
   const h = hex.replace("#", "");
   const n = parseInt(h.length === 3 ? h.split("").map((c) => c + c).join("") : h, 16);
   return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
@@ -102,7 +105,7 @@ function GoodSite({ mockup }) {
           <div
             key={card}
             style={{
-              background: isLight ? rgba(brand.primary, 0.06) : rgba(255, 255, 255, 0.04),
+              background: isLight ? rgba(brand.primary, 0.06) : "rgba(255,255,255,0.04)",
               border: `1px solid ${rgba(brand.primary, 0.2)}`,
               color: isLight ? "#555" : "#bbb",
             }}

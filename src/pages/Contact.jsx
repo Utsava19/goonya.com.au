@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { SITE, SOCIAL_LINKS } from "../data/siteMeta";
+import { sendFormEmail } from "../utils/formSubmit";
 
-const ENQUIRY_EMAIL = "admin@goonya.com.au";
+const ENQUIRY_EMAIL = SITE.enquiryEmail;
 
 export default function Contact() {
   const [sent, setSent] = useState(false);
@@ -26,6 +28,17 @@ export default function Contact() {
     setError("");
 
     try {
+      const serviceLabels = {
+        ai: "AI Automation",
+        website: "Website Design",
+        marketing: "Digital Marketing",
+        social: "Social Media",
+        systems: "Digital Systems",
+        admin: "Admin & Operations",
+        all: "Not sure — let's chat",
+      };
+      const serviceLabel = serviceLabels[form.service] || form.service || "Not specified";
+
       const res = await fetch(`https://formsubmit.co/ajax/${ENQUIRY_EMAIL}`, {
         method: "POST",
         headers: {
@@ -36,10 +49,26 @@ export default function Contact() {
           name: form.name,
           email: form.email,
           business: form.business || "Not provided",
-          service: form.service || "Not specified",
+          service: serviceLabel,
           message: form.message || "No message",
           _subject: `New enquiry from ${form.name} — goonya.com.au`,
           _template: "table",
+          _replyto: form.email,
+          _autoresponse: `Hi ${form.name},
+
+Thanks for contacting Goonya. Here's a copy of what you sent us:
+
+Name: ${form.name}
+Email: ${form.email}
+Business: ${form.business || "Not provided"}
+Service: ${serviceLabel}
+Message: ${form.message || "No message"}
+
+We'll review your enquiry and get back to you within 24 hours.
+
+Goonya
+${ENQUIRY_EMAIL}
+${SITE.phone}`,
         }),
       });
 
@@ -64,27 +93,7 @@ export default function Contact() {
     boxSizing:"border-box",
   };
 
-  const socials = [
-    { name:"Facebook",  href:"https://facebook.com",  icon:(
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-      </svg>
-    )},
-    { name:"Instagram", href:"https://instagram.com", icon:(
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-      </svg>
-    )},
-    { name:"LinkedIn",  href:"https://linkedin.com",  icon:(
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-        <rect x="2" y="9" width="4" height="12"/>
-        <circle cx="4" cy="4" r="2"/>
-      </svg>
-    )},
-  ];
+  const socials = SOCIAL_LINKS;
 
   return (
     <div style={{ background:"#070707", overflowX:"hidden" }}>
@@ -128,7 +137,8 @@ export default function Contact() {
                 Message sent!
               </h2>
               <p style={{ color:"#555", fontSize:"16px", lineHeight:1.7 }}>
-                Thanks for reaching out. We'll be in touch within 24 hours.
+                Thanks for reaching out. A copy of your enquiry has been sent to {form.email}.
+                We'll be in touch within 24 hours.
               </p>
             </div>
           ) : (
@@ -272,12 +282,8 @@ export default function Contact() {
               FOLLOW US
             </div>
             <div style={{ display:"flex", gap:"12px" }}>
-              {[
-                { name:"Facebook",  href:"https://facebook.com" },
-                { name:"Instagram", href:"https://instagram.com" },
-                { name:"LinkedIn",  href:"https://linkedin.com" },
-              ].map(({name,href}) => (
-                <a key={name} href={href} target="_blank" rel="noreferrer" style={{
+              {socials.map(({ name, href, label }) => (
+                <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} style={{
                   padding:"10px 18px", borderRadius:"100px",
                   border:`1px solid rgba(255,255,255,.1)`,
                   fontSize:"12px", color:"#666", textDecoration:"none",
