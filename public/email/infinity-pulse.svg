@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 48" fill="none" role="img" aria-label="Goonya infinity mark">
+  <defs>
+    <linearGradient id="goonyaPurple" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="55%" stop-color="#b79cff"/>
+      <stop offset="100%" stop-color="#9b7cff"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Glow layer -->
+  <path
+    d="M28 24c0-8.8 7.2-16 16-16 5.2 0 9.8 2.5 12.7 6.4C59.6 10.5 64.2 8 69.4 8c8.8 0 16 7.2 16 16s-7.2 16-16 16c-5.2 0-9.8-2.5-12.7-6.4C54.2 37.5 49.6 40 44.4 40c-8.8 0-16-7.2-16-16z"
+    stroke="#9b7cff"
+    stroke-width="3"
+    opacity="0.35"
+    filter="url(#glow)"
+  >
+    <animate attributeName="opacity" values="0.25;0.7;0.25" dur="2.4s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Main infinity -->
+  <path
+    d="M28 24c0-8.8 7.2-16 16-16 5.2 0 9.8 2.5 12.7 6.4C59.6 10.5 64.2 8 69.4 8c8.8 0 16 7.2 16 16s-7.2 16-16 16c-5.2 0-9.8-2.5-12.7-6.4C54.2 37.5 49.6 40 44.4 40c-8.8 0-16-7.2-16-16z"
+    stroke="url(#goonyaPurple)"
+    stroke-width="3"
+    fill="none"
+    stroke-linecap="round"
+  />
+
+  <!-- Circuit dots on right loop -->
+  <circle cx="78" cy="18" r="1.8" fill="#ffffff" opacity="0.9">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="2.4s" begin="0.3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="86" cy="24" r="1.8" fill="#9b7cff">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="2.4s" begin="0.6s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="78" cy="30" r="1.8" fill="#ffffff" opacity="0.9">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="2.4s" begin="0.9s" repeatCount="indefinite"/>
+  </circle>
+</svg>
