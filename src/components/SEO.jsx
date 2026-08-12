@@ -1,116 +1,85 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { CASE_STUDIES } from "../data/caseStudies";
+import { PAGE_SEO, SITE } from "../data/siteMeta";
 
-const BASE_URL = "https://goonya.com.au";
-
-const SEO_DATA = {
-  "/": {
-    title: "Goonya | Websites, Marketing & AI Automation",
-    description:
-      "Goonya helps Australian small businesses grow with professional websites, digital marketing, social media, local SEO and AI automation.",
-  },
-
-  "/about": {
-    title: "About Goonya | Digital Growth for Small Business",
-    description:
-      "Learn about Goonya and how we help Australian small businesses build a stronger online presence through websites, marketing and automation.",
-  },
-
-  "/services": {
-    title: "Digital Marketing & Business Services | Goonya",
-    description:
-      "Explore Goonya's website design, digital marketing, social media, local SEO and AI automation services for Australian small businesses.",
-  },
-
-  "/packages": {
-    title: "Goonya Packages | Websites & Digital Marketing",
-    description:
-      "Explore Goonya's digital marketing, social media and website packages designed for Australian small businesses.",
-  },
-
-  "/our-work": {
-    title: "Our Work | Goonya",
-    description:
-      "Explore websites, marketing projects and digital solutions created by Goonya for Australian small businesses.",
-  },
-
-  "/contact": {
-    title: "Contact Goonya | Let's Grow Your Business",
-    description:
-      "Ready to improve your business online? Contact Goonya for websites, marketing, social media and AI automation solutions.",
-  },
-
-  "/privacy": {
-    title: "Privacy Policy | Goonya",
-    description:
-      "Read the Goonya privacy policy.",
-  },
-
-  "/terms": {
-    title: "Terms & Conditions | Goonya",
-    description:
-      "Read the Goonya terms and conditions.",
-  },
+const DEFAULT_SEO = {
+  title: "Goonya | Digital Growth for Small Business",
+  description:
+    "Goonya helps Australian small businesses grow through websites, marketing and AI automation.",
 };
 
-export default function SEO({ path }) {
-  const data =
-    SEO_DATA[path] || {
-      title: "Goonya | Digital Growth for Small Business",
-      description:
-        "Goonya helps Australian small businesses grow through websites, marketing and AI automation.",
-    };
+function buildSeoMap() {
+  const caseStudySeo = Object.fromEntries(
+    CASE_STUDIES.map((study) => [
+      `/our-work/${study.slug}`,
+      {
+        title: `${study.client} Case Study | Goonya`,
+        description: study.summary,
+      },
+    ])
+  );
 
-  const canonicalUrl = `${BASE_URL}${path === "/" ? "" : path}`;
+  return { ...PAGE_SEO, ...caseStudySeo };
+}
+
+const SEO_DATA = buildSeoMap();
+
+function resolveSeo(path) {
+  return SEO_DATA[path] || DEFAULT_SEO;
+}
+
+function canonicalUrl(path) {
+  return `${SITE.url}${path === "/" ? "" : path}`;
+}
+
+export default function SEO({ path }) {
+  const data = useMemo(() => resolveSeo(path), [path]);
+  const url = useMemo(() => canonicalUrl(path), [path]);
 
   useEffect(() => {
     document.title = data.title;
 
     const setMeta = (name, content) => {
       let element = document.querySelector(`meta[name="${name}"]`);
-
       if (!element) {
         element = document.createElement("meta");
         element.setAttribute("name", name);
         document.head.appendChild(element);
       }
-
       element.setAttribute("content", content);
     };
 
     const setProperty = (property, content) => {
-      let element = document.querySelector(
-        `meta[property="${property}"]`
-      );
-
+      let element = document.querySelector(`meta[property="${property}"]`);
       if (!element) {
         element = document.createElement("meta");
         element.setAttribute("property", property);
         document.head.appendChild(element);
       }
-
       element.setAttribute("content", content);
     };
 
     setMeta("description", data.description);
+    setMeta("twitter:title", data.title);
+    setMeta("twitter:description", data.description);
+    setMeta("twitter:image", `${SITE.url}/logo.png`);
 
     setProperty("og:title", data.title);
     setProperty("og:description", data.description);
-    setProperty("og:url", canonicalUrl);
+    setProperty("og:url", url);
     setProperty("og:type", "website");
-    setProperty("og:site_name", "Goonya");
+    setProperty("og:site_name", SITE.name);
+    setProperty("og:image", `${SITE.url}/logo.png`);
+    setProperty("og:locale", "en_AU");
 
-    let canonical = document.querySelector(
-      'link[rel="canonical"]'
-    );
-
+    let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement("link");
       canonical.setAttribute("rel", "canonical");
       document.head.appendChild(canonical);
     }
-
-    canonical.setAttribute("href", canonicalUrl);
-  }, [data.title, data.description, canonicalUrl]);
+    canonical.setAttribute("href", url);
+  }, [data.title, data.description, url]);
 
   return null;
 }
