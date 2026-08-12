@@ -1,14 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { PACKAGES, BUILD_ITEMS, WEBSITE_PACKAGE, CUSTOM_PACKAGE } from "../data/siteContent";
+import { PACKAGES, WEBSITE_PACKAGE, CUSTOM_PACKAGE } from "../data/siteContent";
 import GrowthScoreCheck from "../components/GrowthScoreCheck";
 import "./Packages.css";
 
 const plans = PACKAGES;
-
-const buildGroups = [...new Set(BUILD_ITEMS.map((i) => i.category))].map((category) => ({
-  category,
-  items: BUILD_ITEMS.filter((i) => i.category === category),
-}));
 
 const RUNNER_WAYPOINTS = [
   { progress: 0,    x: 14, y: 76, pace: 1.5 },
@@ -426,7 +421,6 @@ function Runner() {
 
 export default function Packages() {
   const [openPlans, setOpenPlans] = useState(() => new Set());
-  const [selected, setSelected] = useState([]);
 
   const togglePlan = (index) => {
     setOpenPlans((prev) => {
@@ -436,16 +430,6 @@ export default function Packages() {
       return next;
     });
   };
-
-  const toggleSelection = (id) => {
-    setSelected((current) =>
-      current.includes(id) ? current.filter((x) => x !== id) : [...current, id]
-    );
-  };
-
-  const selectedItems = BUILD_ITEMS.filter((i) => selected.includes(i.id));
-  const onceTotal = selectedItems.filter((i) => !i.recurring).reduce((s, i) => s + i.price, 0);
-  const monthlyTotal = selectedItems.filter((i) => i.recurring).reduce((s, i) => s + i.price, 0);
 
   return (
     <div className="growth-page">
@@ -461,7 +445,7 @@ export default function Packages() {
         </h1>
         <p className="hero-copy">
           Three monthly packages — Launch, Growth and Scale — plus a standalone website build
-          and custom options. Pick what fits where your business is today.
+          and custom options when you need something tailored.
         </p>
         <div className="hero-services">
           <span>WEBSITE</span>
@@ -555,13 +539,18 @@ export default function Packages() {
                   )}
                   <p>{plan.tagline}</p>
                 </div>
+                <ul className="plan-highlights">
+                  {(plan.highlights ?? plan.features).map((item) => (
+                    <li key={item}>+ {item}</li>
+                  ))}
+                </ul>
                 <button
                   type="button"
                   className="plan-toggle"
                   onClick={() => togglePlan(index)}
                   aria-expanded={isOpen}
                 >
-                  {isOpen ? "Hide details" : "See what's included"}
+                  {isOpen ? "Hide full breakdown" : "See full breakdown"}
                   <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
                 </button>
                 <div className={`plan-details ${isOpen ? "is-open" : ""}`}>
@@ -649,74 +638,6 @@ export default function Packages() {
         <a href="/contact" className="primary-button">
           {CUSTOM_PACKAGE.cta}
         </a>
-      </section>
-
-      {/* BUILD YOUR OWN */}
-      <section className="build-section section-shell">
-        <div className="eyebrow">BUILD YOUR GOONYA</div>
-        <h2>
-          Don't need the whole package?
-          <span> Build exactly what you need.</span>
-        </h2>
-        <p className="section-intro">
-          Pick the services that make sense for your business
-          and build your own growth system.
-        </p>
-        <div className="builder">
-          <div className="builder-options">
-            {buildGroups.map((group) => (
-              <div className="builder-group" key={group.category}>
-                <h3>{group.category}</h3>
-                <div className="builder-items">
-                  {group.items.map((item) => {
-                    const active = selected.includes(item.id);
-                    return (
-                      <button
-                        key={item.id}
-                        className={active ? "selected" : ""}
-                        onClick={() => toggleSelection(item.id)}
-                      >
-                        <span>{active ? "✓" : "+"}</span>
-                        {item.label}
-                        <em style={{ marginLeft: "auto", fontStyle: "normal", color: active ? "#9b7cff" : "#666", fontSize: "0.75rem" }}>
-                          ${item.price}{item.recurring ? "/mo" : ""}
-                        </em>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-          <aside className="builder-summary">
-            <div className="summary-label">YOUR GOONYA PLAN</div>
-            {onceTotal > 0 && (
-              <div className="custom-price" style={{ fontSize: "1.8rem", marginBottom: "8px" }}>
-                ${onceTotal.toLocaleString()}
-                <small> one-off</small>
-              </div>
-            )}
-            {monthlyTotal > 0 && (
-              <div className="custom-price">
-                ${monthlyTotal.toLocaleString()}
-                <small>/ month</small>
-              </div>
-            )}
-            {onceTotal === 0 && monthlyTotal === 0 && (
-              <div className="custom-price" style={{ fontSize: "1.5rem", color: "#666" }}>
-                $0
-              </div>
-            )}
-            <p>
-              {selected.length === 0
-                ? "Start selecting services to build your plan."
-                : `${selected.length} service${selected.length === 1 ? "" : "s"} selected.`}
-            </p>
-            <a href="/contact" className="primary-button">
-              LET'S BUILD IT <span>→</span>
-            </a>
-          </aside>
-        </div>
       </section>
 
       <GrowthScoreCheck id="growth-check" onPackagesPage />

@@ -523,14 +523,15 @@
 
 .plans-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  align-items: stretch;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+  width: 100%;
 }
 
-@media (min-width: 960px) {
+@media (max-width: 900px) {
   .plans-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 
@@ -542,17 +543,9 @@
   overflow: visible;
 }
 
-.builder-items button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  justify-content: flex-start;
-}
-
 .plan-card {
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  border-radius: 16px;
   padding: 32px;
   position: relative;
   transition: border-color 0.2s;
@@ -560,7 +553,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  background: #08060f;
 }
 
 .plan-top {
@@ -744,7 +737,23 @@
   font-size: 0.88rem;
   opacity: 0.65;
   line-height: 1.6;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  overflow-wrap: anywhere;
+}
+
+.plan-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  min-width: 0;
+}
+
+.plan-highlights li {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   overflow-wrap: anywhere;
 }
 
@@ -794,25 +803,12 @@
   padding: 14px 20px;
   border-radius: 3px;
   text-decoration: none;
-  margin-top: auto;
+  margin-top: 16px;
   transition: background 0.2s;
 }
 
 .plan-button:hover {
   background: rgba(155, 124, 255, 0.2);
-}
-
-/* =========================================================
-   BUILD YOUR OWN
-========================================================= */
-.build-section h2 {
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  font-weight: 900;
-  margin-bottom: 16px;
-}
-
-.build-section h2 span {
-  color: #9b7cff;
 }
 
 .section-intro {
@@ -821,91 +817,6 @@
   max-width: 520px;
   margin-bottom: 48px;
   line-height: 1.6;
-}
-
-.builder {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 40px;
-  align-items: start;
-}
-
-.builder-group {
-  margin-bottom: 32px;
-}
-
-.builder-group h3 {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  color: #9b7cff;
-  margin-bottom: 12px;
-}
-
-.builder-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.builder-items button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: inherit;
-  font-size: 0.8rem;
-  padding: 8px 14px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-}
-
-.builder-items button:hover {
-  border-color: #9b7cff;
-}
-
-.builder-items button.selected {
-  border-color: #9b7cff;
-  background: rgba(155, 124, 255, 0.12);
-  color: #9b7cff;
-}
-
-.builder-summary {
-  position: sticky;
-  top: 100px;
-  border: 1px solid rgba(155, 124, 255, 0.3);
-  border-radius: 6px;
-  padding: 28px;
-}
-
-.summary-label {
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  color: #9b7cff;
-  margin-bottom: 12px;
-}
-
-.custom-price {
-  font-size: 2.4rem;
-  font-weight: 900;
-  margin-bottom: 12px;
-}
-
-.custom-price small {
-  font-size: 0.85rem;
-  font-weight: 400;
-  opacity: 0.5;
-  margin-left: 4px;
-}
-
-.builder-summary p {
-  font-size: 0.85rem;
-  opacity: 0.6;
-  margin-bottom: 24px;
-  line-height: 1.5;
 }
 
 /* =========================================================
@@ -1195,14 +1106,6 @@
 @media (max-width: 768px) {
   .section-shell {
     padding: 72px 24px;
-  }
-
-  .builder {
-    grid-template-columns: 1fr;
-  }
-
-  .builder-summary {
-    position: static;
   }
 
   .score-form {
