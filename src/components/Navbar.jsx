@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import GoonyaLogo from "./GoonyaLogo";
 
 export default function Navbar() {
   const [open, setOpen]       = useState(false);
@@ -69,31 +70,9 @@ export default function Navbar() {
 
         {/* BRAND */}
         <Link to="/" style={{ textDecoration:"none", display:"flex", alignItems:"center" }}
-          onMouseEnter={e=>e.currentTarget.style.opacity=".8"}
+          onMouseEnter={e=>e.currentTarget.style.opacity=".85"}
           onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-          <img
-            src="/logo.png"
-            alt="Goonya"
-            onError={e => {
-              e.target.style.display = "none";
-              e.target.nextSibling.style.display = "flex";
-            }}
-            style={{
-              height:"44px",
-              width:"auto",
-              display:"block",
-              animation:"logoLoad .8s ease both",
-            }}
-          />
-          {/* fallback text if image fails */}
-          <span style={{ display:"none", alignItems:"center", gap:"3px",
-            fontFamily:"'Space Grotesk',sans-serif", fontSize:"20px",
-            fontWeight:700, letterSpacing:"-1px", color:"white" }}>
-            GOONYA
-            <span style={{ width:"6px", height:"6px", borderRadius:"50%",
-              background:"#9b7cff", boxShadow:"0 0 8px #9b7cff",
-              marginBottom:"10px", flexShrink:0 }}/>
-          </span>
+          <GoonyaLogo height={scrolled ? 40 : 44} style={{ animation:"logoLoad .8s ease both" }} />
         </Link>
 
         {/* DESKTOP LINKS */}
@@ -208,11 +187,7 @@ export default function Navbar() {
           display:"flex", flexDirection:"column", alignItems:"center", gap:"16px" }}>
 
           {/* logo in mobile menu */}
-          <img src="/logo.png" alt="Goonya" style={{
-            height:"32px", width:"auto", display:"block",
-             
-            marginBottom:"8px",
-          }}/>
+          <GoonyaLogo height={32} style={{ marginBottom: 8 }} />
 
           {links.map((l, i) => (
             <Link key={l.path} to={l.path} onClick={() => setOpen(false)}

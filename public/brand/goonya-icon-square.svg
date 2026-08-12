@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="Goonya">
+  <rect width="512" height="512" rx="96" fill="#0c0a14"/>
+  <rect x="24" y="24" width="464" height="464" rx="80" fill="url(#bgGlow)" opacity="0.45"/>
+  <text x="256" y="228" text-anchor="middle" fill="url(#goGrad)" font-family="'Space Grotesk', Arial, sans-serif" font-size="132" font-weight="800" letter-spacing="-8">GO</text>
+  <text x="256" y="318" text-anchor="middle" fill="#f0eef5" font-family="'Space Grotesk', Arial, sans-serif" font-size="72" font-weight="600" letter-spacing="-2">on ya</text>
+  <text x="372" y="308" fill="#9b7cff" font-family="'Space Grotesk', Arial, sans-serif" font-size="80" font-weight="800">!</text>
+  <defs>
+    <radialGradient id="bgGlow" cx="0.5" cy="0.35" r="0.65">
+      <stop stop-color="#9b7cff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#9b7cff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goGrad" x1="120" y1="100" x2="390" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0ebff"/>
+      <stop offset="0.45" stop-color="#9b7cff"/>
+      <stop offset="1" stop-color="#6d4fd4"/>
+    </linearGradient>
+  </defs>
+</svg>

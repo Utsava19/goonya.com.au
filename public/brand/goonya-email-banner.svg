@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 88" fill="none" role="img" aria-label="Goonya">
+  <rect width="320" height="88" rx="10" fill="#0c0a14"/>
+  <text x="16" y="54" fill="url(#goGrad)" font-family="'Space Grotesk', Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="-2.5">GO</text>
+  <text x="88" y="54" fill="#f0eef5" font-family="'Space Grotesk', Arial, sans-serif" font-size="30" font-weight="600">on</text>
+  <text x="132" y="54" fill="#9b7cff" font-family="'Space Grotesk', Arial, sans-serif" font-size="30" font-weight="700">ya</text>
+  <text x="178" y="50" fill="#9b7cff" font-family="'Space Grotesk', Arial, sans-serif" font-size="34" font-weight="800">!</text>
+  <defs>
+    <linearGradient id="goGrad" x1="16" y1="12" x2="82" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e8deff"/>
+      <stop offset="0.55" stop-color="#9b7cff"/>
+      <stop offset="1" stop-color="#7c5ce0"/>
+    </linearGradient>
+  </defs>
+</svg>

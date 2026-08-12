@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import GoonyaLogo from "./GoonyaLogo";
 import { SITE, SOCIAL_LINKS, fullAddress } from "../data/siteMeta";
 
 export default function Footer() {
@@ -27,7 +28,9 @@ export default function Footer() {
         gap: "40px", marginBottom: "56px" }} className="footer-grid">
 
         <div>
-          <img src="/logo.png" alt="Goonya" style={{ height: "40px", width: "auto", display: "block", marginBottom: "14px" }} />
+          <Link to="/" style={{ display: "inline-block", marginBottom: "14px", textDecoration: "none" }}>
+            <GoonyaLogo height={36} />
+          </Link>
           <p style={{ color: "#444", fontSize: "14px", lineHeight: 1.7, maxWidth: "280px", marginBottom: "20px" }}>
             We help Australian small businesses get found, get leads and save time —
             without the big agency price tag.
