@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import GoonyaLogo from "./GoonyaLogo";
-import { SITE, SOCIAL_LINKS, fullAddress } from "../data/siteMeta";
+import { SITE, SOCIAL_LINKS, SLOGAN, fullAddress } from "../data/siteMeta";
 
 export default function Footer() {
   const A = "#9b7cff";
@@ -32,8 +32,7 @@ export default function Footer() {
             <GoonyaLogo height={36} />
           </Link>
           <p style={{ color: "#444", fontSize: "14px", lineHeight: 1.7, maxWidth: "280px", marginBottom: "20px" }}>
-            We help Australian small businesses get found, get leads and save time —
-            without the big agency price tag.
+            {SLOGAN}
           </p>
           <div style={{ display: "flex", gap: "10px" }}>
             {SOCIAL_LINKS.map(({ name, href, label }) => (

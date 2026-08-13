@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" fill="none" role="img" aria-label="Goonya portrait overlay">
+  <rect x="100" y="100" width="1000" height="760" rx="32" fill="none" stroke="rgba(155,124,255,0.45)" stroke-width="4"/>
+  <rect x="0" y="880" width="1200" height="320" fill="url(#bottomFade)"/>
+  <text x="600" y="980" text-anchor="middle" fill="url(#goGrad)" font-family="'Space Grotesk', Arial, sans-serif" font-size="52" font-weight="800" letter-spacing="-1">NAME PLACEHOLDER</text>
+  <text x="600" y="1040" text-anchor="middle" fill="#9b7cff" font-family="'DM Sans', Arial, sans-serif" font-size="24" font-weight="600" letter-spacing="3">ROLE PLACEHOLDER</text>
+  <text x="600" y="1120" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-family="'DM Sans', Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="2">GO ON YA - DIGITAL GROWTH FOR SMALL BUSINESS</text>
+  <defs>
+    <linearGradient id="bottomFade" x1="600" y1="880" x2="600" y2="1200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0c0a14" stop-opacity="0"/>
+      <stop offset="0.35" stop-color="#0c0a14" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#0c0a14" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="goGrad" x1="420" y1="920" x2="780" y2="990" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0ebff"/>
+      <stop offset="0.55" stop-color="#9b7cff"/>
+      <stop offset="1" stop-color="#6d4fd4"/>
+    </linearGradient>
+  </defs>
+</svg>

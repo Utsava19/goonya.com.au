@@ -36,12 +36,18 @@ export const SITE = {
   ],
 };
 
+/** Official brand slogan — use consistently across site, email, and social */
+export const SLOGAN = "GO on ya — digital growth for small business";
+
+/** Short slogan line for tight spaces (covers, badges) */
+export const SLOGAN_SHORT = "GO on ya — digital growth for small business";
+
 /** 70–160 chars — tuned for Google snippet length */
 export const META_DESCRIPTION = SITE.description;
 
 export const SOCIAL = {
   facebook: "https://www.facebook.com/profile.php?id=61593234868713",
-  instagram: "https://www.instagram.com/goonya19/",
+  instagram: "https://www.instagram.com/goonya86/",
 };
 
 export const SOCIAL_LINKS = [

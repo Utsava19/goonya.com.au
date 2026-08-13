@@ -1,16 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 312" fill="none" role="img" aria-label="Goonya go on ya">
-  <rect width="820" height="312" fill="#0c0a14"/>
-  <rect x="0" y="0" width="820" height="312" fill="url(#glow)" opacity="0.5"/>
-  <text x="410" y="148" text-anchor="middle" fill="url(#goGrad)" font-family="'Space Grotesk', Arial, sans-serif" font-size="96" font-weight="800" letter-spacing="-5">GO</text>
-  <text x="410" y="228" text-anchor="middle" fill="#f0eef5" font-family="'Space Grotesk', Arial, sans-serif" font-size="52" font-weight="600" letter-spacing="-1.5">on ya</text>
-  <text x="520" y="220" fill="#9b7cff" font-family="'Space Grotesk', Arial, sans-serif" font-size="58" font-weight="800">!</text>
-  <text x="410" y="278" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-family="'DM Sans', Arial, sans-serif" font-size="14" font-weight="600" letter-spacing="4">DIGITAL GROWTH FOR SMALL BUSINESS</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 624" fill="none" role="img" aria-label="Goonya go on ya">
+  <rect width="1640" height="624" fill="#0c0a14"/>
+  <rect width="1640" height="624" fill="url(#glow)" opacity="0.55"/>
+  <text x="820" y="268" text-anchor="middle" fill="url(#goGrad)" font-family="'Space Grotesk', Arial, sans-serif" font-size="152" font-weight="800" letter-spacing="-8">GO</text>
+  <text x="820" y="390" text-anchor="middle" fill="#f0eef5" font-family="'Space Grotesk', Arial, sans-serif" font-size="84" font-weight="600" letter-spacing="-2.5">on ya</text>
+  <text x="1040" y="378" fill="#9b7cff" font-family="'Space Grotesk', Arial, sans-serif" font-size="92" font-weight="800">!</text>
+  <text x="820" y="468" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-family="'DM Sans', Arial, sans-serif" font-size="28" font-weight="600" letter-spacing="1.5">GO on ya - digital growth for small business</text>
+  <text x="820" y="548" text-anchor="middle" fill="rgba(155,124,255,0.85)" font-family="'DM Sans', Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="3">GOONYA.COM.AU · NOBLE PARK, MELBOURNE</text>
   <defs>
-    <radialGradient id="glow" cx="0.5" cy="0.4" r="0.7">
-      <stop stop-color="#9b7cff" stop-opacity="0.25"/>
+    <radialGradient id="glow" cx="0.5" cy="0.4" r="0.72">
+      <stop stop-color="#9b7cff" stop-opacity="0.28"/>
       <stop offset="1" stop-color="#9b7cff" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="goGrad" x1="280" y1="60" x2="540" y2="150" gradientUnits="userSpaceOnUse">
+    <linearGradient id="goGrad" x1="560" y1="120" x2="1080" y2="300" gradientUnits="userSpaceOnUse">
       <stop stop-color="#f0ebff"/>
       <stop offset="0.45" stop-color="#9b7cff"/>
       <stop offset="1" stop-color="#6d4fd4"/>
