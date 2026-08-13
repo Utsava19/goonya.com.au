@@ -64,7 +64,7 @@ export function fullAddress() {
 
 export const PAGE_SEO = {
   "/": {
-    title: "Goonya | Websites, Marketing & AI Automation Melbourne",
+    title: "Goonya | Digital Growth for Small Business Australia",
     description:
       "Goonya helps Melbourne small businesses get found on Google with websites, digital marketing, local SEO, social media and AI automation — Noble Park, VIC.",
   },
@@ -108,6 +108,47 @@ export const PAGE_SEO = {
   },
 };
 
+/** Main site sections — helps Google understand brand navigation and sitelink candidates */
+export const PRIMARY_NAV = [
+  {
+    path: "/about",
+    name: "About Goonya",
+    description: "Who we are and how we help Australian small businesses grow online.",
+  },
+  {
+    path: "/services",
+    name: "Services",
+    description: "Websites, SEO, digital marketing, social media and AI automation.",
+  },
+  {
+    path: "/packages",
+    name: "Packages",
+    description: "Fixed-price website and marketing packages for small business.",
+  },
+  {
+    path: "/our-work",
+    name: "Our Work",
+    description: "Case studies and real results from Goonya client projects.",
+  },
+  {
+    path: "/faq",
+    name: "FAQ",
+    description: "Common questions about pricing, timelines and how Goonya works.",
+  },
+  {
+    path: "/contact",
+    name: "Contact",
+    description: "Send an enquiry or book a free strategy call with Goonya.",
+  },
+];
+
+export function primaryNavListHtml() {
+  return PRIMARY_NAV.map(
+    ({ path, name, description }) =>
+      `          <li><a href="${path}"><strong>${name}</strong> — ${description}</a></li>`
+  ).join("\n");
+}
+
 export function localBusinessJsonLd() {
   return structuredDataJsonLd();
 }
@@ -130,12 +171,17 @@ export function structuredDataJsonLd() {
         "@id": orgId,
         name: SITE.name,
         legalName: SITE.legalName,
+        alternateName: ["Goonya Australia", "Goonya Digital", "goonya.com.au"],
         url: SITE.url,
         logo: `${SITE.url}/logo.png`,
         image: `${SITE.url}/logo.png`,
         description: META_DESCRIPTION,
         email: SITE.email,
         telephone: "+61-434-785-800",
+        brand: {
+          "@type": "Brand",
+          name: SITE.name,
+        },
         address: {
           "@type": "PostalAddress",
           streetAddress: SITE.address.street,
@@ -152,9 +198,23 @@ export function structuredDataJsonLd() {
         "@id": websiteId,
         url: SITE.url,
         name: SITE.name,
+        alternateName: "Goonya Australia",
         description: META_DESCRIPTION,
         inLanguage: "en-AU",
         publisher: { "@id": orgId },
+        about: { "@id": orgId },
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${SITE.url}/#primary-nav`,
+        name: "Goonya site sections",
+        itemListElement: PRIMARY_NAV.map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: item.name,
+          description: item.description,
+          url: `${SITE.url}${item.path}`,
+        })),
       },
       {
         "@type": "LocalBusiness",

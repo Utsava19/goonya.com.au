@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { runServerGrowthAudit } from "./api/lib/growthAudit.mjs";
-import { META_DESCRIPTION, SOCIAL, SITE, localBusinessJsonLd } from "./src/data/siteMeta.js";
+import { META_DESCRIPTION, SOCIAL, SITE, localBusinessJsonLd, primaryNavListHtml } from "./src/data/siteMeta.js";
 
 function growthAuditApiPlugin() {
   return {
@@ -85,9 +85,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       return html
         .replace("<!-- GTM_INJECT -->", analyticsInjection)
-        .replace("<!-- META_DESCRIPTION -->", META_DESCRIPTION)
+        .replaceAll("<!-- META_DESCRIPTION -->", META_DESCRIPTION)
         .replace("<!-- LOCAL_BUSINESS_JSON -->", jsonLd)
-        .replace("<!-- SOCIAL_LINKS_HTML -->", socialHtml);
+        .replace("<!-- SOCIAL_LINKS_HTML -->", socialHtml)
+        .replace("<!-- PRIMARY_NAV_HTML -->", primaryNavListHtml());
     },
   };
 }
