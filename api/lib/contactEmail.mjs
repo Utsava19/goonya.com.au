@@ -32,72 +32,33 @@ export function buildContactThankYouHtml({ name, serviceLabel, business, message
 
   return `<!DOCTYPE html>
 <html lang="en-AU">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Thank you for contacting Goonya</title>
-</head>
-<body style="margin:0;padding:0;background:#f0edf5;font-family:Arial,Helvetica,sans-serif;color:#1a1625;">
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f0edf5;">
+<head><meta charset="UTF-8" /><title>Thank you for contacting Goonya</title></head>
+<body style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#222;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:8px;">
     <tr>
-      <td align="center" style="padding:32px 16px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:100%;max-width:600px;border-collapse:collapse;">
-          <tr>
-            <td style="background:#0c0a14;padding:28px 32px 24px;text-align:center;border-radius:12px 12px 0 0;">
-              <a href="${SITE.url}" style="text-decoration:none;display:inline-block;">
-                <img src="${SITE.logoUrl}" alt="${SITE.name}" width="180" style="display:block;width:180px;height:auto;max-width:180px;margin:0 auto;border:0;" />
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td style="background:#ffffff;padding:34px 32px 28px;">
-              <p style="margin:0 0 8px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#9b7cff;font-weight:700;">Thank you</p>
-              <h1 style="margin:0 0 16px;font-size:26px;line-height:1.25;color:#0c0a14;font-weight:700;">Hi ${safeName}, we received your enquiry</h1>
-              <p style="margin:0 0 18px;font-size:16px;line-height:1.7;color:#4a4560;">
-                Thank you for contacting <strong>${SITE.name}</strong>. We appreciate you taking the time to reach out.
-                Our team will review your details and get back to you within <strong>24 business hours</strong>.
-              </p>
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;background:#f8f6fc;border:1px solid #e8e4f0;border-radius:10px;">
-                <tr>
-                  <td style="padding:18px 20px;">
-                    <p style="margin:0 0 12px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#9b7cff;font-weight:700;">Your submission</p>
-                    <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#1a1625;"><strong>Service:</strong> ${safeService}</p>
-                    <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#1a1625;"><strong>Business:</strong> ${safeBusiness}</p>
-                    <p style="margin:0;font-size:14px;line-height:1.6;color:#1a1625;"><strong>Message:</strong> ${safeMessage}</p>
-                  </td>
-                </tr>
-              </table>
-              <p style="margin:22px 0 0;font-size:15px;line-height:1.7;color:#4a4560;">
-                Need to add anything else in the meantime? Reply to this email or contact us directly — we are happy to help.
-              </p>
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:22px;border-collapse:collapse;background:#faf8ff;border:1px solid rgba(155,124,255,.22);border-radius:10px;">
-                <tr>
-                  <td style="padding:18px 20px;">
-                    <p style="margin:0 0 10px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#9b7cff;font-weight:700;">Reach us directly</p>
-                    <p style="margin:0 0 6px;font-size:14px;line-height:1.6;">
-                      <a href="mailto:${SITE.email}" style="color:#7c5ce0;text-decoration:none;font-weight:600;">${SITE.email}</a>
-                    </p>
-                    <p style="margin:0 0 6px;font-size:14px;line-height:1.6;">
-                      <a href="tel:${SITE.phoneTel}" style="color:#1a1625;text-decoration:none;">${SITE.phone}</a>
-                    </p>
-                    <p style="margin:0;font-size:14px;line-height:1.6;color:#5c5868;">
-                      <a href="${SITE.url}" style="color:#1a1625;text-decoration:none;">${SITE.url.replace("https://", "")}</a><br />
-                      ${SITE.address}
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td style="background:#0c0a14;padding:20px 32px 24px;text-align:center;border-radius:0 0 12px 12px;">
-              <p style="margin:0 0 6px;font-size:13px;line-height:1.5;color:#c4b5fd;font-weight:600;">${SITE.slogan}</p>
-              <p style="margin:0;font-size:12px;line-height:1.5;color:rgba(255,255,255,.45);">
-                You received this email because you submitted an enquiry at ${SITE.url}/contact
-              </p>
-            </td>
-          </tr>
-        </table>
+      <td style="padding:24px 28px;background:#0c0a14;border-radius:8px 8px 0 0;">
+        <div style="font-size:28px;font-weight:800;color:#9b7cff;letter-spacing:-1px;">GO on ya</div>
+        <div style="font-size:12px;color:#c4b5fd;margin-top:4px;">Goonya — digital growth for small business</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:28px;">
+        <h1 style="margin:0 0 12px;font-size:22px;color:#111;">Hi ${safeName}, thank you for contacting us</h1>
+        <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#444;">
+          We received your enquiry and will get back to you within <strong>24 business hours</strong>.
+        </p>
+        <div style="background:#f8f6fc;border:1px solid #e8e4f0;border-radius:8px;padding:16px 18px;margin-bottom:20px;">
+          <p style="margin:0 0 10px;font-size:12px;font-weight:700;color:#7c5ce0;text-transform:uppercase;letter-spacing:1px;">Your submission</p>
+          <p style="margin:0 0 6px;font-size:14px;line-height:1.6;"><strong>Service:</strong> ${safeService}</p>
+          <p style="margin:0 0 6px;font-size:14px;line-height:1.6;"><strong>Business:</strong> ${safeBusiness}</p>
+          <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Message:</strong> ${safeMessage}</p>
+        </div>
+        <p style="margin:0 0 8px;font-size:14px;line-height:1.7;color:#444;">Questions before we reply? Contact us anytime:</p>
+        <p style="margin:0;font-size:14px;line-height:1.8;">
+          <a href="mailto:${SITE.email}" style="color:#7c5ce0;">${SITE.email}</a><br />
+          <a href="tel:${SITE.phoneTel}" style="color:#222;text-decoration:none;">${SITE.phone}</a><br />
+          <a href="${SITE.url}" style="color:#222;text-decoration:none;">goonya.com.au</a>
+        </p>
       </td>
     </tr>
   </table>
@@ -186,7 +147,7 @@ async function sendViaResend({ to, subject, html, replyTo, text, bcc, tag }) {
     throw new Error("Email service is not configured.");
   }
 
-  const from = process.env.RESEND_FROM || `Goonya <hello@goonya.com.au>`;
+  const from = process.env.RESEND_FROM || `Goonya <${SITE.email}>`;
   const payload = {
     from,
     to: Array.isArray(to) ? to : [to],
@@ -339,7 +300,6 @@ export async function handleContactSubmission(form) {
     try {
       await sendViaResend({
         to: payload.email,
-        bcc: SITE.email,
         subject: "Thank you for contacting Goonya — we'll be in touch shortly",
         html: thankYouHtml,
         text: thankYouText,
@@ -358,6 +318,20 @@ export async function handleContactSubmission(form) {
       thankYouSent = true;
     } catch (err) {
       console.error("FormSubmit thank-you failed:", err.message);
+    }
+  }
+
+  if (process.env.RESEND_API_KEY && thankYouSent) {
+    try {
+      await sendViaResend({
+        to: SITE.email,
+        subject: `Copy: confirmation sent to ${payload.email}`,
+        html: `<p style="font-family:Arial,sans-serif;font-size:14px;color:#444;">This is the confirmation email sent to <strong>${escapeHtml(payload.email)}</strong> after they submitted the contact form:</p>${thankYouHtml}`,
+        text: `Confirmation sent to ${payload.email}:\n\n${thankYouText}`,
+        tag: "contact-thank-you-copy",
+      });
+    } catch (err) {
+      console.error("Resend thank-you copy failed:", err.message);
     }
   }
 

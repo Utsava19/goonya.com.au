@@ -98,8 +98,8 @@ export default function Contact() {
                 Message sent!
               </h2>
               <p style={{ color:"#5c5868", fontSize:"16px", lineHeight:1.7 }}>
-                Thanks for reaching out. A confirmation email has been sent to <strong>{form.email}</strong>.
-                Please check your inbox and spam/junk folder.
+                Thanks for reaching out. We sent a confirmation to <strong>{form.email}</strong> —
+                check that inbox and spam/junk folder (not just {ENQUIRY_EMAIL}).
                 We&apos;ll review your enquiry and be in touch within 24 business hours.
               </p>
               {thankYouWarning && (
