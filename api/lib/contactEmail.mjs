@@ -235,6 +235,11 @@ async function sendViaFormSubmitAjax(form) {
   if (!response.ok) {
     throw new Error("Enquiry notification could not be sent.");
   }
+
+  const result = await response.json().catch(() => ({}));
+  if (result.success === false || result.success === "false") {
+    throw new Error(result.message || "Enquiry notification could not be sent.");
+  }
 }
 
 async function sendAutoresponseViaFormSubmit(form) {
