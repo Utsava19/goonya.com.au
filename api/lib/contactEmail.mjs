@@ -6,7 +6,7 @@ const SITE = {
   phoneTel: "+61434785800",
   address: "75 Bowmore Rd, Noble Park VIC 3174",
   slogan: "GO on ya — digital growth for small business",
-  logoUrl: "https://goonya.com.au/brand/goonya-email-logo.png",
+  logoUrl: "https://goonya.com.au/brand/goonya-email-go-logo.png",
 };
 
 function escapeHtml(value) {
@@ -36,9 +36,10 @@ export function buildContactThankYouHtml({ name, serviceLabel, business, message
 <body style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#222;">
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:8px;">
     <tr>
-      <td style="padding:24px 28px;background:#0c0a14;border-radius:8px 8px 0 0;">
-        <div style="font-size:28px;font-weight:800;color:#9b7cff;letter-spacing:-1px;">GO on ya</div>
-        <div style="font-size:12px;color:#c4b5fd;margin-top:4px;">Goonya — digital growth for small business</div>
+      <td style="padding:24px 28px;background:#0c0a14;border-radius:8px 8px 0 0;text-align:left;">
+        <a href="${SITE.url}" style="text-decoration:none;display:inline-block;line-height:0;">
+          <img src="${SITE.logoUrl}" alt="Goonya — GO on ya" width="180" height="48" style="display:block;width:180px;height:48px;border:0;outline:none;" />
+        </a>
       </td>
     </tr>
     <tr>
@@ -91,7 +92,7 @@ export function buildContactNotificationHtml(form) {
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e8e4f0;">
     <tr>
       <td style="background:#0c0a14;padding:20px 24px;">
-        <img src="${SITE.logoUrl}" alt="${SITE.name}" width="150" style="display:block;width:150px;height:auto;border:0;" />
+        <img src="${SITE.logoUrl}" alt="Goonya — GO on ya" width="180" height="48" style="display:block;width:180px;height:48px;border:0;" />
       </td>
     </tr>
     <tr>

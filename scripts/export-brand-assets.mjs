@@ -17,6 +17,7 @@ const exports = [
   { input: "goonya-icon-square.svg", output: "goonya-icon-320.png", width: 320 },
   { input: "goonya-icon-square.svg", output: "goonya-icon-180.png", width: 180 },
   { input: "goonya-wordmark-dark.svg", output: "goonya-wordmark-dark-800.png", width: 800 },
+  { input: "goonya-email-go-logo.svg", output: "goonya-email-go-logo.png", width: 360 },
   { input: "goonya-email-banner.svg", output: "goonya-email-logo.png", width: 360 },
   { input: "goonya-wordmark-light.svg", output: "goonya-wordmark-light-800.png", width: 800 },
   { input: "goonya-facebook-cover.svg", output: "goonya-facebook-cover.png", width: 820 },
