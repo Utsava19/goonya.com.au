@@ -2,6 +2,9 @@
   "functions": {
     "api/growth-audit.js": {
       "maxDuration": 30
+    },
+    "api/contact.js": {
+      "maxDuration": 15
     }
   },
   "headers": [
@@ -30,7 +33,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api/|sitemap\\.xml|robots\\.txt|assets/|brand/|email/|google-business/|[^/]+\\.(png|svg|ico|jpg|jpeg|webp|gif|xml|txt|html)$).*)",
+      "source": "/((?!api/|sitemap\\.xml|robots\\.txt|assets/|brand/|email/|google-business/).*)",
       "destination": "/"
     }
   ]
