@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SITE, SOCIAL_LINKS } from "../data/siteMeta";
-import { sendFormEmail } from "../utils/formSubmit";
+import { sendContactEnquiry } from "../utils/formSubmit";
 
 const ENQUIRY_EMAIL = SITE.enquiryEmail;
 
@@ -28,53 +28,7 @@ export default function Contact() {
     setError("");
 
     try {
-      const serviceLabels = {
-        ai: "AI Automation",
-        website: "Website Design",
-        seo: "SEO & Local Search",
-        content: "Content Creation",
-        marketing: "Digital Marketing",
-        social: "Social Media",
-        systems: "Digital Systems",
-        admin: "Admin & Operations",
-        all: "Not sure — let's chat",
-      };
-      const serviceLabel = serviceLabels[form.service] || form.service || "Not specified";
-
-      const res = await fetch(`https://formsubmit.co/ajax/${ENQUIRY_EMAIL}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          business: form.business || "Not provided",
-          service: serviceLabel,
-          message: form.message || "No message",
-          _subject: `New enquiry from ${form.name} — goonya.com.au`,
-          _template: "table",
-          _replyto: form.email,
-          _autoresponse: `Hi ${form.name},
-
-Thanks for contacting Goonya. Here's a copy of what you sent us:
-
-Name: ${form.name}
-Email: ${form.email}
-Business: ${form.business || "Not provided"}
-Service: ${serviceLabel}
-Message: ${form.message || "No message"}
-
-We'll review your enquiry and get back to you within 24 hours.
-
-Goonya
-${ENQUIRY_EMAIL}
-${SITE.phone}`,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Send failed");
+      await sendContactEnquiry(form);
       setSent(true);
     } catch {
       setError("Something went wrong sending your message. Please email us directly.");
@@ -139,8 +93,8 @@ ${SITE.phone}`,
                 Message sent!
               </h2>
               <p style={{ color:"#5c5868", fontSize:"16px", lineHeight:1.7 }}>
-                Thanks for reaching out. A copy of your enquiry has been sent to {form.email}.
-                We'll be in touch within 24 hours.
+                Thanks for reaching out. A confirmation email has been sent to <strong>{form.email}</strong>.
+                We&apos;ll review your enquiry and be in touch within 24 business hours.
               </p>
             </div>
           ) : (

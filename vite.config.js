@@ -1,7 +1,52 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { handleContactSubmission } from "./api/lib/contactEmail.mjs";
 import { runServerGrowthAudit } from "./api/lib/growthAudit.mjs";
 import { META_DESCRIPTION, SOCIAL, SITE, localBusinessJsonLd, primaryNavListHtml } from "./src/data/siteMeta.js";
+
+function contactApiPlugin() {
+  return {
+    name: "contact-api",
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        if (req.url !== "/api/contact" && !req.url?.startsWith("/api/contact?")) {
+          return next();
+        }
+
+        if (req.method === "OPTIONS") {
+          res.statusCode = 204;
+          res.setHeader("Access-Control-Allow-Origin", "*");
+          res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+          res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+          return res.end();
+        }
+
+        if (req.method !== "POST") {
+          res.statusCode = 405;
+          res.setHeader("Content-Type", "application/json");
+          return res.end(JSON.stringify({ error: "Method not allowed" }));
+        }
+
+        let body = "";
+        req.on("data", (chunk) => { body += chunk; });
+        req.on("end", async () => {
+          try {
+            const parsed = JSON.parse(body || "{}");
+            const result = await handleContactSubmission(parsed);
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify(result));
+          } catch (err) {
+            console.error("contact dev error:", err);
+            res.statusCode = 500;
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ error: err.message || "Could not send your enquiry." }));
+          }
+        });
+      });
+    },
+  };
+}
 
 function growthAuditApiPlugin() {
   return {
@@ -94,5 +139,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 
 export default defineConfig({
-  plugins: [react(), growthAuditApiPlugin(), seoAnalyticsPlugin()],
+  plugins: [react(), contactApiPlugin(), growthAuditApiPlugin(), seoAnalyticsPlugin()],
 });

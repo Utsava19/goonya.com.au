@@ -2,6 +2,47 @@ import { SITE } from "../data/siteMeta";
 
 export const GOONYA_EMAIL = SITE.email;
 
+const SERVICE_LABELS = {
+  ai: "AI Automation",
+  website: "Website Design",
+  seo: "SEO & Local Search",
+  content: "Content Creation",
+  marketing: "Digital Marketing",
+  social: "Social Media",
+  systems: "Digital Systems",
+  admin: "Admin & Operations",
+  all: "Not sure — let's chat",
+};
+
+export function getServiceLabel(service) {
+  return SERVICE_LABELS[service] || service || "Not specified";
+}
+
+export async function sendContactEnquiry(form) {
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name: form.name,
+      email: form.email,
+      business: form.business,
+      service: form.service,
+      serviceLabel: getServiceLabel(form.service),
+      message: form.message,
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || "Email could not be sent.");
+  }
+
+  return data;
+}
+
 export async function sendFormEmail({ subject, fields, autoresponse, replyTo }) {
   const payload = {
     _subject: subject,
