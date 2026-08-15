@@ -145,6 +145,29 @@ export function buildContactNotificationHtml(form) {
 </html>`;
 }
 
+function buildContactThankYouText({ name, serviceLabel, business, message }) {
+  const greeting = firstName(name);
+  return `Hi ${greeting},
+
+Thank you for contacting Goonya — we received your enquiry.
+
+We'll review your details and get back to you within 24 business hours.
+
+Your submission:
+Service: ${serviceLabel || "Not specified"}
+Business: ${business || "Not provided"}
+Message: ${message || "No message provided"}
+
+Need to reach us sooner?
+Email: ${SITE.email}
+Phone: ${SITE.phone}
+Website: ${SITE.url}
+
+${SITE.slogan}
+
+— Goonya`;
+}
+
 async function sendViaResend({ to, subject, html, replyTo }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -174,25 +197,29 @@ async function sendViaResend({ to, subject, html, replyTo }) {
 }
 
 async function sendViaFormSubmit(form) {
-  const response = await fetch(`https://formsubmit.co/ajax/${SITE.email}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      name: form.name,
-      email: form.email,
-      business: form.business || "Not provided",
-      service: form.serviceLabel || "Not specified",
-      message: form.message || "No message",
-      _subject: `New enquiry from ${form.name} — goonya.com.au`,
-      _template: "table",
-      _replyto: form.email,
-    }),
+  const body = new URLSearchParams({
+    name: form.name,
+    email: form.email,
+    business: form.business || "Not provided",
+    service: form.serviceLabel || "Not specified",
+    message: form.message || "No message",
+    _subject: `New enquiry from ${form.name} — goonya.com.au`,
+    _template: "table",
+    _replyto: form.email,
+    _autoresponse: buildContactThankYouText(form),
+    _captcha: "false",
   });
 
-  if (!response.ok) {
+  const response = await fetch(`https://formsubmit.co/${encodeURIComponent(SITE.email)}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: body.toString(),
+    redirect: "manual",
+  });
+
+  if (response.status !== 200 && response.status !== 301 && response.status !== 302) {
     throw new Error("Email could not be sent.");
   }
 }
@@ -232,9 +259,9 @@ export async function handleContactSubmission(form) {
       replyTo: SITE.email,
     });
 
-    return { ok: true, autoresponse: true };
+    return { ok: true, autoresponse: true, branded: true };
   }
 
   await sendViaFormSubmit(payload);
-  return { ok: true, autoresponse: false };
+  return { ok: true, autoresponse: true, branded: false };
 }
