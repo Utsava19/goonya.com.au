@@ -8,6 +8,7 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [thankYouWarning, setThankYouWarning] = useState("");
   const [form, setForm] = useState({ name:"", email:"", business:"", service:"", message:"" });
 
   useEffect(() => {
@@ -26,10 +27,14 @@ export default function Contact() {
     e.preventDefault();
     setSending(true);
     setError("");
+    setThankYouWarning("");
 
     try {
-      await sendContactEnquiry(form);
+      const result = await sendContactEnquiry(form);
       setSent(true);
+      if (result?.thankYouSent === false) {
+        setThankYouWarning(`Your enquiry was sent, but we could not deliver a confirmation to ${form.email}. Check spam or email us at ${ENQUIRY_EMAIL}.`);
+      }
     } catch {
       setError("Something went wrong sending your message. Please email us directly.");
     } finally {
@@ -94,8 +99,16 @@ export default function Contact() {
               </h2>
               <p style={{ color:"#5c5868", fontSize:"16px", lineHeight:1.7 }}>
                 Thanks for reaching out. A confirmation email has been sent to <strong>{form.email}</strong>.
+                Please check your inbox and spam/junk folder.
                 We&apos;ll review your enquiry and be in touch within 24 business hours.
               </p>
+              {thankYouWarning && (
+                <p style={{ color:"#8a6d00", fontSize:"14px", lineHeight:1.6, marginTop:"16px",
+                  padding:"12px 16px", background:"#fff9e6", borderRadius:"8px",
+                  border:"1px solid #e6c200" }}>
+                  {thankYouWarning}
+                </p>
+              )}
             </div>
           ) : (
             <form onSubmit={submit} style={{ display:"flex", flexDirection:"column", gap:"18px" }}>

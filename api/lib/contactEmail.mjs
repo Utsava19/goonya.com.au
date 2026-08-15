@@ -180,27 +180,32 @@ function parseResendError(message) {
   }
 }
 
-async function sendViaResend({ to, subject, html, replyTo, text }) {
+async function sendViaResend({ to, subject, html, replyTo, text, bcc, tag }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     throw new Error("Email service is not configured.");
   }
 
-  const from = process.env.RESEND_FROM || `Goonya <${SITE.email}>`;
+  const from = process.env.RESEND_FROM || `Goonya <hello@goonya.com.au>`;
+  const payload = {
+    from,
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    html,
+    reply_to: replyTo || SITE.email,
+    tags: [{ name: "category", value: tag || "contact" }],
+  };
+
+  if (text) payload.text = text;
+  if (bcc) payload.bcc = Array.isArray(bcc) ? bcc : [bcc];
+
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      from,
-      to: Array.isArray(to) ? to : [to],
-      subject,
-      html,
-      text: text || undefined,
-      reply_to: replyTo,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -297,29 +302,71 @@ export async function handleContactSubmission(form) {
   const thankYouHtml = buildContactThankYouHtml(payload);
   const thankYouText = buildContactThankYouText(payload);
 
+  let notificationSent = false;
+  let thankYouSent = false;
+  let provider = "formsubmit";
+
   if (process.env.RESEND_API_KEY) {
     try {
       await sendViaResend({
         to: SITE.email,
         subject: `New enquiry from ${payload.name} — goonya.com.au`,
         html: notificationHtml,
+        text: [
+          `New enquiry from ${payload.name}`,
+          `Email: ${payload.email}`,
+          `Business: ${payload.business || "Not provided"}`,
+          `Service: ${payload.serviceLabel}`,
+          `Message: ${payload.message || "No message"}`,
+        ].join("\n"),
         replyTo: payload.email,
+        tag: "contact-notification",
       });
+      notificationSent = true;
+      provider = "resend";
+    } catch (err) {
+      console.error("Resend notification failed:", err.message);
+    }
+  }
 
+  if (!notificationSent) {
+    await sendViaFormSubmitAjax(payload);
+    notificationSent = true;
+    provider = "formsubmit";
+  }
+
+  if (process.env.RESEND_API_KEY) {
+    try {
       await sendViaResend({
         to: payload.email,
+        bcc: SITE.email,
         subject: "Thank you for contacting Goonya — we'll be in touch shortly",
         html: thankYouHtml,
         text: thankYouText,
         replyTo: SITE.email,
+        tag: "contact-thank-you",
       });
-
-      return { ok: true, autoresponse: true, branded: true, provider: "resend" };
+      thankYouSent = true;
     } catch (err) {
-      console.error("Resend failed, falling back to FormSubmit:", err.message);
+      console.error("Resend thank-you failed:", err.message);
     }
   }
 
-  await sendViaFormSubmit(payload);
-  return { ok: true, autoresponse: true, branded: false, provider: "formsubmit" };
+  if (!thankYouSent) {
+    try {
+      await sendAutoresponseViaFormSubmit(payload);
+      thankYouSent = true;
+    } catch (err) {
+      console.error("FormSubmit thank-you failed:", err.message);
+    }
+  }
+
+  return {
+    ok: true,
+    notificationSent,
+    thankYouSent,
+    autoresponse: thankYouSent,
+    branded: provider === "resend" && thankYouSent,
+    provider,
+  };
 }
