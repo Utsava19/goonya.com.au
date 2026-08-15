@@ -192,8 +192,12 @@ async function sendViaResend({ to, subject, html, replyTo }) {
 
   if (!response.ok) {
     const detail = await response.text();
-    throw new Error(detail || "Email could not be sent.");
+    const error = new Error(detail || "Email could not be sent.");
+    error.status = response.status;
+    throw error;
   }
+
+  return response.json().catch(() => ({}));
 }
 
 async function sendViaFormSubmit(form) {
@@ -245,23 +249,27 @@ export async function handleContactSubmission(form) {
   const thankYouHtml = buildContactThankYouHtml(payload);
 
   if (process.env.RESEND_API_KEY) {
-    await sendViaResend({
-      to: SITE.email,
-      subject: `New enquiry from ${payload.name} — goonya.com.au`,
-      html: notificationHtml,
-      replyTo: payload.email,
-    });
+    try {
+      await sendViaResend({
+        to: SITE.email,
+        subject: `New enquiry from ${payload.name} — goonya.com.au`,
+        html: notificationHtml,
+        replyTo: payload.email,
+      });
 
-    await sendViaResend({
-      to: payload.email,
-      subject: "Thank you for contacting Goonya — we'll be in touch shortly",
-      html: thankYouHtml,
-      replyTo: SITE.email,
-    });
+      await sendViaResend({
+        to: payload.email,
+        subject: "Thank you for contacting Goonya — we'll be in touch shortly",
+        html: thankYouHtml,
+        replyTo: SITE.email,
+      });
 
-    return { ok: true, autoresponse: true, branded: true };
+      return { ok: true, autoresponse: true, branded: true, provider: "resend" };
+    } catch (err) {
+      console.error("Resend failed, falling back to FormSubmit:", err.message);
+    }
   }
 
   await sendViaFormSubmit(payload);
-  return { ok: true, autoresponse: true, branded: false };
+  return { ok: true, autoresponse: true, branded: false, provider: "formsubmit" };
 }
