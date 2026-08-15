@@ -168,7 +168,19 @@ ${SITE.slogan}
 — Goonya`;
 }
 
-async function sendViaResend({ to, subject, html, replyTo }) {
+function parseResendError(message) {
+  try {
+    const parsed = JSON.parse(message);
+    if (parsed.message?.includes("domain is not verified")) {
+      return "Email domain is not verified in Resend yet. Add the DNS records Resend provided, then wait for Verified status.";
+    }
+    return parsed.message || message;
+  } catch {
+    return message;
+  }
+}
+
+async function sendViaResend({ to, subject, html, replyTo, text }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     throw new Error("Email service is not configured.");
@@ -186,13 +198,14 @@ async function sendViaResend({ to, subject, html, replyTo }) {
       to: Array.isArray(to) ? to : [to],
       subject,
       html,
+      text: text || undefined,
       reply_to: replyTo,
     }),
   });
 
   if (!response.ok) {
     const detail = await response.text();
-    const error = new Error(detail || "Email could not be sent.");
+    const error = new Error(parseResendError(detail));
     error.status = response.status;
     throw error;
   }
@@ -200,17 +213,38 @@ async function sendViaResend({ to, subject, html, replyTo }) {
   return response.json().catch(() => ({}));
 }
 
-async function sendViaFormSubmit(form) {
+async function sendViaFormSubmitAjax(form) {
+  const response = await fetch(`https://formsubmit.co/ajax/${SITE.email}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name: form.name,
+      email: form.email,
+      business: form.business || "Not provided",
+      service: form.serviceLabel || "Not specified",
+      message: form.message || "No message",
+      _subject: `New enquiry from ${form.name} — goonya.com.au`,
+      _template: "table",
+      _replyto: form.email,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Enquiry notification could not be sent.");
+  }
+}
+
+async function sendAutoresponseViaFormSubmit(form) {
   const body = new URLSearchParams({
     name: form.name,
     email: form.email,
-    business: form.business || "Not provided",
-    service: form.serviceLabel || "Not specified",
-    message: form.message || "No message",
-    _subject: `New enquiry from ${form.name} — goonya.com.au`,
-    _template: "table",
-    _replyto: form.email,
+    message: form.message || "Enquiry submitted",
+    _subject: `Thank you for contacting Goonya`,
     _autoresponse: buildContactThankYouText(form),
+    _template: "box",
     _captcha: "false",
   });
 
@@ -220,11 +254,20 @@ async function sendViaFormSubmit(form) {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: body.toString(),
-    redirect: "manual",
+    redirect: "follow",
   });
 
-  if (response.status !== 200 && response.status !== 301 && response.status !== 302) {
-    throw new Error("Email could not be sent.");
+  if (!response.ok) {
+    throw new Error("Thank-you email could not be sent.");
+  }
+}
+
+async function sendViaFormSubmit(form) {
+  await sendViaFormSubmitAjax(form);
+  try {
+    await sendAutoresponseViaFormSubmit(form);
+  } catch (err) {
+    console.error("FormSubmit autoresponse failed:", err.message);
   }
 }
 
@@ -247,6 +290,7 @@ export async function handleContactSubmission(form) {
 
   const notificationHtml = buildContactNotificationHtml(payload);
   const thankYouHtml = buildContactThankYouHtml(payload);
+  const thankYouText = buildContactThankYouText(payload);
 
   if (process.env.RESEND_API_KEY) {
     try {
@@ -261,6 +305,7 @@ export async function handleContactSubmission(form) {
         to: payload.email,
         subject: "Thank you for contacting Goonya — we'll be in touch shortly",
         html: thankYouHtml,
+        text: thankYouText,
         replyTo: SITE.email,
       });
 
