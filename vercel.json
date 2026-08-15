@@ -30,7 +30,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api/|sitemap\\.xml|robots\\.txt|assets/|brand/|email/).*)",
+      "source": "/((?!api/|sitemap\\.xml|robots\\.txt|assets/|brand/|email/|google-business/|[^/]+\\.(png|svg|ico|jpg|jpeg|webp|gif|xml|txt|html)$).*)",
       "destination": "/"
     }
   ]
