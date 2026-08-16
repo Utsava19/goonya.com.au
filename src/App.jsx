@@ -18,6 +18,7 @@ import Faq from "./pages/Faq";
 import LocalSeoLanding from "./pages/LocalSeoLanding";
 import { LOCAL_SEO_PATHS } from "./data/localSeoPages.js";
 import { trackPageView } from "./utils/analytics.js";
+import { normalizePathname } from "./utils/pathname.js";
 import "./App.css";
 import "./styles/pageLayout.css";
 
@@ -33,12 +34,13 @@ function AnalyticsTracker() {
 
 function AppContent() {
   const location = useLocation();
+  const pathname = normalizePathname(location.pathname);
   const analyticsPath = `${location.pathname}${location.search}${location.hash}`;
 
   return (
     <>
-      <Analytics route={location.pathname} path={analyticsPath} />
-      <SEO path={location.pathname} />
+      <Analytics route={pathname} path={analyticsPath} />
+      <SEO path={pathname} />
 
       <ScrollToTop />
       <AnalyticsTracker />

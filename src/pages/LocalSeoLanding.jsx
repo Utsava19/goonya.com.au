@@ -1,13 +1,14 @@
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { LOCAL_SEO_PAGES } from "../data/localSeoPages";
 import { SITE } from "../data/siteMeta";
+import { normalizePathname } from "../utils/pathname";
 
 export default function LocalSeoLanding() {
   const { pathname } = useLocation();
-  const page = LOCAL_SEO_PAGES[pathname];
+  const page = LOCAL_SEO_PAGES[normalizePathname(pathname)];
 
   if (!page) {
-    return <Navigate to="/" replace />;
+    return null;
   }
 
   const A = "#9b7cff";

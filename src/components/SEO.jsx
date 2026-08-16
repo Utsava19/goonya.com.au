@@ -29,7 +29,7 @@ function resolveSeo(path) {
 }
 
 function canonicalUrl(path) {
-  return `${SITE.url}${path === "/" ? "" : path}`;
+  return path === "/" ? `${SITE.url}/` : `${SITE.url}${path}`;
 }
 
 export default function SEO({ path }) {
