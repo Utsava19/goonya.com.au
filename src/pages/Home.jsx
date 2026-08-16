@@ -13,6 +13,7 @@ import {
   TestimonialsWithPhotos,
   SeoSpotlight,
   ContentCreationSpotlight,
+  LocalServiceAreas,
 } from "../components/HomeMarketingSections";
 
 /* ── HERO ROTATING OUTCOME ── */
@@ -474,8 +475,8 @@ export default function Home() {
 
             <p className="fi" style={{ maxWidth:"520px", marginTop:"20px",
               color:"#666", fontSize:"17px", lineHeight:1.75 }}>
-              Without the big agency price tag. Websites, marketing and smart automation —
-              built around one goal: more revenue for your business.
+              SEO, digital marketing, social media and advertising in Noble Park, Melbourne and the Grampians —
+              without the big agency price tag.
             </p>
 
             <div className="fi" style={{ display:"flex", alignItems:"center",
@@ -586,6 +587,8 @@ export default function Home() {
       </section>
 
       <SeoSpotlight />
+
+      <LocalServiceAreas />
 
       <ContentCreationSpotlight />
 

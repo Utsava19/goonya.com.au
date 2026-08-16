@@ -396,9 +396,9 @@ export function SeoSpotlight() {
 
           <div className="seo-spotlight-visual">
             <div className="seo-search-mock">
-              <div className="seo-search-bar">plumber near me · Dandenong</div>
+              <div className="seo-search-bar">digital marketing noble park</div>
               {[
-                { rank: 1, name: "Your business (after Goonya)", highlight: true, meta: "★★★★★ · Open now · Quote online" },
+                { rank: 1, name: "Goonya — SEO, ads & social media", highlight: true, meta: "★★★★★ · Noble Park · Free strategy call" },
                 { rank: 2, name: "Competitor A", highlight: false, meta: "★★★ · Closed · No website" },
                 { rank: 3, name: "Competitor B", highlight: false, meta: "★★★★ · Slow site · No booking" },
               ].map((row) => (
@@ -520,33 +520,10 @@ export function SeoSpotlight() {
   );
 }
 
-const CONTENT_VIDEO_SRC =
-  "https://videos.pexels.com/video-files/3195394/3195394-sd_640_360_24fps.mp4";
-const CONTENT_VIDEO_POSTER =
-  "https://images.pexels.com/photos/6335/man-coffee-phone-office.jpg?auto=compress&cs=tinysrgb&w=1200";
+const CONTENT_BG_IMAGE = "/brand/gbp/goonya-inside-office-01.jpg";
 
 export function ContentCreationSpotlight() {
   const sectionRef = useRef(null);
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const video = videoRef.current;
-    if (!section || !video) return;
-
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    obs.observe(section);
-    return () => obs.disconnect();
-  }, []);
 
   const platforms = [
     { name: "Instagram", color: "#e1306c", items: ["Reels & Stories", "Feed posts", "Carousels"] },
@@ -557,17 +534,15 @@ export function ContentCreationSpotlight() {
 
   return (
     <section ref={sectionRef} className="content-creation-spotlight" aria-label="Content creation services">
-      <video
-        ref={videoRef}
+      <img
         className="content-creation-video"
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        poster={CONTENT_VIDEO_POSTER}
-      >
-        <source src={CONTENT_VIDEO_SRC} type="video/mp4" />
-      </video>
+        src={CONTENT_BG_IMAGE}
+        alt="Goonya social media and digital marketing team in Noble Park, Melbourne"
+        loading="lazy"
+        decoding="async"
+        width={1920}
+        height={1080}
+      />
       <div className="content-creation-overlay" aria-hidden="true" />
       <div className="page-container content-creation-inner">
         <div className="content-creation-copy">
@@ -910,6 +885,109 @@ export function TestimonialsWithPhotos() {
         </div>
       </div>
       <style>{`@media(max-width:900px){ .testi-grid{ grid-template-columns:1fr !important; } }`}</style>
+    </section>
+  );
+}
+
+const LOCAL_AREAS = [
+  {
+    region: "Noble Park & South-East Melbourne",
+    terms: ["SEO Noble Park", "digital marketing Noble Park", "social media manager", "Google Ads & advertising"],
+    suburbs: ["Noble Park", "Dandenong", "Springvale", "Keysborough", "Casey", "Cranbourne"],
+  },
+  {
+    region: "Greater Melbourne",
+    terms: ["local SEO", "website design", "Meta advertising", "content creation"],
+    suburbs: ["Melbourne", "Monash", "Bayside", "Eastern suburbs"],
+  },
+  {
+    region: "Grampians & Western Victoria",
+    terms: ["digital marketing Grampians", "SEO Horsham", "social media management", "online advertising"],
+    suburbs: ["Horsham", "Stawell", "Ararat", "Hamilton", "Ballarat", "Warrnambool"],
+  },
+];
+
+export function LocalServiceAreas() {
+  return (
+    <section className="section-surface page-section local-service-areas" aria-label="Areas we serve">
+      <div className="page-container">
+        <div className="local-areas-head">
+          <div className="eyebrow-light">WHERE WE HELP BUSINESSES GROW</div>
+          <h2>
+            SEO, digital marketing &amp; social media across{" "}
+            <span>Noble Park, Melbourne &amp; the Grampians.</span>
+          </h2>
+          <p>
+            Goonya helps small businesses get found when people search for SEO, digital marketing,
+            social media managers and advertising in Noble Park, across Melbourne and throughout
+            the Grampians region — without the big-agency price tag.
+          </p>
+        </div>
+        <div className="local-areas-grid">
+          {LOCAL_AREAS.map(({ region, terms, suburbs }) => (
+            <article key={region} className="local-area-card">
+              <h3>{region}</h3>
+              <p className="local-area-terms">{terms.join(" · ")}</p>
+              <p className="local-area-suburbs">{suburbs.join(" · ")}</p>
+            </article>
+          ))}
+        </div>
+        <p className="local-areas-foot">
+          Based in Noble Park, VIC. Remote-friendly for businesses across Victoria.
+          {" "}
+          <Link to="/contact">Book a free strategy call →</Link>
+        </p>
+      </div>
+      <style>{`
+        .local-areas-head { max-width: 760px; margin: 0 auto 40px; text-align: center; }
+        .local-areas-head h2 {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(30px, 3.5vw, 48px);
+          font-weight: 700;
+          letter-spacing: -2px;
+          color: #141118;
+          line-height: 1.1;
+          margin: 0 0 16px;
+        }
+        .local-areas-head h2 span { color: ${A}; }
+        .local-areas-head p { color: #5c5868; font-size: 16px; line-height: 1.75; margin: 0; }
+        .local-areas-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+        .local-area-card {
+          background: #fff;
+          border: 1px solid rgba(20,17,24,.06);
+          border-radius: 16px;
+          padding: 28px 24px;
+          box-shadow: 0 12px 40px rgba(20,17,24,.04);
+        }
+        .local-area-card h3 {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 18px;
+          color: #141118;
+          margin: 0 0 12px;
+        }
+        .local-area-terms {
+          color: ${A};
+          font-size: 13px;
+          font-weight: 600;
+          line-height: 1.6;
+          margin: 0 0 10px;
+        }
+        .local-area-suburbs { color: #8a8499; font-size: 13px; line-height: 1.6; margin: 0; }
+        .local-areas-foot {
+          text-align: center;
+          margin: 32px 0 0;
+          color: #5c5868;
+          font-size: 14px;
+        }
+        .local-areas-foot a { color: ${A}; font-weight: 600; text-decoration: none; }
+        @media (max-width: 900px) {
+          .local-areas-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
     </section>
   );
 }

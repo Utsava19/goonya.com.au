@@ -3,7 +3,7 @@ export const SITE = {
   legalName: "Goonya",
   url: "https://goonya.com.au",
   description:
-    "Goonya helps Melbourne small businesses get found on Google, win enquiries and save time with websites, SEO, social media and automation — Noble Park, VIC.",
+    "Goonya — digital marketing, SEO, social media manager and advertising in Noble Park, Melbourne and the Grampians. Websites, Google Ads and local SEO for small business.",
   phone: "0434 785 800",
   phoneTel: "0434785800",
   phoneSecondary: "0452 542 981",
@@ -25,13 +25,32 @@ export const SITE = {
     "https://www.google.com/maps/search/?api=1&query=75+Bowmore+Rd,+Noble+Park+VIC+3174,+Australia",
   /** Add your Google Business Profile link here once live, e.g. https://g.page/goonya */
   googleBusinessUrl: null,
-  areaServed: ["Noble Park", "Melbourne", "Victoria", "Australia"],
+  areaServed: [
+    "Noble Park",
+    "Dandenong",
+    "Casey",
+    "Melbourne",
+    "Grampians",
+    "Horsham",
+    "Stawell",
+    "Ararat",
+    "Hamilton",
+    "Ballarat",
+    "Warrnambool",
+    "Victoria",
+    "Australia",
+  ],
   services: [
     "Website design",
     "Digital marketing",
     "SEO",
+    "Local SEO Noble Park",
     "Google Business Profile",
-    "Social media",
+    "Google Ads",
+    "Social media management",
+    "Social media manager",
+    "Advertising",
+    "Meta advertising",
     "AI automation",
   ],
 };
@@ -70,9 +89,9 @@ export function fullAddress() {
 
 export const PAGE_SEO = {
   "/": {
-    title: "Goonya | Digital Growth for Small Business Australia",
+    title: "Digital Marketing & SEO Noble Park | Social Media & Ads | Goonya",
     description:
-      "Goonya helps Melbourne small businesses get found on Google with websites, digital marketing, local SEO, social media and AI automation — Noble Park, VIC.",
+      "Goonya — SEO, digital marketing, social media manager and advertising in Noble Park, Melbourne and the Grampians. Websites, Google Ads and local SEO for small business.",
   },
   "/about": {
     title: "About Goonya | Digital Growth for Small Business",
@@ -80,9 +99,9 @@ export const PAGE_SEO = {
       "Learn about Goonya and how we help Australian small businesses build a stronger online presence through websites, marketing and automation.",
   },
   "/services": {
-    title: "Digital Marketing & Business Services | Goonya",
+    title: "SEO, Digital Marketing & Social Media Manager | Goonya Noble Park",
     description:
-      "Explore Goonya's website design, digital marketing, social media, local SEO and AI automation services for Australian small businesses.",
+      "SEO Noble Park, digital marketing, social media management, Google Ads and advertising for Melbourne and Grampians small businesses. Websites and automation by Goonya.",
   },
   "/packages": {
     title: "Goonya Packages | Websites & Digital Marketing",
@@ -255,11 +274,12 @@ export function structuredDataJsonLd() {
           "@type": "OfferCatalog",
           name: "Digital growth services",
           itemListElement: [
-            { "@type": "Offer", itemOffered: { "@type": "Service", name: "Website Design" } },
-            { "@type": "Offer", itemOffered: { "@type": "Service", name: "Digital Marketing" } },
-            { "@type": "Offer", itemOffered: { "@type": "Service", name: "SEO & Google Business" } },
-            { "@type": "Offer", itemOffered: { "@type": "Service", name: "Social Media" } },
-            { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Automation" } },
+            { "@type": "Offer", itemOffered: { "@type": "Service", name: "Website Design", areaServed: "Victoria, Australia" } },
+            { "@type": "Offer", itemOffered: { "@type": "Service", name: "Digital Marketing", areaServed: "Noble Park, Melbourne, Grampians" } },
+            { "@type": "Offer", itemOffered: { "@type": "Service", name: "SEO & Local SEO Noble Park", areaServed: "Noble Park, Melbourne" } },
+            { "@type": "Offer", itemOffered: { "@type": "Service", name: "Social Media Management", areaServed: "Victoria, Australia" } },
+            { "@type": "Offer", itemOffered: { "@type": "Service", name: "Google Ads & Advertising", areaServed: "Victoria, Australia" } },
+            { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Automation", areaServed: "Australia" } },
           ],
         },
       },
