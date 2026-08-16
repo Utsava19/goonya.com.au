@@ -75,6 +75,8 @@ export default function Footer() {
         <div>
           <div style={headingStyle}>RESOURCES</div>
           <Link to="/faq" style={linkStyle}>FAQ</Link>
+          <Link to="/digital-marketing-melbourne" style={linkStyle}>Melbourne Marketing</Link>
+          <Link to="/digital-marketing-south-east-melbourne" style={linkStyle}>South-East Melbourne</Link>
           <Link to="/digital-marketing-grampians" style={linkStyle}>Grampians Marketing</Link>
           <Link to="/seo-noble-park" style={linkStyle}>SEO Noble Park</Link>
           <Link to="/packages#plans" style={linkStyle}>View Packages</Link>

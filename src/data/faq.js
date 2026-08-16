@@ -25,6 +25,11 @@ export const FAQ_ITEMS = [
       "We're based in Noble Park, Melbourne, but we work with small businesses across Victoria and Australia — including the Grampians, Horsham, Stawell, Ararat, Hamilton and Ballarat. Most work is done remotely with video calls and clear reporting.",
   },
   {
+    question: "Do you help Melbourne and south-east Melbourne businesses?",
+    answer:
+      "Yes. We work across greater Melbourne and south-east Melbourne — including Dandenong, Casey, Cranbourne, Springvale, Monash and surrounding suburbs. See our Melbourne and south-east Melbourne digital marketing pages for how we help you rank locally.",
+  },
+  {
     question: "Do you help Grampians businesses with marketing and social media?",
     answer:
       "Yes. We offer digital marketing, social media management, SEO, Google Ads and website design for Grampians and western Victoria businesses. See our Grampians digital marketing page for details on how we help you rank for local searches.",

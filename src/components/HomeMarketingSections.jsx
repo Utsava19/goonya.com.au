@@ -891,18 +891,27 @@ export function TestimonialsWithPhotos() {
 
 const LOCAL_AREAS = [
   {
-    region: "Noble Park & South-East Melbourne",
-    terms: ["SEO Noble Park", "digital marketing Noble Park", "social media manager", "Google Ads & advertising"],
-    suburbs: ["Noble Park", "Dandenong", "Springvale", "Keysborough", "Casey", "Cranbourne"],
+    region: "South-East Melbourne",
+    href: "/digital-marketing-south-east-melbourne",
+    terms: ["digital marketing south-east Melbourne", "marketing Dandenong", "SEO Casey", "social media manager"],
+    suburbs: ["Noble Park", "Dandenong", "Springvale", "Keysborough", "Casey", "Cranbourne", "Berwick"],
   },
   {
     region: "Greater Melbourne",
-    terms: ["local SEO", "website design", "Meta advertising", "content creation"],
-    suburbs: ["Melbourne", "Monash", "Bayside", "Eastern suburbs"],
+    href: "/digital-marketing-melbourne",
+    terms: ["digital marketing Melbourne", "SEO Melbourne", "social media manager", "Google Ads Melbourne"],
+    suburbs: ["Melbourne CBD", "Richmond", "Bayside", "Eastern suburbs", "Northern suburbs", "Monash"],
+  },
+  {
+    region: "Noble Park & local SEO",
+    href: "/seo-noble-park",
+    terms: ["SEO Noble Park", "marketing Noble Park", "advertising Noble Park", "Google Business Profile"],
+    suburbs: ["Noble Park", "Dandenong", "Springvale", "Greater Dandenong"],
   },
   {
     region: "Grampians & Western Victoria",
-    terms: ["digital marketing Grampians", "SEO Horsham", "social media management", "online advertising"],
+    href: "/digital-marketing-grampians",
+    terms: ["digital marketing Grampians", "SEO Horsham", "social media Stawell", "online advertising"],
     suburbs: ["Horsham", "Stawell", "Ararat", "Hamilton", "Ballarat", "Warrnambool"],
   },
 ];
@@ -924,21 +933,18 @@ export function LocalServiceAreas() {
           </p>
         </div>
         <div className="local-areas-grid">
-          {LOCAL_AREAS.map(({ region, terms, suburbs }) => (
+          {LOCAL_AREAS.map(({ region, href, terms, suburbs }) => (
             <article key={region} className="local-area-card">
               <h3>{region}</h3>
               <p className="local-area-terms">{terms.join(" · ")}</p>
               <p className="local-area-suburbs">{suburbs.join(" · ")}</p>
+              <Link to={href} className="local-area-link">View {region} services →</Link>
             </article>
           ))}
         </div>
         <p className="local-areas-foot">
-          Based in Noble Park, VIC. Remote-friendly for businesses across Victoria.
+          Based in Noble Park, VIC. Remote-friendly across Victoria.
           {" "}
-          <Link to="/digital-marketing-grampians">Grampians digital marketing →</Link>
-          {" · "}
-          <Link to="/seo-noble-park">SEO Noble Park →</Link>
-          {" · "}
           <Link to="/contact">Book a free strategy call →</Link>
         </p>
       </div>
@@ -957,7 +963,7 @@ export function LocalServiceAreas() {
         .local-areas-head p { color: #5c5868; font-size: 16px; line-height: 1.75; margin: 0; }
         .local-areas-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           gap: 20px;
         }
         .local-area-card {
@@ -980,7 +986,14 @@ export function LocalServiceAreas() {
           line-height: 1.6;
           margin: 0 0 10px;
         }
-        .local-area-suburbs { color: #8a8499; font-size: 13px; line-height: 1.6; margin: 0; }
+        .local-area-suburbs { color: #8a8499; font-size: 13px; line-height: 1.6; margin: 0 0 14px; }
+        .local-area-link {
+          display: inline-block;
+          color: ${A};
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
+        }
         .local-areas-foot {
           text-align: center;
           margin: 32px 0 0;
