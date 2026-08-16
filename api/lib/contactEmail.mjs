@@ -6,7 +6,6 @@ const SITE = {
   phoneTel: "+61434785800",
   address: "75 Bowmore Rd, Noble Park VIC 3174",
   slogan: "GO on ya — digital growth for small business",
-  logoUrl: "https://goonya.com.au/brand/goonya-email-go-logo.png",
 };
 
 function escapeHtml(value) {
@@ -24,45 +23,23 @@ function firstName(name) {
   return trimmed.split(/\s+/)[0];
 }
 
-export function buildContactThankYouHtml({ name, serviceLabel, business, message }) {
+export function buildContactThankYouHtml({ name }) {
   const safeName = escapeHtml(firstName(name));
-  const safeService = escapeHtml(serviceLabel || "General enquiry");
-  const safeBusiness = escapeHtml(business || "Not provided");
-  const safeMessage = escapeHtml(message || "No message provided");
 
   return `<!DOCTYPE html>
 <html lang="en-AU">
-<head><meta charset="UTF-8" /><title>Thank you for contacting Goonya</title></head>
-<body style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#222;">
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:8px;">
-    <tr>
-      <td style="padding:24px 28px;background:#0c0a14;border-radius:8px 8px 0 0;text-align:left;">
-        <a href="${SITE.url}" style="text-decoration:none;display:inline-block;line-height:0;">
-          <img src="${SITE.logoUrl}" alt="Goonya — GO on ya" width="180" height="48" style="display:block;width:180px;height:48px;border:0;outline:none;" />
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:28px;">
-        <h1 style="margin:0 0 12px;font-size:22px;color:#111;">Hi ${safeName}, thank you for contacting us</h1>
-        <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#444;">
-          We received your enquiry and will get back to you within <strong>24 business hours</strong>.
-        </p>
-        <div style="background:#f8f6fc;border:1px solid #e8e4f0;border-radius:8px;padding:16px 18px;margin-bottom:20px;">
-          <p style="margin:0 0 10px;font-size:12px;font-weight:700;color:#7c5ce0;text-transform:uppercase;letter-spacing:1px;">Your submission</p>
-          <p style="margin:0 0 6px;font-size:14px;line-height:1.6;"><strong>Service:</strong> ${safeService}</p>
-          <p style="margin:0 0 6px;font-size:14px;line-height:1.6;"><strong>Business:</strong> ${safeBusiness}</p>
-          <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Message:</strong> ${safeMessage}</p>
-        </div>
-        <p style="margin:0 0 8px;font-size:14px;line-height:1.7;color:#444;">Questions before we reply? Contact us anytime:</p>
-        <p style="margin:0;font-size:14px;line-height:1.8;">
-          <a href="mailto:${SITE.email}" style="color:#7c5ce0;">${SITE.email}</a><br />
-          <a href="tel:${SITE.phoneTel}" style="color:#222;text-decoration:none;">${SITE.phone}</a><br />
-          <a href="${SITE.url}" style="color:#222;text-decoration:none;">goonya.com.au</a>
-        </p>
-      </td>
-    </tr>
-  </table>
+<head><meta charset="UTF-8" /><title>We received your enquiry</title></head>
+<body style="margin:0;padding:24px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#222;background:#ffffff;">
+  <p style="margin:0 0 16px;font-size:13px;font-weight:700;color:#7c5ce0;letter-spacing:0.5px;">GO on ya</p>
+  <p style="margin:0 0 12px;">Hi ${safeName},</p>
+  <p style="margin:0 0 12px;">Thank you for contacting Goonya.</p>
+  <p style="margin:0 0 12px;">We received your enquiry and will be in touch within 24 business hours.</p>
+  <p style="margin:0 0 20px;">If you need anything sooner, reply to this email or call us on ${SITE.phone}.</p>
+  <p style="margin:0;color:#555;">
+    Goonya<br />
+    <a href="mailto:${SITE.email}" style="color:#555;">${SITE.email}</a><br />
+    <a href="${SITE.url}" style="color:#555;">goonya.com.au</a>
+  </p>
 </body>
 </html>`;
 }
@@ -79,8 +56,8 @@ export function buildContactNotificationHtml(form) {
   const tableRows = rows
     .map(
       ([label, value]) => `<tr>
-        <td style="padding:10px 12px;border-bottom:1px solid #ece8f4;font-size:12px;color:#8a8499;width:120px;vertical-align:top;">${escapeHtml(label)}</td>
-        <td style="padding:10px 12px;border-bottom:1px solid #ece8f4;font-size:14px;color:#1a1625;vertical-align:top;">${escapeHtml(value)}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #ece8f4;font-size:12px;color:#666;width:120px;vertical-align:top;">${escapeHtml(label)}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #ece8f4;font-size:14px;color:#111;vertical-align:top;">${escapeHtml(value)}</td>
       </tr>`
     )
     .join("");
@@ -88,17 +65,16 @@ export function buildContactNotificationHtml(form) {
   return `<!DOCTYPE html>
 <html lang="en-AU">
 <head><meta charset="UTF-8" /><title>New enquiry</title></head>
-<body style="margin:0;padding:24px;background:#f0edf5;font-family:Arial,Helvetica,sans-serif;">
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e8e4f0;">
+<body style="margin:0;padding:24px;font-family:Arial,Helvetica,sans-serif;background:#f7f7f7;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:8px;">
     <tr>
-      <td style="background:#0c0a14;padding:20px 24px;">
-        <img src="${SITE.logoUrl}" alt="Goonya — GO on ya" width="180" height="48" style="display:block;width:180px;height:48px;border:0;" />
+      <td style="padding:20px 24px;border-bottom:1px solid #eee;">
+        <p style="margin:0 0 4px;font-size:16px;font-weight:700;color:#7c5ce0;letter-spacing:0.5px;">GO on ya</p>
+        <p style="margin:0;font-size:14px;color:#666;">New contact form enquiry</p>
       </td>
     </tr>
     <tr>
-      <td style="padding:24px;">
-        <h1 style="margin:0 0 8px;font-size:22px;color:#0c0a14;">New website enquiry</h1>
-        <p style="margin:0 0 18px;font-size:14px;color:#5c5868;">Submitted via goonya.com.au/contact</p>
+      <td style="padding:20px 24px;">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;">${tableRows}</table>
       </td>
     </tr>
@@ -107,27 +83,31 @@ export function buildContactNotificationHtml(form) {
 </html>`;
 }
 
-function buildContactThankYouText({ name, serviceLabel, business, message }) {
+function buildContactThankYouText({ name }) {
   const greeting = firstName(name);
   return `Hi ${greeting},
 
-Thank you for contacting Goonya — we received your enquiry.
+Thank you for contacting Goonya.
 
-We'll review your details and get back to you within 24 business hours.
+We received your enquiry and will be in touch within 24 business hours.
 
-Your submission:
-Service: ${serviceLabel || "Not specified"}
-Business: ${business || "Not provided"}
-Message: ${message || "No message provided"}
+If you need anything sooner, reply to this email or call us on ${SITE.phone}.
 
-Need to reach us sooner?
-Email: ${SITE.email}
-Phone: ${SITE.phone}
-Website: ${SITE.url}
+Goonya
+${SITE.email}
+${SITE.url.replace("https://", "")}`;
+}
 
-${SITE.slogan}
-
-— Goonya`;
+function buildContactNotificationText(form) {
+  return [
+    "New contact form enquiry",
+    "",
+    `Name: ${form.name}`,
+    `Email: ${form.email}`,
+    `Business: ${form.business || "Not provided"}`,
+    `Service: ${form.serviceLabel || "Not specified"}`,
+    `Message: ${form.message || "No message"}`,
+  ].join("\n");
 }
 
 function parseResendError(message) {
@@ -142,7 +122,7 @@ function parseResendError(message) {
   }
 }
 
-async function sendViaResend({ to, subject, html, replyTo, text, bcc, tag }) {
+async function sendViaResend({ to, subject, html, replyTo, text, tag }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     throw new Error("Email service is not configured.");
@@ -154,12 +134,10 @@ async function sendViaResend({ to, subject, html, replyTo, text, bcc, tag }) {
     to: Array.isArray(to) ? to : [to],
     subject,
     html,
+    text,
     reply_to: replyTo || SITE.email,
     tags: [{ name: "category", value: tag || "contact" }],
   };
-
-  if (text) payload.text = text;
-  if (bcc) payload.bcc = Array.isArray(bcc) ? bcc : [bcc];
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -213,8 +191,8 @@ async function sendAutoresponseViaFormSubmit(form) {
   const body = new URLSearchParams({
     name: form.name,
     email: form.email,
-    message: form.message || "Enquiry submitted",
-    _subject: `Thank you for contacting Goonya`,
+    message: "Enquiry received",
+    _subject: "We received your enquiry — Goonya",
     _autoresponse: buildContactThankYouText(form),
     _template: "box",
     _captcha: "false",
@@ -231,15 +209,6 @@ async function sendAutoresponseViaFormSubmit(form) {
 
   if (!response.ok) {
     throw new Error("Thank-you email could not be sent.");
-  }
-}
-
-async function sendViaFormSubmit(form) {
-  await sendViaFormSubmitAjax(form);
-  try {
-    await sendAutoresponseViaFormSubmit(form);
-  } catch (err) {
-    console.error("FormSubmit autoresponse failed:", err.message);
   }
 }
 
@@ -261,6 +230,7 @@ export async function handleContactSubmission(form) {
   }
 
   const notificationHtml = buildContactNotificationHtml(payload);
+  const notificationText = buildContactNotificationText(payload);
   const thankYouHtml = buildContactThankYouHtml(payload);
   const thankYouText = buildContactThankYouText(payload);
 
@@ -272,15 +242,9 @@ export async function handleContactSubmission(form) {
     try {
       await sendViaResend({
         to: SITE.email,
-        subject: `New enquiry from ${payload.name} — goonya.com.au`,
+        subject: `New enquiry from ${payload.name}`,
         html: notificationHtml,
-        text: [
-          `New enquiry from ${payload.name}`,
-          `Email: ${payload.email}`,
-          `Business: ${payload.business || "Not provided"}`,
-          `Service: ${payload.serviceLabel}`,
-          `Message: ${payload.message || "No message"}`,
-        ].join("\n"),
+        text: notificationText,
         replyTo: payload.email,
         tag: "contact-notification",
       });
@@ -297,42 +261,30 @@ export async function handleContactSubmission(form) {
     provider = "formsubmit";
   }
 
-  if (process.env.RESEND_API_KEY) {
-    try {
-      await sendViaResend({
-        to: payload.email,
-        subject: "Thank you for contacting Goonya — we'll be in touch shortly",
-        html: thankYouHtml,
-        text: thankYouText,
-        replyTo: SITE.email,
-        tag: "contact-thank-you",
-      });
-      thankYouSent = true;
-    } catch (err) {
-      console.error("Resend thank-you failed:", err.message);
+  if (payload.email.toLowerCase() !== SITE.email.toLowerCase()) {
+    if (process.env.RESEND_API_KEY) {
+      try {
+        await sendViaResend({
+          to: payload.email,
+          subject: "We received your enquiry — Goonya",
+          html: thankYouHtml,
+          text: thankYouText,
+          replyTo: SITE.email,
+          tag: "contact-thank-you",
+        });
+        thankYouSent = true;
+      } catch (err) {
+        console.error("Resend thank-you failed:", err.message);
+      }
     }
-  }
 
-  if (!thankYouSent) {
-    try {
-      await sendAutoresponseViaFormSubmit(payload);
-      thankYouSent = true;
-    } catch (err) {
-      console.error("FormSubmit thank-you failed:", err.message);
-    }
-  }
-
-  if (process.env.RESEND_API_KEY && thankYouSent) {
-    try {
-      await sendViaResend({
-        to: SITE.email,
-        subject: `Copy: confirmation sent to ${payload.email}`,
-        html: `<p style="font-family:Arial,sans-serif;font-size:14px;color:#444;">This is the confirmation email sent to <strong>${escapeHtml(payload.email)}</strong> after they submitted the contact form:</p>${thankYouHtml}`,
-        text: `Confirmation sent to ${payload.email}:\n\n${thankYouText}`,
-        tag: "contact-thank-you-copy",
-      });
-    } catch (err) {
-      console.error("Resend thank-you copy failed:", err.message);
+    if (!thankYouSent) {
+      try {
+        await sendAutoresponseViaFormSubmit(payload);
+        thankYouSent = true;
+      } catch (err) {
+        console.error("FormSubmit thank-you failed:", err.message);
+      }
     }
   }
 
@@ -341,7 +293,7 @@ export async function handleContactSubmission(form) {
     notificationSent,
     thankYouSent,
     autoresponse: thankYouSent,
-    branded: provider === "resend" && thankYouSent,
+    branded: false,
     provider,
   };
 }
