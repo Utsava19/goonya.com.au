@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
@@ -30,9 +31,11 @@ function AnalyticsTracker() {
 
 function AppContent() {
   const location = useLocation();
+  const analyticsPath = `${location.pathname}${location.search}${location.hash}`;
 
   return (
     <>
+      <Analytics route={location.pathname} path={analyticsPath} />
       <SEO path={location.pathname} />
 
       <ScrollToTop />
