@@ -99,6 +99,7 @@ export default function Footer() {
         <span style={{ fontSize: "12px", color: "#3a3a3a" }}>© 2026 Goonya. All rights reserved.</span>
         <div style={{ display: "flex", gap: "24px" }}>
           <Link to="/faq" style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>FAQ</Link>
+          <a href={`${SITE.url}/sitemap.xml`} style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>Sitemap</a>
           <Link to="/privacy" style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>Privacy Policy</Link>
           <Link to="/terms" style={{ fontSize: "12px", color: "#3a3a3a", textDecoration: "none" }}>Terms & Conditions</Link>
         </div>
