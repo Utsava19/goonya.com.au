@@ -126,7 +126,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       }
 
       const jsonLd = JSON.stringify(localBusinessJsonLd(), null, 2);
-      const socialHtml = `<a href="${SOCIAL.facebook}">Facebook</a> · <a href="${SOCIAL.instagram}">Instagram</a> · <a href="${SITE.mapsUrl}">Google Maps</a>`;
+      const socialHtml = `<a href="${SOCIAL.facebook}">Facebook</a> · <a href="${SOCIAL.instagram}">Instagram</a> · <a href="${SOCIAL.linkedin}">LinkedIn</a> · <a href="${SITE.mapsUrl}">Google Maps</a>`;
 
       return html
         .replace("<!-- GTM_INJECT -->", analyticsInjection)

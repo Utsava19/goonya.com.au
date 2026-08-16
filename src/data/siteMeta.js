@@ -73,6 +73,7 @@ export const META_DESCRIPTION = SITE.description;
 export const SOCIAL = {
   facebook: "https://www.facebook.com/profile.php?id=61593234868713",
   instagram: "https://www.instagram.com/goonya86/",
+  linkedin: "https://www.linkedin.com/company/goonya",
 };
 
 export const SOCIAL_LINKS = [
@@ -85,6 +86,11 @@ export const SOCIAL_LINKS = [
     name: "Instagram",
     href: SOCIAL.instagram,
     label: "Goonya on Instagram",
+  },
+  {
+    name: "LinkedIn",
+    href: SOCIAL.linkedin,
+    label: "Goonya on LinkedIn",
   },
 ];
 
@@ -219,7 +225,7 @@ export function structuredDataJsonLd() {
   const websiteId = `${SITE.url}/#website`;
   const businessId = `${SITE.url}/#localbusiness`;
 
-  const sameAs = [SITE.mapsUrl, SOCIAL.facebook, SOCIAL.instagram];
+  const sameAs = [SITE.mapsUrl, SOCIAL.facebook, SOCIAL.instagram, SOCIAL.linkedin];
   if (SITE.googleBusinessUrl) {
     sameAs.push(SITE.googleBusinessUrl);
   }
