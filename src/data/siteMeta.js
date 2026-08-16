@@ -1,7 +1,7 @@
 export const SITE = {
   name: "Goonya",
   legalName: "Goonya",
-  url: "https://goonya.com.au",
+  url: "https://www.goonya.com.au",
   description:
     "Goonya — digital marketing, SEO, social media manager and advertising in Noble Park, Melbourne and the Grampians. Websites, Google Ads and local SEO for small business.",
   phone: "0434 785 800",

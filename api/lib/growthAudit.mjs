@@ -50,7 +50,7 @@ async function fetchHtml(url) {
       headers: {
         Accept: "text/html,application/xhtml+xml",
         "User-Agent":
-          "GoonyaGrowthCheck/1.0 (+https://goonya.com.au; business growth audit bot)",
+          "GoonyaGrowthCheck/1.0 (+https://www.goonya.com.au; business growth audit bot)",
       },
     });
 

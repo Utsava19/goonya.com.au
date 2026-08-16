@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://goonya.com.au/sitemap.xml
+Sitemap: https://www.goonya.com.au/sitemap.xml

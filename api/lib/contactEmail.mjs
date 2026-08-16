@@ -1,6 +1,6 @@
 const SITE = {
   name: "Goonya",
-  url: "https://goonya.com.au",
+  url: "https://www.goonya.com.au",
   email: "info@goonya.com.au",
   phone: "0434 785 800",
   phoneTel: "+61434785800",

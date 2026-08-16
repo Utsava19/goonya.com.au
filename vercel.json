@@ -18,10 +18,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.goonya.com.au"
+          "value": "goonya.com.au"
         }
       ],
-      "destination": "https://goonya.com.au/:path*",
+      "destination": "https://www.goonya.com.au/:path*",
       "permanent": true
     }
   ],
@@ -31,7 +31,7 @@
       "headers": [
         {
           "key": "Link",
-          "value": "<https://goonya.com.au/sitemap.xml>; rel=\"sitemap\""
+          "value": "<https://www.goonya.com.au/sitemap.xml>; rel=\"sitemap\""
         }
       ]
     },
