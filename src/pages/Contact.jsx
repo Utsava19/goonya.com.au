@@ -78,7 +78,7 @@ export default function Contact() {
       </section>
 
       {/* FORM + INFO */}
-      <section className="section-fade-to-surface page-section">
+      <section className="section-solid-surface page-section">
       <div className="page-container" style={{ margin:"0 auto 130px",
         display:"grid", gridTemplateColumns:"1.4fr 1fr", gap:"20px" }} className="ct-grid">
 

@@ -173,7 +173,7 @@ export default function About() {
       />
 
       {/* ══ PHOTO + ABOUT TEXT ══ */}
-      <section className="section-fade-to-surface-after-stats page-section">
+      <section className="section-solid-surface page-section">
       <div style={{ width:"min(1400px,90vw)", margin:"0 auto",
         display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px",
         background:LL, border:`1px solid ${LL}`, borderRadius:"16px", overflow:"hidden",

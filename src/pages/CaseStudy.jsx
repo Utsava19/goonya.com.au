@@ -41,7 +41,7 @@ export default function CaseStudy() {
         </div>
       </section>
 
-      <section className="section-fade-to-surface page-section">
+      <section className="section-solid-surface page-section">
       <div className="page-container">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", marginBottom: "64px" }}
           className="cs-problem-grid">

@@ -84,7 +84,7 @@ export default function LocalSeoLanding() {
         </div>
       </section>
 
-      <section className="section-fade-to-surface page-section">
+      <section className="section-solid-surface page-section">
         <div className="page-container">
           <div className="eyebrow-light" style={{ marginBottom: "16px" }}>
             WHAT WE DO

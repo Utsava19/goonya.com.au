@@ -117,6 +117,33 @@
     linear-gradient(180deg, var(--bg) 0%, var(--bg-mid) 100%);
 }
 
+.section-solid-surface {
+  background: var(--surface);
+  color: var(--text-dark);
+}
+
+.content-panel {
+  background: var(--surface-card-light);
+  border: 1px solid var(--line-light);
+  border-radius: 16px;
+  padding: clamp(32px, 5vw, 48px);
+  box-shadow: 0 12px 40px rgba(20, 17, 24, 0.05);
+}
+
+.legal-document h2 {
+  color: var(--text-dark);
+  font-size: 18px;
+  margin: 32px 0 12px;
+}
+
+.legal-document p {
+  margin-bottom: 16px;
+}
+
+.legal-document a {
+  color: var(--accent);
+}
+
 /* ── Single gradient handoffs (use ONE per page break, never stack) ── */
 .section-fade-to-surface {
   background: linear-gradient(

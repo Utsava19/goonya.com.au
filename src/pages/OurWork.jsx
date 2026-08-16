@@ -54,7 +54,7 @@ export default function OurWork() {
         </div>
       </section>
 
-      <section className="section-fade-to-surface page-section">
+      <section className="section-solid-surface page-section">
       <div className="page-container" style={{ paddingBottom: "100px" }}>
         <div className="ow-list">
           {CASE_STUDIES.map((study, i) => (

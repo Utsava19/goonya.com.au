@@ -192,7 +192,7 @@ export function CaseStudyShowcase() {
   const cards = featured.length >= 2 ? featured : CASE_STUDIES.slice(0, 2);
 
   return (
-    <section className="section-fade-to-surface-after-stats page-section">
+    <section className="section-surface page-section">
       <div className="page-container">
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 48px" }}>
           <div className="eyebrow-light" style={{ marginBottom: 12 }}>REAL CLIENT RESULTS</div>
@@ -376,9 +376,15 @@ export function SeoSpotlight() {
             }}>
               Get found on Google<span style={{ color: A }}> before your competitors do.</span>
             </h2>
-            <p style={{ color: "#888", fontSize: 16, lineHeight: 1.75, maxWidth: 520, marginBottom: 28 }}>
-              Most small businesses lose enquiries because they are invisible locally. We fix your Google presence,
-              website SEO and tracking so the right people find you first.
+            <p style={{ color: "#888", fontSize: 16, lineHeight: 1.75, maxWidth: 520, marginBottom: 20 }}>
+              When a customer searches on Google, they type what they need — like{" "}
+              <strong style={{ color: "#ccc" }}>plumber near me</strong> or{" "}
+              <strong style={{ color: "#ccc" }}>café near me</strong> — not your business name.
+              We help you show up in those results before your competitors do.
+            </p>
+            <p style={{ color: "#666", fontSize: 14, lineHeight: 1.65, maxWidth: 520, marginBottom: 28 }}>
+              That is local SEO: your Google listing, website and reviews working together so
+              the right people find you when they are ready to call or book.
             </p>
             <ul className="seo-spotlight-list">
               {seoItems.map((item) => (
@@ -395,10 +401,13 @@ export function SeoSpotlight() {
           </div>
 
           <div className="seo-spotlight-visual">
+            <p className="seo-search-caption">
+              Example search — your customer types a service, not an agency name:
+            </p>
             <div className="seo-search-mock">
-              <div className="seo-search-bar">social media manager grampians</div>
+              <div className="seo-search-bar">plumber near me · Dandenong</div>
               {[
-                { rank: 1, name: "Goonya — marketing, SEO & social media", highlight: true, meta: "★★★★★ · Horsham · Stawell · Free strategy call" },
+                { rank: 1, name: `${featured.client} (after Goonya)`, highlight: true, meta: "★★★★★ · Open now · Quote online" },
                 { rank: 2, name: "Competitor A", highlight: false, meta: "★★★ · Closed · No website" },
                 { rank: 3, name: "Competitor B", highlight: false, meta: "★★★★ · Slow site · No booking" },
               ].map((row) => (
@@ -411,6 +420,10 @@ export function SeoSpotlight() {
                 </div>
               ))}
             </div>
+            <p className="seo-search-footnote">
+              Goonya does not rank for plumber near me — <strong>your business does</strong>, after we fix
+              your Google presence, website and local SEO.
+            </p>
 
             <div className="seo-testimonial-card">
               <div style={{ color: A, fontSize: 14, marginBottom: 10 }}>{"★".repeat(featured.stars)}</div>
@@ -422,7 +435,7 @@ export function SeoSpotlight() {
                   <div style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#fff", fontWeight: 600, fontSize: 14 }}>
                     {featured.quoteName}
                   </div>
-                  <div style={{ fontSize: 12, color: "#666" }}>{featured.quoteRole}</div>
+                  <div style={{ fontSize: 12, color: "#aaa" }}>{featured.quoteRole}</div>
                 </div>
               </div>
             </div>
@@ -465,6 +478,19 @@ export function SeoSpotlight() {
           flex-direction: column;
           gap: 20px;
         }
+        .seo-search-caption {
+          margin: 0;
+          font-size: 13px;
+          line-height: 1.55;
+          color: #888;
+        }
+        .seo-search-footnote {
+          margin: 0;
+          font-size: 13px;
+          line-height: 1.6;
+          color: #777;
+        }
+        .seo-search-footnote strong { color: #ccc; font-weight: 600; }
         .seo-search-mock {
           background: #08060f;
           border: 1px solid rgba(255,255,255,.08);
@@ -505,7 +531,7 @@ export function SeoSpotlight() {
         }
         .seo-result-highlight .seo-result-rank { color: ${A}; }
         .seo-result-name { color: #fff; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-        .seo-result-meta { color: #666; font-size: 12px; }
+        .seo-result-meta { color: #aaa; font-size: 12px; }
         .seo-testimonial-card {
           background: rgba(255,255,255,.03);
           border: 1px solid rgba(255,255,255,.08);

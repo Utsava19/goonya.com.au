@@ -205,7 +205,7 @@ export default function WebsiteMockupPair({ mockup, industry = "Business", cover
         }
         .wm-divider { flex: 0 0 auto; font-size: 28px; font-weight: 700; }
         .wm-note {
-          flex: 1 1 100%; text-align: center; color: #666;
+          flex: 1 1 100%; text-align: center; color: #444;
           font-size: 14px; line-height: 1.65; margin: 8px 0 0;
           max-width: 720px; margin-inline: auto;
         }

@@ -56,7 +56,7 @@ export default function Faq() {
         </div>
       </section>
 
-      <section className="section-fade-to-surface page-section">
+      <section className="section-solid-surface page-section">
         <div className="page-container" style={{ maxWidth: 820, paddingBottom: 80 }}>
           <div className="faq-list">
             {FAQ_ITEMS.map(({ question, answer }, index) => {
