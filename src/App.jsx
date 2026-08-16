@@ -15,6 +15,7 @@ import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Faq from "./pages/Faq";
+import LocalSeoLanding from "./pages/LocalSeoLanding";
 import { trackPageView } from "./utils/analytics.js";
 import "./App.css";
 import "./styles/pageLayout.css";
@@ -56,6 +57,8 @@ function AppContent() {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/faq" element={<Faq />} />
+            <Route path="/digital-marketing-grampians" element={<LocalSeoLanding />} />
+            <Route path="/seo-noble-park" element={<LocalSeoLanding />} />
           </Routes>
         </main>
 

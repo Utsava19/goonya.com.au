@@ -22,7 +22,12 @@ export const FAQ_ITEMS = [
   {
     question: "Do you only work with Melbourne businesses?",
     answer:
-      "We're based in Noble Park, Melbourne, but we work with small businesses across Australia. Most of our work is done remotely — calls, shared dashboards and clear updates — with on-site visits when it makes sense for your project.",
+      "We're based in Noble Park, Melbourne, but we work with small businesses across Victoria and Australia — including the Grampians, Horsham, Stawell, Ararat, Hamilton and Ballarat. Most work is done remotely with video calls and clear reporting.",
+  },
+  {
+    question: "Do you help Grampians businesses with marketing and social media?",
+    answer:
+      "Yes. We offer digital marketing, social media management, SEO, Google Ads and website design for Grampians and western Victoria businesses. See our Grampians digital marketing page for details on how we help you rank for local searches.",
   },
   {
     question: "How long does a new website take?",

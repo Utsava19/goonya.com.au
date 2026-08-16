@@ -1,3 +1,5 @@
+import { CASE_STUDIES } from "./caseStudies.js";
+
 export const PACKAGES = [
   {
     id: "launch",
@@ -328,29 +330,13 @@ export const PROCESS_STEPS = [
   { step: "05", title: "We Optimise", desc: "We track what's working and improve it every month." },
 ];
 
-export const TESTIMONIALS = [
-  {
-    quote: "Goonya completely rebuilt our website and fixed our Google listing. We're getting more calls every week.",
-    name: "Sarah Mitchell",
-    role: "Owner, Bloom Café",
-    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop&crop=face",
-    stars: 5,
-  },
-  {
-    quote: "We were juggling a web guy, a social person and ads with no plan. Goonya put it all in one system.",
-    name: "James O'Brien",
-    role: "Director, Northline Plumbing",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face",
-    stars: 5,
-  },
-  {
-    quote: "Our enquiries used to slip through. Now leads get followed up automatically. Huge difference for a small team.",
-    name: "Lisa Tran",
-    role: "Manager, Maison Beauty",
-    photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&crop=face",
-    stars: 5,
-  },
-];
+export const TESTIMONIALS = CASE_STUDIES.slice(0, 3).map((study) => ({
+  quote: study.quote,
+  name: study.quoteName,
+  role: study.quoteRole,
+  photo: study.clientPhoto,
+  stars: 5,
+}));
 
 export const INDUSTRIES = [
   "Restaurant / Café",

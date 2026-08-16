@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { CASE_STUDIES } from "../data/caseStudies";
+import { CASE_STUDIES, FEATURED_CASE } from "../data/caseStudies";
 import Robot from "./Robot";
 import { PACKAGES, PROCESS_STEPS, TESTIMONIALS } from "../data/siteContent";
 
@@ -354,7 +354,7 @@ export function SeoSpotlight() {
     "Schema markup so Google understands your business",
     "Monthly ranking and enquiry tracking",
   ];
-  const featured = TESTIMONIALS[1];
+  const featured = FEATURED_CASE;
 
   return (
     <section className="section-fade-to-dark page-section">
@@ -396,9 +396,9 @@ export function SeoSpotlight() {
 
           <div className="seo-spotlight-visual">
             <div className="seo-search-mock">
-              <div className="seo-search-bar">digital marketing noble park</div>
+              <div className="seo-search-bar">social media manager grampians</div>
               {[
-                { rank: 1, name: "Goonya — SEO, ads & social media", highlight: true, meta: "★★★★★ · Noble Park · Free strategy call" },
+                { rank: 1, name: "Goonya — marketing, SEO & social media", highlight: true, meta: "★★★★★ · Horsham · Stawell · Free strategy call" },
                 { rank: 2, name: "Competitor A", highlight: false, meta: "★★★ · Closed · No website" },
                 { rank: 3, name: "Competitor B", highlight: false, meta: "★★★★ · Slow site · No booking" },
               ].map((row) => (
@@ -416,13 +416,13 @@ export function SeoSpotlight() {
               <div style={{ color: A, fontSize: 14, marginBottom: 10 }}>{"★".repeat(featured.stars)}</div>
               <p style={{ color: "#ccc", fontSize: 15, lineHeight: 1.7, marginBottom: 20 }}>"{featured.quote}"</p>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <img src={featured.photo} alt={featured.name} width={48} height={48}
+                <img src={featured.clientPhoto} alt={featured.quoteName} width={48} height={48}
                   style={{ borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(155,124,255,.35)" }} />
                 <div>
                   <div style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#fff", fontWeight: 600, fontSize: 14 }}>
-                    {featured.name}
+                    {featured.quoteName}
                   </div>
-                  <div style={{ fontSize: 12, color: "#666" }}>{featured.role}</div>
+                  <div style={{ fontSize: 12, color: "#666" }}>{featured.quoteRole}</div>
                 </div>
               </div>
             </div>
@@ -935,6 +935,10 @@ export function LocalServiceAreas() {
         <p className="local-areas-foot">
           Based in Noble Park, VIC. Remote-friendly for businesses across Victoria.
           {" "}
+          <Link to="/digital-marketing-grampians">Grampians digital marketing →</Link>
+          {" · "}
+          <Link to="/seo-noble-park">SEO Noble Park →</Link>
+          {" · "}
           <Link to="/contact">Book a free strategy call →</Link>
         </p>
       </div>

@@ -30,7 +30,8 @@ export const SITE = {
     "Dandenong",
     "Casey",
     "Melbourne",
-    "Grampians",
+      "Grampians",
+      "Grampians region",
     "Horsham",
     "Stawell",
     "Ararat",
@@ -48,6 +49,8 @@ export const SITE = {
     "Google Business Profile",
     "Google Ads",
     "Social media management",
+    "Digital marketing Grampians",
+    "Marketing Horsham",
     "Social media manager",
     "Advertising",
     "Meta advertising",
@@ -86,6 +89,15 @@ export function fullAddress() {
   const { street, suburb, state, postcode, country } = SITE.address;
   return `${street}, ${suburb} ${state} ${postcode}, ${country}`;
 }
+
+import { LOCAL_SEO_PAGES } from "./localSeoPages.js";
+
+const LOCAL_PAGE_SEO = Object.fromEntries(
+  Object.entries(LOCAL_SEO_PAGES).map(([path, page]) => [
+    path,
+    { title: page.title, description: page.description },
+  ])
+);
 
 export const PAGE_SEO = {
   "/": {
@@ -131,6 +143,7 @@ export const PAGE_SEO = {
     description:
       "Answers to common questions about Goonya packages, pricing, websites, SEO, social media, AI automation and how to get started.",
   },
+  ...LOCAL_PAGE_SEO,
 };
 
 /** Main site sections — helps Google understand brand navigation and sitelink candidates */
@@ -159,6 +172,16 @@ export const PRIMARY_NAV = [
     path: "/faq",
     name: "FAQ",
     description: "Common questions about pricing, timelines and how Goonya works.",
+  },
+  {
+    path: "/digital-marketing-grampians",
+    name: "Digital Marketing Grampians",
+    description: "SEO, social media manager and advertising for Horsham, Stawell and western Victoria.",
+  },
+  {
+    path: "/seo-noble-park",
+    name: "SEO Noble Park",
+    description: "Local SEO and digital marketing for Noble Park and south-east Melbourne.",
   },
   {
     path: "/contact",
