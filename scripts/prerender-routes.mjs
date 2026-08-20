@@ -229,6 +229,10 @@ function verifySeoOutput(routePaths) {
       errors.push(`Missing index,follow robots tag for ${routePath}`);
     }
 
+    if (/https:\/\/goonya\.com\.au(?:\/|"|')/.test(html)) {
+      errors.push(`Apex URL in HTML for ${routePath} (use ${SITE.url})`);
+    }
+
     const localPage = LOCAL_SEO_PAGES[routePath];
     if (localPage && !html.includes(escapeHtml(localPage.h1))) {
       errors.push(`Local SEO body missing for ${routePath}`);

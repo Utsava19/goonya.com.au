@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/prerender-routes.mjs",
+    "seo:verify": "node scripts/verify-live-seo.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "brand:export": "node scripts/export-brand-assets.mjs",
