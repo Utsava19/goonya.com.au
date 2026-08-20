@@ -10,18 +10,29 @@
   "redirects": [
     {
       "source": "/:path+/",
-      "destination": "/:path+",
+      "destination": "https://www.goonya.com.au/:path+",
       "permanent": true
     },
     {
-      "source": "/:path*",
+      "source": "/",
       "has": [
         {
           "type": "host",
           "value": "goonya.com.au"
         }
       ],
-      "destination": "https://www.goonya.com.au/:path*",
+      "destination": "https://www.goonya.com.au/",
+      "permanent": true
+    },
+    {
+      "source": "/:path+",
+      "has": [
+        {
+          "type": "host",
+          "value": "goonya.com.au"
+        }
+      ],
+      "destination": "https://www.goonya.com.au/:path+",
       "permanent": true
     }
   ],
